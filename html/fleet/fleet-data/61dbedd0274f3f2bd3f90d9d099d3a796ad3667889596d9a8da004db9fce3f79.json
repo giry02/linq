@@ -1,0 +1,8 @@
+{
+    "method":  "GET",
+    "path":  "/fleet/admin/companies?pageNo=1\u0026pageSize=20\u0026searchKeyword=\u0026sortCol=",
+    "status":  200,
+    "contentType":  "application/json",
+    "bodyEncoding":  "base64",
+    "body":  "eyJjb2RlIjoiMDAiLCJtc2ciOiJzdWNjZXNzIiwic3RhdHVzIjoyMDAsInJlc3VsdCI6W3siY29tcGFueUlkIjoxOTMzLCJjb21wYW55TmFtZSI6Iijso7wp7IS47KKF66y866WY7KSR67aA7KeA7KCQIiwiY29tcGFueUtpbmQiOiJmbGVldCIsInNldHRpbmdUeXBlQ29kZSI6IlMiLCJ0aW1lem9uZUlkIjoiQXNpYS9TZW91bCIsImxlYWRlclVzZXJJZCI6IlRlc3RfRmxlZXQyX0FkbWluIiwicmVnVXNlcklkIjoiYWRtaW4iLCJyZWdEYXRldGltZSI6IjIwMjUtMTEtMDkiLCJtb2REYXRldGltZSI6bnVsbCwibW9kVXNlcklkIjoiYWRtaW4iLCJ1c2VZbiI6IlkifV0sInBhZ2VObyI6MSwicGFnZVNpemUiOjIwLCJ0b3RhbCI6MX0="
+}

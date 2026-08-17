@@ -1,0 +1,8 @@
+{
+  "method": "GET",
+  "path": "/fleet/admin/company/151/menugroups",
+  "status": 200,
+  "contentType": "application/json",
+  "bodyEncoding": "base64",
+  "body": "eyJjb2RlIjoiMDAiLCJtc2ciOiJzdWNjZXNzIiwic3RhdHVzIjoyMDAsInJlc3VsdCI6W3sibWVudUdyb3VwSWQiOjQ3NSwibWVudUdyb3VwTmFtZSI6Iuq4sOuzuCDrqZTribQg6re466O5IiwiY29tcGFueUlkIjoxNTEsInJlZ0RhdGV0aW1lIjoiMjAyNS0wNy0xNCIsInJlZ1VzZXJJZCI6ImFkbWluIiwibW9kRGF0ZXRpbWUiOm51bGwsIm1vZFVzZXJJZCI6bnVsbH1dfQ=="
+}

@@ -1,0 +1,8 @@
+{
+  "method": "GET",
+  "path": "/common/company/groups",
+  "status": 200,
+  "contentType": "application/json",
+  "bodyEncoding": "base64",
+  "body": "eyJjb2RlIjoiMDAiLCJtc2ciOiJzdWNjZXNzIiwic3RhdHVzIjoyMDAsInJlc3VsdCI6W3siZ3JvdXBJZCI6MTk0OCwiZ3JvdXBOYW1lIjoi6riw67O46re466O5IiwiZGVmYXVsdEdyb3VwWW4iOiJZIn0seyJncm91cElkIjozNDMwNCwiZ3JvdXBOYW1lIjoi7YWM7Iqk7Yq46re466O5IiwiZGVmYXVsdEdyb3VwWW4iOiJOIn1dfQ=="
+}

@@ -1,0 +1,8 @@
+{
+  "method": "GET",
+  "path": "/fleet/analysis/summary/group/1948?startDate=20260801&endDate=20260813",
+  "status": 200,
+  "contentType": "application/json",
+  "bodyEncoding": "base64",
+  "body": "eyJjb2RlIjoiMDAiLCJtc2ciOiJzdWNjZXNzIiwic3RhdHVzIjoyMDAsInJlc3VsdCI6eyJjb21wYW55SWQiOjE5MzMsImNvbXBhbnlOYW1lIjoiKOyjvCnshLjsooXrrLzrpZjspJHrtoDsp4DsoJAiLCJncm91cElkIjoxOTQ4LCJncm91cE5hbWUiOiLquLDrs7jqt7jro7kiLCJvcGVyYXRpbmdSYXRlIjo0OS43LCJlZmZpY2llbmN5UmF0ZSI6NTcuNiwic2hvY2tDbnQiOjMsImZ1ZWxMaCI6MC4wLCJiYXR0ZXJ5RnVlbExoIjowLjAsImJhdHRlcnlSYXRlIjo4NC45LCJiYXR0ZXJ5Q2hhcmdlQ250IjowLCJoeWRyb2dlblJhdGUiOjAuMCwiZGlzdGFuY2UiOjMwMC4xLCJvcGVyYXRpbmdUaW1lIjoyMzMuMCwic3RyRGlzdGFuY2UiOiIzMDBLbSIsInN0ck9wZXJhdGluZ1RpbWUiOiIyMzNIIiwibG1DbnQiOjAsImxhQ250IjowLCJsaUNudCI6MTYsImhpQ250IjowfX0="
+}

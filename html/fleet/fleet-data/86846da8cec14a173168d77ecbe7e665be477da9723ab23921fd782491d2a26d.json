@@ -1,0 +1,8 @@
+{
+  "method": "GET",
+  "path": "/fleet/management/company/daily-summary?startDate=20260813&endDate=20260813&groupId=1948",
+  "status": 200,
+  "contentType": "application/json",
+  "bodyEncoding": "base64",
+  "body": "eyJjb2RlIjoiMDIiLCJtc2ciOiJudWxsIENhdXNlOm9yZy5hcGFjaGUuaWJhdGlzLmJpbmRpbmcuQmluZGluZ0V4Y2VwdGlvbjogUGFyYW1ldGVyICYjMzk7Z3JvdXBJZCYjMzk7IG5vdCBmb3VuZC4gQXZhaWxhYmxlIHBhcmFtZXRlcnMgYXJlIFtwYXJhbSwgdXNlciwgcGFyYW0xLCBwYXJhbTJdIiwic3RhdHVzIjoyMDAsInJlc3VsdCI6bnVsbH0="
+}

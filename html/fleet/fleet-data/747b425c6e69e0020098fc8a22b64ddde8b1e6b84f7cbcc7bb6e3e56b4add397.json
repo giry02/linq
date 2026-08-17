@@ -1,0 +1,8 @@
+{
+    "method":  "GET",
+    "path":  "/fleet/dashboard/summary-group-widget?endDate=20260813\u0026groupId=1948\u0026startDate=20260801",
+    "status":  200,
+    "contentType":  "application/json",
+    "bodyEncoding":  "base64",
+    "body":  "eyJjb2RlIjoiMDAiLCJtc2ciOiJzdWNjZXNzIiwic3RhdHVzIjoyMDAsInJlc3VsdCI6W3siZnVlbFR5cGVDb2RlIjoiTEkiLCJmdWVsVHlwZUNvZGVOYW1lIjoi66as7YqsIiwiZXF1aXBtZW50Q250IjoxNiwiZXF1aXBtZW50UGVyY2VudGFnZSI6MTAwLjAsIm9wZXJhdGluZ1RpbWUiOjE3MzIyLCJzdHJPcGVyVGltZSI6IjI4OEgiLCJlZmZpY2llbmN5Ijo1My45fV19"
+}

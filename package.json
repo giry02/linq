@@ -1,0 +1,14 @@
+{
+  "name": "linq-machineiq-html-mirror",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node scripts/start-html.mjs",
+    "start:fleet": "node html/fleet/server.mjs",
+    "start:dealer": "node html/dealer/server.mjs",
+    "test": "npm --prefix html/fleet test && npm --prefix html/dealer test",
+    "qa:fleet": "set QA_SITE=fleet&& node scripts/qa-offline-sites.mjs",
+    "qa:dealer": "set QA_SITE=dealer&& node scripts/qa-offline-sites.mjs"
+  }
+}

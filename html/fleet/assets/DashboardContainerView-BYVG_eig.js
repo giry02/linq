@@ -1,0 +1,1 @@
+import{_ as a,s as n,G as r,aw as e,o as s,l as c}from"./index-dGkWfo-f.js";const _={};function p(i,d){const o=e("router-view"),t=e("page-body");return s(),n(t,{class:"page-management",title:"대시보드"},{default:r(()=>[c(o)]),_:1})}const m=a(_,[["render",p]]);export{m as default};

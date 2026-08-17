@@ -1,0 +1,8 @@
+{
+  "method": "GET",
+  "path": "/fleet/admin/all-companies",
+  "status": 200,
+  "contentType": "application/json",
+  "bodyEncoding": "base64",
+  "body": "W3siY29tcGFueUlkIjoxOTMzLCJjb21wYW55VHlwZSI6ImZsZWV0IiwiY29tcGFueU5hbWUiOiLsoITssrTssKjrn4kiLCJjb21wYW55S2luZCI6ImZsZWV0Iiwic2V0dGluZ1R5cGVDb2RlIjoiUyIsInRpbWV6b25lSWQiOiJBc2lhL1Nlb3VsIiwibGVhZGVyVXNlcklkIjpudWxsLCJyZWdVc2VySWQiOiJhZG1pbiIsInJlZ0RhdGV0aW1lIjoiMjAyNS0xMS0wOSIsIm1vZERhdGV0aW1lIjpudWxsLCJtb2RVc2VySWQiOiJhZG1pbiIsImV4cGlyZURhdGV0aW1lIjpudWxsLCJ1c2VZbiI6IlkiLCJjb21wYW55V29ya2luZ1RpbWUiOm51bGwsImNvbXBhbnlIb2xpZGF5TGlzdCI6bnVsbH1d"
+}

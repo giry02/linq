@@ -1,0 +1,8 @@
+{
+  "method": "GET",
+  "path": "/fleet/admin/equipment/FBA34-000522/groups",
+  "status": 200,
+  "contentType": "application/json",
+  "bodyEncoding": "base64",
+  "body": "eyJjb2RlIjoiMDIiLCJtc2ciOiJudWxsIENhdXNlOm9yZy5hcGFjaGUuaWJhdGlzLmV4Y2VwdGlvbnMuVG9vTWFueVJlc3VsdHNFeGNlcHRpb246IEV4cGVjdGVkIG9uZSByZXN1bHQgKG9yIG51bGwpIHRvIGJlIHJldHVybmVkIGJ5IHNlbGVjdE9uZSgpLCBidXQgZm91bmQ6IDIiLCJzdGF0dXMiOjIwMCwicmVzdWx0IjpudWxsfQ=="
+}

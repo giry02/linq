@@ -1,0 +1,8 @@
+{
+  "method": "GET",
+  "path": "/fleet/management/equipment/summary-operation?equipmentId=&startDate=20260801&endDate=20260813",
+  "status": 200,
+  "contentType": "application/json",
+  "bodyEncoding": "base64",
+  "body": "eyJjb2RlIjoiMDAiLCJtc2ciOiJzdWNjZXNzIiwic3RhdHVzIjoyMDAsInJlc3VsdCI6eyJkaXN0YW5jZSI6MC4wLCJvcGVyYXRpbmdUaW1lIjowLjAsInN0ckRpc3RhbmNlIjoiMEttIiwic3RyT3BlcmF0aW5nVGltZSI6IjBIIDBNIiwic2hvY2tDb3VudCI6MCwic2hvY2sxQ291bnQiOjAsInNob2NrMkNvdW50IjowLCJzaG9jazNDb3VudCI6MCwic2hvY2s0Q291bnQiOjAsInNob2NrNUNvdW50IjowLCJyZXBhaXJDb3VudCI6MCwiZXJyb3JDb3VudCI6MCwiYmF0dGVyeUVycm9yQ291bnQiOjB9fQ=="
+}

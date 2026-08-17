@@ -1,0 +1,8 @@
+{
+  "method": "POST",
+  "path": "/fleet/history/menu-access",
+  "status": 200,
+  "contentType": "application/json",
+  "bodyEncoding": "base64",
+  "body": "eyJjb2RlIjoiMDAiLCJtc2ciOiJzdWNjZXNzIiwic3RhdHVzIjoyMDAsInJlc3VsdCI6bnVsbH0="
+}

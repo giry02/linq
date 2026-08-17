@@ -1,0 +1,8 @@
+{
+  "method": "GET",
+  "path": "/fleet/analysis/summary/group/34304?equipmentId=&startDate=20260801&endDate=20260813",
+  "status": 200,
+  "contentType": "application/json",
+  "bodyEncoding": "base64",
+  "body": "eyJjb2RlIjoiMDAiLCJtc2ciOiJzdWNjZXNzIiwic3RhdHVzIjoyMDAsInJlc3VsdCI6eyJjb21wYW55SWQiOjE1MSwiY29tcGFueU5hbWUiOiLrkZDsgrDsp4DqsozssKgg6rK964Ko7KSR67aA7YyQ66ekIOyjvOyLne2ajOyCrCIsImdyb3VwSWQiOjM0MzA0LCJncm91cE5hbWUiOiLthYzsiqTtirjqt7jro7kiLCJvcGVyYXRpbmdSYXRlIjo1NC40LCJlZmZpY2llbmN5UmF0ZSI6MzguMSwic2hvY2tDbnQiOjAsImZ1ZWxMaCI6MCwiYmF0dGVyeUZ1ZWxMaCI6MCwiYmF0dGVyeVJhdGUiOjgxLCJiYXR0ZXJ5Q2hhcmdlQ250IjowLCJoeWRyb2dlblJhdGUiOjAsImRpc3RhbmNlIjoyNS42LCJvcGVyYXRpbmdUaW1lIjo1Niwic3RyRGlzdGFuY2UiOiIyNUttIiwic3RyT3BlcmF0aW5nVGltZSI6IjU1SCIsImxtQ250IjowLCJsYUNudCI6MCwibGlDbnQiOjAsImhpQ250IjowfX0="
+}
