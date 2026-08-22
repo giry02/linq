@@ -19,6 +19,11 @@
       content="MACHINE IQ"
     />
     <title>MACHINE IQ</title>
+    <script>
+      if (!['localhost', '127.0.0.1'].includes(location.hostname)) {
+        location.replace('./public-dashboard.html');
+      }
+    </script>
     <script type="module" crossorigin src="/dealer/assets/index-dGkWfo-f.js"></script>
     <link rel="stylesheet" crossorigin href="/dealer/assets/index-Bp-Zy4Q1.css">
     <link rel="stylesheet" href="/dealer/assets/local-fonts.css">
