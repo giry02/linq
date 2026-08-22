@@ -1,7 +1,14 @@
-:root { color-scheme: light; font-family: 'Noto Sans KR', 'Malgun Gothic', sans-serif; background:#eceff1; }
+:root {
+  color-scheme: light;
+  font-family: 'Noto Sans KR', 'Malgun Gothic', sans-serif;
+  background:#eceff1;
+  --mobile-font-min:12px;
+  --mobile-font-label:13px;
+  --mobile-font-body:14px;
+}
 * { box-sizing:border-box; }
 html, body { margin:0; min-height:100%; color:#171717; background:#eceff1; }
-body { font-family:inherit; }
+body { font-family:inherit; font-size:var(--mobile-font-body); }
 button, input, select { font:inherit; }
 button { color:inherit; }
 .mobile-app { position:relative; width:min(100%, 480px); min-height:100dvh; margin:0 auto; padding-bottom:76px; overflow:hidden; background:#f6f6f6; box-shadow:0 0 30px rgba(0,0,0,.08); }
@@ -202,3 +209,52 @@ button { color:inherit; }
 .notification-item p { margin:4px 0 0; color:#666; font-size:11px; }
 .toast { position:fixed; z-index:50; right:20px; bottom:84px; left:20px; max-width:440px; margin:auto; padding:11px 14px; color:#fff; border-radius:7px; background:rgba(25,25,25,.92); text-align:center; font-size:12px; }
 @media (max-width:360px) { .summary-card { min-height:108px; padding:13px; } .brand strong { font-size:20px; } }
+
+/* Mobile readability baseline: captions never fall below 12px. */
+.header-button b,
+.welcome small,
+.dashboard-heading p,
+.dashboard-heading small,
+.summary-card small,
+.dashboard-kpi small,
+.dashboard-panel__head span,
+.dashboard-donut span,
+.dashboard-legend span,
+.dashboard-alert small,
+.dashboard-alert time,
+.priority-item__top span,
+.priority-item p,
+.priority-item__meta,
+.sub-head p,
+.sub-head > span,
+.filter-chips button,
+.vehicle-mobile-row__head small,
+.service-mobile-row__head small,
+.status-pill,
+.vehicle-mobile-row__meta span,
+.service-mobile-row p,
+.service-mobile-row__meta,
+.detail-hero small,
+.detail-hero p,
+.detail-card__head span,
+.detail-definition dt,
+.detail-service-list small,
+.empty-state.compact,
+.account-card span,
+.account-card small,
+.setting-row small,
+.select-row small,
+.bottom-nav span,
+.notification-item time,
+.notification-item p {
+  font-size:var(--mobile-font-min);
+}
+
+.dashboard-kpi span,
+.dashboard-alert strong,
+.vehicle-mobile-row__meta b,
+.service-counts span,
+.detail-definition dd,
+.detail-service-list strong {
+  font-size:var(--mobile-font-label);
+}
