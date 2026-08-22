@@ -6,6 +6,10 @@
   const frame = document.querySelector('.review-shell__frame');
   let recoveringSession = false;
 
+  function isStaticPreviewHost() {
+    return query.get('static') === '1' || location.hostname.endsWith('github.io') || location.protocol === 'file:';
+  }
+
   function reviewScreenForRoute(value) {
     const target = new URL(value, location.origin);
     if (target.searchParams.get('chart') === 'horizontal') return 'shock-horizontal';
@@ -146,6 +150,21 @@
     const route = normalizeRoute(requestedRoute);
     if (!route) {
       setStatus('열 수 없는 검토 화면 경로입니다.', true);
+      return;
+    }
+
+    if (isStaticPreviewHost()) {
+      const reviewScreen = reviewScreenForRoute(route);
+      if (!reviewScreen) {
+        setStatus('공개용 검토 화면을 찾지 못했습니다.', true);
+        return;
+      }
+      setStatus('공개용 검토 화면을 불러오고 있습니다.');
+      frame.addEventListener('load', () => {
+        status.hidden = true;
+        frame.classList.add('is-ready');
+      }, {once:true});
+      frame.src = `./static/${reviewScreen}.html${location.search}`;
       return;
     }
     try {

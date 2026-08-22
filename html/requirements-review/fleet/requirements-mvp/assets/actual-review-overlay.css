@@ -838,7 +838,106 @@ body.linq-review-map-fullscreen .linq-review-map-card.linq-review-map-widget-ful
 }
 
 /* 31-day operating efficiency: dates continue downward as fixed-width rows.
- * All values remain visible without horizontal scrolling; hover is supplementary only. */
+* All values remain visible without horizontal scrolling; hover is supplementary only. */
+
+.requirements-horizontal-chart {
+  margin: 0 0 24px;
+  padding: 24px 28px 28px;
+  border: 1px solid #ddd;
+  border-radius: 16px;
+  background: #fff;
+}
+
+.requirements-horizontal-chart__head,
+.requirements-horizontal-chart__axis,
+.requirements-horizontal-chart__row {
+  display: grid;
+  grid-template-columns: 64px minmax(0, 1fr) 44px;
+  align-items: center;
+}
+
+.requirements-horizontal-chart__head {
+  grid-template-columns: 1fr auto;
+  margin-bottom: 18px;
+}
+
+.requirements-horizontal-chart__head h4,
+.requirements-horizontal-chart__head p {
+  margin: 0;
+}
+
+.requirements-horizontal-chart__head h4 { font-size: 20px; }
+.requirements-horizontal-chart__head p { margin-top: 5px; color: #777; font-size: 13px; }
+
+.requirements-horizontal-chart__legend {
+  display: flex;
+  gap: 14px;
+  font-size: 13px;
+}
+
+.requirements-horizontal-chart__legend span::before {
+  content: '';
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  margin-right: 5px;
+  border-radius: 50%;
+  background: #8ab0c5;
+}
+
+.requirements-horizontal-chart__legend .is-caution::before { background:#f5a623; }
+.requirements-horizontal-chart__legend .is-warning::before { background:#ff3b21; }
+
+.requirements-horizontal-chart__axis {
+  padding-bottom: 8px;
+  color: #777;
+  font-size: 12px;
+}
+
+.requirements-horizontal-chart__axis > div {
+  display: flex;
+  justify-content: space-between;
+}
+
+.requirements-horizontal-chart__row {
+  position: relative;
+  min-height: 29px;
+}
+
+.requirements-horizontal-chart__row > strong,
+.requirements-horizontal-chart__row > em {
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 500;
+}
+
+.requirements-horizontal-chart__row > span {
+  display: flex;
+  height: 12px;
+  overflow: hidden;
+  border-radius: 6px;
+  background: linear-gradient(to right, #eee 1px, transparent 1px) 0 0 / 20% 100%, #f7f7f7;
+}
+
+.requirements-horizontal-chart__row i { display:block; height:100%; }
+.requirements-horizontal-chart__row i.is-sensitive { background:#8ab0c5; }
+.requirements-horizontal-chart__row i.is-caution { background:#f5a623; }
+.requirements-horizontal-chart__row i.is-warning { background:#ff3b21; }
+
+.requirements-horizontal-chart__row:hover::after,
+.requirements-horizontal-chart__row:focus-visible::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  z-index: 4;
+  left: 80px;
+  bottom: calc(100% + 4px);
+  padding: 7px 10px;
+  border-radius: 5px;
+  color: #fff;
+  background: #222;
+  font-size: 12px;
+  white-space: nowrap;
+}
 .linq-review-efficiency-chart {
   display: block;
   width: 100%;

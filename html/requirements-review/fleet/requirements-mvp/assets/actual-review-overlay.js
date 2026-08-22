@@ -953,6 +953,34 @@
     markReview(document.querySelector('.content-head') || table, 'R-SUP-003');
   }
 
+  function applyShockHorizontal(content) {
+    if (screen !== 'shock-horizontal' || content.querySelector('.requirements-horizontal-chart')) return;
+    const table = [...content.querySelectorAll('table')].find(candidate => {
+      const labels = [...candidate.querySelectorAll('thead th')].map(cell => cell.textContent.replace(/\s/g, ''));
+      return ['일자', '민감', '주의', '경고', '합계'].every(label => labels.includes(label));
+    });
+    if (!table) return;
+    const rows = [...table.querySelectorAll('tbody tr')].map(row => {
+      const cells = [...row.cells].map(cell => Number(cell.textContent.trim()) || 0);
+      return {day:cells[0], sensitive:cells[1], caution:cells[2], warning:cells[3], total:cells[4]};
+    }).filter(row => row.day >= 1 && row.day <= 31);
+    if (!rows.length) return;
+    const max = Math.max(5, ...rows.map(row => row.total));
+    const ticks = Array.from({length:max + 1}, (_, index) => `<span>${index}</span>`).join('');
+    const chartRows = rows.map(row => {
+      const segment = (value, type) => value > 0
+        ? `<i class="is-${type}" style="width:${(value / max) * 100}%"></i>`
+        : '';
+      const detail = `${row.day}일 · 민감 ${row.sensitive}회 · 주의 ${row.caution}회 · 경고 ${row.warning}회 · 합계 ${row.total}회`;
+      return `<div class="requirements-horizontal-chart__row" tabindex="0" aria-label="${detail}" data-tooltip="${detail}"><strong>${row.day}일</strong><span>${segment(row.sensitive, 'sensitive')}${segment(row.caution, 'caution')}${segment(row.warning, 'warning')}</span><em>${row.total}</em></div>`;
+    }).join('');
+    const chart = document.createElement('section');
+    chart.className = 'requirements-horizontal-chart';
+    chart.innerHTML = `<div class="requirements-horizontal-chart__head"><div><h4>일별 충격 횟수 · 축 전환 비교안</h4><p>세로축은 날짜, 가로축은 충격 횟수입니다.</p></div><div class="requirements-horizontal-chart__legend"><span class="is-sensitive">민감</span><span class="is-caution">주의</span><span class="is-warning">경고</span></div></div><div class="requirements-horizontal-chart__axis"><span>날짜</span><div>${ticks}</div><span>합계</span></div><div class="requirements-horizontal-chart__rows">${chartRows}</div>`;
+    const host = table.closest('.content-section__body, .content-section') || table.parentElement;
+    host.insertBefore(chart, host.firstChild);
+  }
+
   function ensureDashboardControls() {
     if (screen !== 'dashboard') return;
     if (document.querySelector('.linq-review-fullscreen-button')) return;
@@ -1034,6 +1062,7 @@
     if (screen === 'lithium-battery') applyLithiumBattery(content);
     if (screen === 'home-vehicles') applyHomeVehicles(content);
     if (screen === 'supplies-management') applySupplies(content);
+    if (screen === 'shock-horizontal') applyShockHorizontal(content);
     syncServiceSummaryCount(content);
     const needsRefine = document.body.dataset.reviewMarkersRefined !== 'true';
     if (needsRefine) {
