@@ -1,0 +1,202 @@
+﻿[
+    {
+        "Path":  "/fleet/analysis/shock/ranking/group/1948?periodTypeCode=monthly\u0026startDate=20260801",
+        "Http":  200,
+        "Code":  "00"
+    },
+    {
+        "Path":  "/fleet/analysis/shock/graph/group/1948?equipmentId=\u0026periodTypeCode=monthly\u0026startDate=20260801",
+        "Http":  200,
+        "Code":  "00"
+    },
+    {
+        "Path":  "/fleet/analysis/fuel/summary/group/1948?equipmentId=\u0026periodTypeCode=monthly\u0026startDate=20260801",
+        "Http":  200,
+        "Code":  "00"
+    },
+    {
+        "Path":  "/fleet/analysis/fuel/graph/group/1948?equipmentId=\u0026periodTypeCode=monthly\u0026startDate=20260801",
+        "Http":  200,
+        "Code":  "00"
+    },
+    {
+        "Path":  "/fleet/analysis/li/stat/group/1948?pageNo=1\u0026pageSize=10",
+        "Http":  200,
+        "Code":  "00"
+    },
+    {
+        "Path":  "/fleet/analysis/li/stat/group/1948?pageNo=2\u0026pageSize=10",
+        "Http":  200,
+        "Code":  "00"
+    },
+    {
+        "Path":  "/fleet/analysis/hi/stat/group/1948?pageNo=1\u0026pageSize=10",
+        "Http":  200,
+        "Code":  "00"
+    },
+    {
+        "Path":  "/fleet/analysis/hi/stat/group/1948?pageNo=2\u0026pageSize=10",
+        "Http":  200,
+        "Code":  "00"
+    },
+    {
+        "Path":  "/fleet/report/summary?groupId=1948\u0026periodTypeCode=monthly\u0026startDate=20260801",
+        "Http":  200,
+        "Code":  "00"
+    },
+    {
+        "Path":  "/fleet/report/summary/graph?groupId=1948\u0026periodTypeCode=monthly\u0026startDate=20260801",
+        "Http":  200,
+        "Code":  "00"
+    },
+    {
+        "Path":  "/common/workingtime/group/1948/current",
+        "Http":  200,
+        "Code":  "00"
+    },
+    {
+        "Path":  "/common/map/geofence/group/1948",
+        "Http":  200,
+        "Code":  "00"
+    },
+    {
+        "Path":  "/common/map/geofence/group/equipments?groupId=1948",
+        "Http":  200,
+        "Code":  "00"
+    },
+    {
+        "Path":  "/fleet/analysis/li/stat/equipment/FBA32-002045",
+        "Http":  200,
+        "Code":  "00"
+    },
+    {
+        "Path":  "/fleet/analysis/li/error/group/1948?equipmentId=FBA32-002045\u0026periodTypeCode=monthly\u0026startDate=20260801\u0026endDate=20260813",
+        "Http":  200,
+        "Code":  "00"
+    },
+    {
+        "Path":  "/fleet/analysis/li/graph/charge/group/1948?equipmentId=FBA32-002045\u0026periodTypeCode=monthly\u0026startDate=20260801\u0026endDate=20260813",
+        "Http":  200,
+        "Code":  "00"
+    },
+    {
+        "Path":  "/fleet/analysis/shock/ranking/group/34304?periodTypeCode=monthly\u0026startDate=20260801",
+        "Http":  200,
+        "Code":  "00"
+    },
+    {
+        "Path":  "/fleet/analysis/shock/graph/group/34304?equipmentId=\u0026periodTypeCode=monthly\u0026startDate=20260801",
+        "Http":  200,
+        "Code":  "00"
+    },
+    {
+        "Path":  "/fleet/analysis/fuel/summary/group/34304?equipmentId=\u0026periodTypeCode=monthly\u0026startDate=20260801",
+        "Http":  200,
+        "Code":  "00"
+    },
+    {
+        "Path":  "/fleet/analysis/fuel/graph/group/34304?equipmentId=\u0026periodTypeCode=monthly\u0026startDate=20260801",
+        "Http":  200,
+        "Code":  "00"
+    },
+    {
+        "Path":  "/fleet/analysis/li/stat/group/34304?pageNo=1\u0026pageSize=10",
+        "Http":  200,
+        "Code":  "00"
+    },
+    {
+        "Path":  "/fleet/analysis/li/stat/group/34304?pageNo=2\u0026pageSize=10",
+        "Http":  200,
+        "Code":  "00"
+    },
+    {
+        "Path":  "/fleet/analysis/hi/stat/group/34304?pageNo=1\u0026pageSize=10",
+        "Http":  200,
+        "Code":  "00"
+    },
+    {
+        "Path":  "/fleet/analysis/hi/stat/group/34304?pageNo=2\u0026pageSize=10",
+        "Http":  200,
+        "Code":  "00"
+    },
+    {
+        "Path":  "/fleet/report/summary?groupId=34304\u0026periodTypeCode=monthly\u0026startDate=20260801",
+        "Http":  200,
+        "Code":  "00"
+    },
+    {
+        "Path":  "/fleet/report/summary/graph?groupId=34304\u0026periodTypeCode=monthly\u0026startDate=20260801",
+        "Http":  200,
+        "Code":  "00"
+    },
+    {
+        "Path":  "/common/workingtime/group/34304/current",
+        "Http":  200,
+        "Code":  "00"
+    },
+    {
+        "Path":  "/common/map/geofence/group/34304",
+        "Http":  200,
+        "Code":  "00"
+    },
+    {
+        "Path":  "/common/map/geofence/group/equipments?groupId=34304",
+        "Http":  200,
+        "Code":  "00"
+    },
+    {
+        "Path":  "/fleet/analysis/li/stat/equipment/FBA32-002044",
+        "Http":  200,
+        "Code":  "00"
+    },
+    {
+        "Path":  "/fleet/analysis/li/error/group/34304?equipmentId=FBA32-002044\u0026periodTypeCode=monthly\u0026startDate=20260801\u0026endDate=20260813",
+        "Http":  200,
+        "Code":  "00"
+    },
+    {
+        "Path":  "/fleet/analysis/li/graph/charge/group/34304?equipmentId=FBA32-002044\u0026periodTypeCode=monthly\u0026startDate=20260801\u0026endDate=20260813",
+        "Http":  200,
+        "Code":  "00"
+    },
+    {
+        "Path":  "/fleet/report/diffgroup?groupIds=1948,34304\u0026periodTypeCode=monthly\u0026startDate=20260801",
+        "Http":  200,
+        "Code":  "00"
+    },
+    {
+        "Path":  "/fleet/report/diffgroup/graph?groupIds=1948,34304\u0026periodTypeCode=monthly\u0026startDate=20260801",
+        "Http":  200,
+        "Code":  "00"
+    },
+    {
+        "Path":  "/fleet/report/heatmap/graph?groupIds=1948,34304\u0026periodTypeCode=monthly\u0026startDate=20260801",
+        "Http":  200,
+        "Code":  "00"
+    },
+    {
+        "Path":  "/fleet/admin/companies?searchKeyword=\u0026sortCol=companyId%20DESC\u0026pageNo=1\u0026pageSize=20",
+        "Http":  200,
+        "Code":  "00"
+    },
+    {
+        "Path":  "/fleet/admin/groups?searchKeyword=\u0026sortCol=groupId%20DESC\u0026pageNo=1\u0026pageSize=20",
+        "Http":  200,
+        "Code":  "00"
+    },
+    {
+        "Path":  "/fleet/admin/equipments?searchKeyword=\u0026sortCol=equipmentId%20DESC\u0026pageNo=1\u0026pageSize=20",
+        "Http":  200,
+        "Code":  "00"
+    },
+    {
+        "Path":  "/fleet/admin/account/requests",
+        "Http":  200,
+        "Code":  "00"
+    },
+    {
+        "Path":  "/fleet/admin/equipment/requests",
+        "Http":  200,
+        "Code":  "00"
+    }
+]

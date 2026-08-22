@@ -1,0 +1,8 @@
+{
+  "method": "GET",
+  "path": "/common/workingtime/group/1948/current",
+  "status": 200,
+  "contentType": "application/json",
+  "bodyEncoding": "base64",
+  "body": "eyJjb2RlIjoiMDAiLCJtc2ciOiJzdWNjZXNzIiwic3RhdHVzIjoyMDAsInJlc3VsdCI6eyJzZXR0aW5nVHlwZUNvZGUiOiJHIiwic2V0dGluZ0RhdGUiOiIyMDI1LTEyLTExIiwic3RhcnRUaW1lIjoiMDgwMCIsImVuZFRpbWUiOiIxNzAwIiwiYnJlYWtUaW1lIjo2MCwidGltZXpvbmVJZCI6IkFzaWEvU2VvdWwiLCJ3b3JraW5nVGltZU1pbnV0ZSI6NDgwLCJob2xpZGF5V29yayI6MX19"
+}

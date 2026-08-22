@@ -1,0 +1,8 @@
+{
+  "method": "GET",
+  "path": "/fleet/analysis/hi/stat/equipment/FBA36-003906",
+  "status": 200,
+  "contentType": "application/json",
+  "bodyEncoding": "base64",
+  "body": "eyJjb2RlIjoiMDIiLCJtc2ciOiJDYW5ub3QgaW52b2tlICZxdW90O2phdmEubGFuZy5JbnRlZ2VyLmludFZhbHVlKCkmcXVvdDsgYmVjYXVzZSB0aGUgcmV0dXJuIHZhbHVlIG9mICZxdW90O2NvbS5kb29zYW4ubGlucS5hcHAuZmxlZXQubWFuYWdlbWVudC5kdG8uVmVoaWNsZURldGFpbER0by5nZXRDb21wYW55SWQoKSZxdW90OyBpcyBudWxsIiwic3RhdHVzIjoyMDAsInJlc3VsdCI6bnVsbH0="
+}

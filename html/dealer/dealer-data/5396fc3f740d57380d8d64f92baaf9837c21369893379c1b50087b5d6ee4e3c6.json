@@ -1,0 +1,8 @@
+{
+  "method": "GET",
+  "path": "/common/code/code-commons/EMK",
+  "status": 200,
+  "contentType": "application/json",
+  "bodyEncoding": "base64",
+  "body": "eyJjb2RlIjoiMDAiLCJtc2ciOiJzdWNjZXNzIiwic3RhdHVzIjoyMDAsInJlc3VsdCI6W3siY29kZSI6IkRvb3NhbiIsImdyb3VwQ29kZSI6IkVNSyIsImNvZGVOYW1lIjoiRE9PU0FOIiwicmVnRGF0ZXRpbWUiOiIyMDI0LTAzLTI1IDA1OjA2OjQ0IiwicmVnVXNlcklkIjoiYWRtaW4iLCJ1c2VZbiI6IlkiLCJjb2RlT3JkZXIiOjF9LHsiY29kZSI6IlRPWU9UQSIsImdyb3VwQ29kZSI6IkVNSyIsImNvZGVOYW1lIjoi64+E7JqU7YOAIiwicmVnRGF0ZXRpbWUiOiIyMDI0LTAzLTI1IDA1OjA2OjUzIiwicmVnVXNlcklkIjoiYWRtaW4iLCJ1c2VZbiI6IlkiLCJjb2RlT3JkZXIiOjN9LHsiY29kZSI6IkhZVU5EQUkiLCJncm91cENvZGUiOiJFTUsiLCJjb2RlTmFtZSI6Iu2YhOuMgCIsInJlZ0RhdGV0aW1lIjoiMjAyNC0wMy0yNSAwNTowNjo1MyIsInJlZ1VzZXJJZCI6ImFkbWluIiwidXNlWW4iOiJZIiwiY29kZU9yZGVyIjo0fV19"
+}

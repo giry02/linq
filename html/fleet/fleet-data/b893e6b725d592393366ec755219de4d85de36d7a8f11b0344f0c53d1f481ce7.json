@@ -1,0 +1,8 @@
+{
+  "method": "GET",
+  "path": "/fleet/service/service-count?groupId=34304&equipmentId=&startDate=20260801&endDate=20260813&periodTypeCode=monthly",
+  "status": 200,
+  "contentType": "application/json",
+  "bodyEncoding": "base64",
+  "body": "eyJjb2RlIjoiMDAiLCJtc2ciOiJzdWNjZXNzIiwic3RhdHVzIjoyMDAsInJlc3VsdCI6eyJ0b3RTZXJ2aWNlQ291bnQiOjExLCJ0b3RSZXBhaXJDb3VudCI6MCwidG90U2NoZWR1bGVDb3VudCI6MTEsInRvdEVycm9yQ291bnQiOjAsInRvdEJhdHRlcnlFcnJvckNvdW50IjowfX0="
+}

@@ -1,0 +1,1 @@
+const i=()=>{const n=r=>!r||isNaN(r)?0:Math.round(r/1e3*10)/10,u=r=>!r||isNaN(r)?0:Math.round(r/3600);return{meterToKm:n,secondToHour:u,formatDistanceKm:(r,t)=>{const o=n(r);return t?`${t(o)}Km`:`${o}Km`},formatTimeHour:(r,t)=>{const o=u(r);return t?`${t(o)} Hour`:`${o} Hour`}}};export{i as u};

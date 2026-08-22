@@ -1,0 +1,8 @@
+{
+  "method": "GET",
+  "path": "/common/code/code-commons/CKJ",
+  "status": 200,
+  "contentType": "application/json",
+  "bodyEncoding": "base64",
+  "body": "eyJjb2RlIjoiMDAiLCJtc2ciOiJzdWNjZXNzIiwic3RhdHVzIjoyMDAsInJlc3VsdCI6W3siY29kZSI6ImZsZWV0IiwiZ3JvdXBDb2RlIjoiQ0tKIiwiY29kZU5hbWUiOiLtlIzrpr8iLCJyZWdVc2VySWQiOiJhZG1pbiIsInVzZVluIjoiWSIsImNvZGVPcmRlciI6MX0seyJjb2RlIjoicmVudGFsIiwiZ3JvdXBDb2RlIjoiQ0tKIiwiY29kZU5hbWUiOiLroIztg4giLCJyZWdVc2VySWQiOiJhZG1pbiIsInVzZVluIjoiWSIsImNvZGVPcmRlciI6Mn0seyJjb2RlIjoiZGVhbGVyIiwiZ3JvdXBDb2RlIjoiQ0tKIiwiY29kZU5hbWUiOiLrlJzrn6wiLCJyZWdVc2VySWQiOiJhZG1pbiIsInVzZVluIjoiWSIsImNvZGVPcmRlciI6M31dfQ=="
+}

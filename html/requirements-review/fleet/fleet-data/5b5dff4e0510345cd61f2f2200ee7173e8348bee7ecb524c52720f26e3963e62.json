@@ -1,0 +1,8 @@
+{
+  "method": "GET",
+  "path": "/common/user/user/equipment-stock",
+  "status": 200,
+  "contentType": "application/json",
+  "bodyEncoding": "base64",
+  "body": "eyJjb2RlIjoiMDAiLCJtc2ciOiJzdWNjZXNzIiwic3RhdHVzIjoyMDAsInJlc3VsdCI6eyJlcXVpcG1lbnRTdG9ja0ZsYWciOiJZIiwidG1zRmxhZyI6IlkifX0="
+}

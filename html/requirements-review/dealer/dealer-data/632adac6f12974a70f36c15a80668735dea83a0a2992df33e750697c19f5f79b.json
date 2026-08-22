@@ -1,0 +1,8 @@
+{
+  "method": "GET",
+  "path": "/common/map/geofence/area",
+  "status": 200,
+  "contentType": "application/json",
+  "bodyEncoding": "base64",
+  "body": "eyJjb2RlIjoiMDIiLCJtc2ciOiJSZXF1ZXN0IG1ldGhvZCAmIzM5O0dFVCYjMzk7IGlzIG5vdCBzdXBwb3J0ZWQiLCJzdGF0dXMiOjIwMCwicmVzdWx0IjpudWxsfQ=="
+}

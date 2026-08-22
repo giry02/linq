@@ -1,0 +1,8 @@
+{
+  "method": "GET",
+  "path": "/fleet/admin/equipment/FBA34-000522",
+  "status": 200,
+  "contentType": "application/json",
+  "bodyEncoding": "base64",
+  "body": "eyJjb2RlIjoiMDAiLCJtc2ciOiJzdWNjZXNzIiwic3RhdHVzIjoyMDAsInJlc3VsdCI6eyJlcXVpcG1lbnRJZCI6IkZCQTM0LTAwMDUyMiIsImVxdWlwbWVudE51bWJlciI6IkZCQTM0XzIyNDI1MDI3NyIsImVxdWlwbWVudE5hbWUiOiJCMzVTLTcjIyMiLCJ0ZXJtaW5hbElkIjoyMjQyNTAyNzcsIm1vZGVsWWVhciI6Im51bGwiLCJyZW50YWxZbiI6Ik4iLCJlcXVpcG1lbnRDb2RlSWQiOjczOCwiY29kZU5hbWUiOiJCMzVTLTciLCJ0eXBlQ29kZSI6Ik1PVE9SIiwidHlwZUNvZGVOYW1lIjoi7KCE64+ZIiwiZnVlbFR5cGVDb2RlIjpudWxsLCJmdWVsVHlwZUNvZGVOYW1lIjpudWxsLCJtYWtlckNvZGUiOiJEb29zYW4iLCJlcXVpcG1lbnRDb2RlIjoiRkJBMzQiLCJncm91cElkIjoxOTQ4LCJncm91cE5hbWUiOiLquLDrs7jqt7jro7kiLCJjdW11bGF0aXZlRGlzdGFuY2UiOjAuMCwiY3VtdWxhdGl2ZVRpbWVWYWwiOjB9fQ=="
+}

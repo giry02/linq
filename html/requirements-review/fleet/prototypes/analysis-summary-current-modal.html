@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MACHINE IQ · 운행이력 요약정보 · 2안</title>
+  <link rel="stylesheet" href="../assets/local-fonts.css">
+  <link rel="stylesheet" href="./analysis-summary-prototype.css">
+</head>
+<body data-layout="current">
+  <div id="wrap">
+    <header class="page-head">
+      <div class="page-head__inner">
+        <a class="page-head__logo" href="../" aria-label="Bobcat MACHINE IQ"><img src="../favicon.ico" alt=""><strong>Bobcat</strong><span>MACHINE IQ</span></a>
+        <nav class="page-head__nav" aria-label="주 메뉴">
+          <button type="button" data-global="대시보드">대시보드</button><button type="button" data-global="차량관리">차량관리</button><button type="button" class="active" data-global="운행이력">운행이력</button><button type="button" data-global="서비스">서비스</button><button type="button" data-global="리포트">리포트</button><button type="button" data-global="지도">지도</button><button type="button" data-global="관리기능">관리기능</button>
+        </nav>
+        <div class="page-head__account"><span id="account"></span><button type="button">로그아웃</button></div>
+      </div>
+    </header>
+    <div class="page-body">
+      <aside class="local-side">
+        <div class="local-side__inner">
+          <div class="page-side">
+            <div class="page-side__title" id="selected-company"></div>
+            <div class="page-side__content">
+              <div class="page-side__search"><fieldset class="search-input"><input id="current-vehicle-search" type="search" placeholder="그룹 또는 차량"><button type="button" aria-label="검색">⌕</button></fieldset></div>
+              <div class="page-side__list">
+                <section class="side-wrap">
+                  <div class="side-wrap__header active"><div class="side-wrap__title">그룹별</div><button class="side-wrap__button opened" type="button">⌃</button></div>
+                  <div class="side-wrap__body opened"><button class="side-item type2 active" type="button"><em>기본그룹</em></button><button class="side-item type2" type="button"><em>테스트그룹</em></button></div>
+                </section>
+                <section class="side-wrap vehicle-wrap">
+                  <div class="side-wrap__header"><div class="side-wrap__title">차량</div><button class="side-wrap__button" id="vehicle-list-toggle" type="button">⌄</button></div>
+                  <div class="side-wrap__body" id="current-vehicles"></div>
+                </section>
+              </div>
+            </div>
+          </div>
+        </div>
+      </aside>
+      <button class="local-side-func" type="button" aria-label="좌측 메뉴 접기">‹</button>
+      <main class="local-body">
+        <section class="content-path"><span>⌂</span><span>운행이력</span><span id="breadcrumb-current">요약정보</span></section>
+        <div class="content-head">
+          <div class="content-head__main"><h3 id="page-title">요약정보</h3><div class="content-head__dataset">- <span id="dataset-name">기본그룹</span></div></div>
+          <div class="filter-form"><div class="period-tabs"><button>일</button><button>주</button><button class="active">월</button><button>사용자설정</button></div><input disabled value="2026. 08. 01."><span>~</span><input disabled value="2026. 08. 17."><button class="primary-button" type="button">조회</button></div>
+        </div>
+        <div class="content-body"><div class="display-table" id="summary-table"></div><div class="vehicle-cards" id="vehicle-cards"></div></div>
+      </main>
+    </div>
+    <footer class="page-foot"><strong>Bobcat <span>MACHINE IQ</span></strong><p>이용약관　 위치정보 및 위치기반서비스 이용약관　 개인(위치)정보 처리방침　 오픈소스 고지</p><p>©2024 Bobcat Company. ALL RIGHTS RESERVED.</p></footer>
+  </div>
+
+  <div class="modal-backdrop" id="modal-backdrop" hidden>
+    <section class="vehicle-modal" role="dialog" aria-modal="true" aria-labelledby="modal-vehicle-id">
+      <header class="modal-head"><img id="vehicle-image" src="../assets/images/B20253032S7.jpg" alt="선택 차량"><div><h2 id="modal-vehicle-id"></h2><p id="modal-vehicle-meta"></p><strong id="modal-overall"></strong></div><button id="modal-close" type="button" aria-label="닫기">×</button></header>
+      <div class="modal-body"><table class="health-table"><thead><tr><th>상태 항목</th><th>현재 상태</th><th>설명</th><th>기능 이동</th></tr></thead><tbody id="health-grid"></tbody></table><p class="modal-note">이 화면의 기능 이동 버튼을 선택한 경우에만 차량 ID를 다음 화면에 전달합니다. 상단 주 메뉴는 선택 업체 기준으로 이동합니다.</p></div>
+    </section>
+  </div>
+  <div class="toast" id="toast" hidden></div>
+  <script src="./analysis-summary-prototype.js" defer></script>
+</body>
+</html>

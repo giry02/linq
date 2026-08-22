@@ -1,0 +1,8 @@
+{
+  "method": "GET",
+  "path": "/common/code/type-code",
+  "status": 200,
+  "contentType": "application/json",
+  "bodyEncoding": "base64",
+  "body": "eyJjb2RlIjoiMDAiLCJtc2ciOiJzdWNjZXNzIiwic3RhdHVzIjoyMDAsInJlc3VsdCI6W3siZnVlbFR5cGVDb2RlIjoiTEkiLCJmdWVsVHlwZUNvZGVOYW1lIjoi66as7YqsIiwidHlwZUNvZGVSZXNMaXN0IjpbeyJlcXVpcG1lbnRDb2RlSWQiOjcxNCwiZXF1aXBtZW50Q29kZU5hbWUiOiJCMzBTLTcifSx7ImVxdWlwbWVudENvZGVJZCI6NzM4LCJlcXVpcG1lbnRDb2RlTmFtZSI6IkIzNVMtNyJ9XX1dfQ=="
+}

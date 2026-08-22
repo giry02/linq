@@ -1,0 +1,8 @@
+{
+  "method": "GET",
+  "path": "/fleet/management/company/daily-summary?startDate=20260813&endDate=20260813",
+  "status": 200,
+  "contentType": "application/json",
+  "bodyEncoding": "base64",
+  "body": "eyJjb2RlIjoiMDAiLCJtc2ciOiJzdWNjZXNzIiwic3RhdHVzIjoyMDAsInJlc3VsdCI6eyJkaXN0YW5jZSI6MjgxLjAsIm9wZXJhdGluZ1RpbWUiOjgxNS4wLCJzdHJEaXN0YW5jZSI6IjI4MUttIiwic3RyT3BlcmF0aW5nVGltZSI6IjgxNEggNTBNIiwic2hvY2tDb3VudCI6MjQ1LCJzaG9jazFDb3VudCI6MTI2NSwic2hvY2syQ291bnQiOjM2Mywic2hvY2szQ291bnQiOjExOSwic2hvY2s0Q291bnQiOjEyMiwic2hvY2s1Q291bnQiOjQsImVycm9yQ291bnQiOjEwLCJiYXR0ZXJ5RXJyb3JDb3VudCI6MjAsImluc3BlY3Rpb25Db3VudCI6bnVsbCwic2NoZWR1bGVDb3VudCI6MjEzLCJyZXBhaXJDb3VudCI6bnVsbCwiZ2VvZmVuY2VDb3VudCI6bnVsbCwidGltZWZlbmNlQ291bnQiOm51bGwsImVxdWlwbWVudENvdW50IjoxMDIsIndvcmtpbmdFcXVpcG1lbnRDb3VudCI6ODQsImVmZmljaWVuY3kiOjYxLjh9fQ=="
+}

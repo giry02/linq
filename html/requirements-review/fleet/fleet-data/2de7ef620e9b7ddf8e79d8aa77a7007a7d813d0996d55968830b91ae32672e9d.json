@@ -1,0 +1,8 @@
+{
+  "method": "GET",
+  "path": "/fleet/dashboard/summary?startDate=20260801&endDate=20260813",
+  "status": 200,
+  "contentType": "application/json",
+  "bodyEncoding": "base64",
+  "body": "eyJjb2RlIjoiMDAiLCJtc2ciOiJzdWNjZXNzIiwic3RhdHVzIjoyMDAsInJlc3VsdCI6W3siZnVlbFR5cGVDb2RlIjoiTEkiLCJmdWVsVHlwZUNvZGVOYW1lIjoi66as7YqsIiwiZXF1aXBtZW50Q250IjoyMSwiZXF1aXBtZW50UGVyY2VudGFnZSI6MTAwLjAsIm9wZXJhdGluZ1RpbWUiOjE3MzIyLCJzdHJPcGVyVGltZSI6IjI4OEgiLCJlZmZpY2llbmN5Ijo1My45fV19"
+}

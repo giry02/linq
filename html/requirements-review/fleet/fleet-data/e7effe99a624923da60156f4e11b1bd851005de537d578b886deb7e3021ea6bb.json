@@ -1,0 +1,8 @@
+{
+  "method": "GET",
+  "path": "/fleet/analysis/summary-equipment-group?groupId=1948&startDate=20260801&endDate=20260813&pageNo=2&pageSize=20",
+  "status": 200,
+  "contentType": "application/json",
+  "bodyEncoding": "base64",
+  "body": "eyJjb2RlIjoiMDAiLCJtc2ciOiJzdWNjZXNzIiwic3RhdHVzIjoyMDAsInJlc3VsdCI6W10sInBhZ2VObyI6MiwicGFnZVNpemUiOjIwLCJ0b3RhbCI6MTN9"
+}

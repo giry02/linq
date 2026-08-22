@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MACHINE IQ · Operation History Summary · English Sample</title>
+  <link rel="stylesheet" href="../assets/local-fonts.css">
+  <link rel="stylesheet" href="./analysis-summary-prototype.css">
+</head>
+<body data-layout="top" data-view="compact-list">
+  <div id="wrap">
+    <header class="page-head">
+      <div class="page-head__inner">
+        <a class="page-head__logo" href="../" aria-label="Bobcat MACHINE IQ">
+          <img src="../favicon.ico" alt=""><strong>Bobcat</strong><span>MACHINE IQ</span>
+        </a>
+        <nav class="page-head__nav" aria-label="Main navigation">
+          <button type="button">Dashboard</button>
+          <button type="button">Vehicles</button>
+          <button type="button" class="active">Operation History</button>
+          <button type="button">Service</button>
+          <button type="button">Reports</button>
+          <button type="button">Map</button>
+          <button type="button">Admin</button>
+        </nav>
+        <div class="page-head__account"><span>Test_Fleet2_Admin · Administrator</span><button type="button">Log out</button></div>
+      </div>
+    </header>
+
+    <section class="top-selection collapsed" aria-label="Company and vehicle selection">
+      <div class="top-selection__inner">
+        <strong>View Target</strong>
+        <label><span>Company</span><select><option>Jungwon Construction Equipment</option></select></label>
+        <label><span>Vehicle</span><select><option>FBA32-002415 · B30S-7</option></select></label>
+        <span class="selection-context">Current view · FBA32-002415</span>
+        <button class="line-button" type="button">Advanced Vehicle Search</button>
+      </div>
+    </section>
+
+    <div class="page-body">
+      <aside class="local-side analysis-side">
+        <div class="local-side__inner">
+          <div class="page-side">
+            <div class="page-side__title">Operation History</div>
+            <div class="page-side__content">
+              <nav class="analysis-menu-list" aria-label="Operation history navigation">
+                <button class="side-item type2 active" type="button"><em>Summary</em></button>
+                <button class="side-item type2" type="button"><em>Usage Time</em></button>
+                <button class="side-item type2" type="button"><em>Operating Efficiency</em></button>
+                <button class="side-item type2" type="button"><em>Impact</em></button>
+                <button class="side-item type2" type="button"><em>Engine</em></button>
+                <button class="side-item type2" type="button"><em>Lithium Battery</em></button>
+                <button class="side-item type2" type="button"><em>Hydrogen</em></button>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </aside>
+      <button class="local-side-func" type="button" aria-label="Collapse navigation">‹</button>
+
+      <main class="local-body">
+        <section class="content-path"><span>⌂</span><span>Operation History</span><span>Summary</span></section>
+        <div class="content-head">
+          <div class="content-head__main"><h3>Summary</h3><div class="content-head__dataset">- <span>FBA32-002415</span></div></div>
+          <div class="filter-form">
+            <div class="period-tabs"><button>Day</button><button>Week</button><button class="active">Month</button><button>Custom</button></div>
+            <input disabled value="2026. 08. 01."><span>~</span><input disabled value="2026. 08. 17."><button class="primary-button" type="button">Search</button>
+          </div>
+        </div>
+
+        <div class="content-body">
+          <div class="display-table">
+            <table class="summary-one-line">
+              <thead><tr><th>Vehicle</th><th>Operating Rate</th><th>Operating Efficiency</th><th>Impact Count</th><th>Distance</th><th>Time</th><th>Avg. Fuel Consumption</th><th>Avg. Battery Consumption</th></tr></thead>
+              <tbody><tr><td>FBA32-002415 (B30S-7)</td><td>119.6%</td><td>80.7%</td><td>0</td><td>148km</td><td>143H 33M</td><td>-</td><td>0kWh</td></tr></tbody>
+            </table>
+          </div>
+
+          <div class="vehicle-cards">
+            <div class="compact-list-head">
+              <strong>Selected Vehicle 1 <small>Operating data available</small></strong>
+              <div class="fuel-legend" aria-label="Power type">
+                <span><i class="fuel-icon lithium"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="6" width="15" height="12" rx="2"/><path d="M19 10h2v4h-2M11 8.5 8.5 13H12l-1 3 4-5h-3z"/></svg></i>Lithium</span>
+              </div>
+            </div>
+
+            <div class="compact-card-list">
+              <article class="compact-vehicle-card lithium">
+                <div class="compact-card__icon"><i class="fuel-icon lithium"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="6" width="15" height="12" rx="2"/><path d="M19 10h2v4h-2M11 8.5 8.5 13H12l-1 3 4-5h-3z"/></svg></i></div>
+                <div class="compact-card__body">
+                  <div class="compact-card__head">
+                    <div class="compact-card__identity"><strong>FBA32-002415</strong><span>B30S-7</span><b class="fuel-type-badge lithium"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="6" width="15" height="12" rx="2"/><path d="M19 10h2v4h-2M11 8.5 8.5 13H12l-1 3 4-5h-3z"/></svg><span>Lithium</span></b></div>
+                    <div class="compact-card__status">
+                      <span class="health-badge normal">Normal</span>
+                      <span class="connection-badge connected">● Connected</span>
+                      <span class="energy-label">Battery Remaining</span><i class="energy-gauge lithium"><b style="width:80%"></b></i><strong class="energy-value">80%</strong>
+                    </div>
+                  </div>
+                  <div class="compact-card__info">
+                    <div><span>Company</span><strong title="Jungwon Construction Equipment">Jungwon Construction Equipment</strong></div>
+                    <div><span>Group</span><strong>Default Group</strong></div>
+                    <div><span>Power Type</span><strong>Lithium</strong></div>
+                    <div><span>Total Distance</span><strong>148km</strong></div>
+                    <div><span>Total Operating Time</span><strong>143H 33M</strong></div>
+                    <div><span>TMS Device Serial</span><strong>32002415</strong></div>
+                  </div>
+                  <div class="compact-card__metrics">
+                    <div><span>Operating Rate <small class="period-basis">Monthly</small></span><strong>119.6%</strong></div>
+                    <div><span>Operating Efficiency <small class="period-basis">Monthly</small></span><strong>80.7%</strong></div>
+                    <div><span>Impact Count <small class="period-basis">Monthly</small></span><strong>0</strong></div>
+                    <div><span>Period Distance <small class="period-basis">Monthly</small></span><strong>148km</strong></div>
+                    <div><span>Period Operating Time <small class="period-basis">Monthly</small></span><strong>143H 33M</strong></div>
+                    <div><span>Avg. Battery Consumption <small class="period-basis">Monthly</small></span><strong>0kWh</strong></div>
+                  </div>
+                </div>
+              </article>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <footer class="page-foot"><strong>Bobcat <span>MACHINE IQ</span></strong><p>Terms of Use　 Location-Based Service Terms　 Privacy Policy　 Open Source Notices</p><p>©2024 Bobcat Company. ALL RIGHTS RESERVED.</p></footer>
+  </div>
+</body>
+</html>

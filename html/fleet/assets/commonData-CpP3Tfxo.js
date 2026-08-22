@@ -1,0 +1,1 @@
+import"./index-dGkWfo-f.js";import{g as n}from"./api.util-DPWM_tWc.js";const a=()=>({getComponentCode:async(e,t=[])=>(await n(`/common/code/code-commons/${e}`))?.map(o=>({value:o.code,label:o.codeName}))||t});export{a as u};

@@ -1,0 +1,8 @@
+{
+  "method": "GET",
+  "path": "/fleet/analysis/la/summary/group/1948?equipmentId=&periodTypeCode=monthly&startDate=20260801",
+  "status": 200,
+  "contentType": "application/json",
+  "bodyEncoding": "base64",
+  "body": "eyJjb2RlIjoiMDAiLCJtc2ciOiJzdWNjZXNzIiwic3RhdHVzIjoyMDAsInJlc3VsdCI6eyJzdGRMYUFoaCI6bnVsbCwicHJldkxhQWhoIjpudWxsLCJhdmdMYUFoaCI6bnVsbCwic3RkTGFBY2MiOm51bGwsInByZXZMYUFjYyI6bnVsbCwiYXZnTGFBY2MiOm51bGx9fQ=="
+}

@@ -1,0 +1,25 @@
+/* Local review/capture layout: keep the global header and footer in flow. */
+.page-head {
+  position: relative !important;
+  top: auto !important;
+  right: auto !important;
+  left: auto !important;
+  min-width: 0 !important;
+}
+
+.page-foot {
+  position: relative !important;
+  bottom: auto !important;
+  min-width: 0 !important;
+}
+
+#wrap {
+  min-width: 0 !important;
+  overflow-x: hidden !important;
+}
+
+@media (max-width: 1399px) {
+  :root {
+    font-size: .75px !important;
+  }
+}

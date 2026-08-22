@@ -1,0 +1,8 @@
+{
+  "method": "GET",
+  "path": "/fleet/admin/user/youngmin.sim@doosan.com/groups",
+  "status": 200,
+  "contentType": "application/json",
+  "bodyEncoding": "base64",
+  "body": "eyJjb2RlIjoiMDAiLCJtc2ciOiJzdWNjZXNzIiwic3RhdHVzIjoyMDAsInJlc3VsdCI6W3siZ3JvdXBJZCI6NDAxLCJncm91cE5hbWUiOiLquLDrs7jqt7jro7kiLCJkZWZhdWx0R3JvdXBZbiI6IlkifV19"
+}

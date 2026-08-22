@@ -1,0 +1,8 @@
+{
+  "method": "GET",
+  "path": "/common/user/users",
+  "status": 200,
+  "contentType": "application/json",
+  "bodyEncoding": "base64",
+  "body": "eyJjb2RlIjoiMDAiLCJtc2ciOiJzdWNjZXNzIiwic3RhdHVzIjoyMDAsInJlc3VsdCI6W3sidXNlcklkIjoiVGVzdF9EZWFsZXIyX0FkbWluIiwidXNlck5hbWUiOiLqsr3rgqjspJHrtoAgLSDqtIDrpqzsnpAifSx7InVzZXJJZCI6IlRlc3RfRGVhbGVyMl9FbXBsb3llZSIsInVzZXJOYW1lIjoi6rK964Ko7KSR67aAIC0g7KeB7JuQIn0seyJ1c2VySWQiOiJ5b3VuZ21pbi5zaW1AZG9vc2FuLmNvbSIsInVzZXJOYW1lIjoi7J6Q64+Z7IOd7ISxIn1dfQ=="
+}

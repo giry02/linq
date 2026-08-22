@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="theme-color" content="#ff3600">
+  <title>MACHINE IQ 딜러 앱 · 대시보드형</title><link rel="stylesheet" href="../../assets/local-fonts.css"><link rel="stylesheet" href="./variants.css">
+</head>
+<body class="theme-web layout-dashboard">
+  <div class="prototype-app">
+    <header class="topbar"><a class="logo" href="#" aria-label="Bobcat Machine IQ 홈"><strong>Bobcat</strong><span>MACHINE IQ</span></a><div class="top-actions"><button class="icon-button" type="button" data-action="새 알림 2건이 있습니다." aria-label="알림"><i class="bell-icon"></i><b class="badge">2</b></button></div></header>
+    <main class="page">
+      <h1 class="page-title">대시보드</h1><small class="period" data-period></small>
+      <div class="dashboard-search"><label class="search"><i data-lucide="search"></i><input type="search" placeholder="호기·기종·고객명 검색"></label><button type="button" data-action="차량 검색을 실행합니다." aria-label="검색"><i data-lucide="search"></i></button></div>
+      <section class="dashboard-kpis" aria-label="주요 업무 지표">
+        <button class="dashboard-kpi is-danger" data-action="통합 차량 에러 목록으로 이동합니다."><i data-lucide="triangle-alert"></i><span>차량 에러</span><strong data-error-count></strong><small>차량·배터리</small></button>
+        <button class="dashboard-kpi is-warning" data-action="소모품 도래 목록으로 이동합니다."><i data-lucide="refresh-cw"></i><span>소모품 도래</span><strong data-supply-count></strong><small>교체 대상</small></button>
+        <button class="dashboard-kpi" data-action="전체 서비스로 이동합니다."><i data-lucide="layout-grid"></i><span>전체 서비스</span><strong data-service-count></strong><small>전체 업무</small></button>
+      </section>
+      <section class="dashboard-panel">
+        <div class="dashboard-panel__head"><h2>에러 구성</h2><span>현재 기준</span></div>
+        <div class="distribution"><div class="donut"><span>통합 에러<strong>210</strong></span></div><div class="legend"><div class="legend-row"><i></i><span>차량 에러</span><strong>43</strong></div><div class="legend-row"><i></i><span>배터리 에러</span><strong>167</strong></div><div class="legend-row"><i></i><span>정비 진행</span><strong>없음</strong></div></div></div>
+      </section>
+      <section class="dashboard-panel">
+        <div class="dashboard-panel__head"><h2>업무 처리 현황</h2><span>이번 달</span></div>
+        <div class="progress-list"><div class="progress-row"><header><span>에러 확인</span><strong>72%</strong></header><div class="progress-track"><i style="width:72%"></i></div></div><div class="progress-row"><header><span>소모품 확인</span><strong>48%</strong></header><div class="progress-track"><i style="width:48%"></i></div></div></div>
+      </section>
+      <section class="dashboard-panel">
+        <div class="dashboard-panel__head"><h2>최근 알림</h2><span>2건</span></div>
+        <button class="dashboard-alert" data-action="FBA34-000637 상세 화면으로 이동합니다."><i data-lucide="triangle-alert"></i><span><strong>FBA34-000637 · 차량 에러</strong><small>핑거팁 컨트롤러 CAN 통신 이상</small></span><time>15:43</time></button>
+        <button class="dashboard-alert" data-action="FBA30_225060326 상세 화면으로 이동합니다."><i data-lucide="refresh-cw"></i><span><strong>FBA30_225060326 · 소모품</strong><small>트랜스미션 오일 교체 기준 초과</small></span><time>08.13</time></button>
+      </section>
+    </main>
+    <nav class="bottom-nav" aria-label="주 메뉴"><button class="is-active"><i data-lucide="house"></i><span>홈</span></button><button data-action="차량 메뉴로 이동합니다."><i data-lucide="truck"></i><span>차량</span></button><button data-action="서비스 메뉴로 이동합니다."><i data-lucide="wrench"></i><span>서비스</span></button><button data-action="설정 메뉴로 이동합니다."><i data-lucide="settings"></i><span>설정</span></button></nav>
+  </div><div class="toast" role="status" hidden></div><script src="../data.js"></script><script src="./vendor/lucide.min.js"></script><script src="./variants.js"></script>
+</body>
+</html>

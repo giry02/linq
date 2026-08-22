@@ -1,0 +1,8 @@
+{
+    "method":  "GET",
+    "path":  "/fleet/management/equipment/summary-operation?endDate=20260813\u0026equipmentId=FBA32_224250271\u0026startDate=20260801",
+    "status":  200,
+    "contentType":  "application/json",
+    "bodyEncoding":  "base64",
+    "body":  "eyJjb2RlIjoiMDAiLCJtc2ciOiJzdWNjZXNzIiwic3RhdHVzIjoyMDAsInJlc3VsdCI6eyJkaXN0YW5jZSI6NzQuMCwib3BlcmF0aW5nVGltZSI6MzMuMCwic3RyRGlzdGFuY2UiOiI3NEttIiwic3RyT3BlcmF0aW5nVGltZSI6IjMzSCAxTSIsInNob2NrQ291bnQiOjEsInNob2NrMUNvdW50Ijo0MCwic2hvY2syQ291bnQiOjAsInNob2NrM0NvdW50IjoxLCJzaG9jazRDb3VudCI6MCwic2hvY2s1Q291bnQiOjAsInJlcGFpckNvdW50IjowLCJlcnJvckNvdW50IjowLCJiYXR0ZXJ5RXJyb3JDb3VudCI6MH19"
+}

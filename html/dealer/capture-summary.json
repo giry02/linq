@@ -1,0 +1,1082 @@
+[
+  {
+    "path": "/common/auth/valid-token",
+    "http": 200,
+    "code": "00",
+    "bytes": 56
+  },
+  {
+    "path": "/common/code/code-commons/ATF",
+    "http": 200,
+    "code": "00",
+    "bytes": 1305
+  },
+  {
+    "path": "/common/code/code-commons/CKJ",
+    "http": 200,
+    "code": "00",
+    "bytes": 358
+  },
+  {
+    "path": "/common/code/code-commons/INF",
+    "http": 200,
+    "code": "00",
+    "bytes": 202262
+  },
+  {
+    "path": "/common/code/code-commons/INL",
+    "http": 200,
+    "code": "00",
+    "bytes": 1821
+  },
+  {
+    "path": "/common/code/type-code",
+    "http": 200,
+    "code": "00",
+    "bytes": 1010
+  },
+  {
+    "path": "/common/company/groups",
+    "http": 200,
+    "code": "00",
+    "bytes": 2290
+  },
+  {
+    "path": "/common/holidays/company",
+    "http": 200,
+    "code": "00",
+    "bytes": 54
+  },
+  {
+    "path": "/common/map/geofence/area",
+    "http": 200,
+    "code": "02",
+    "bytes": 94
+  },
+  {
+    "path": "/common/map/geofence/group/1948",
+    "http": 200,
+    "code": "00",
+    "bytes": 54
+  },
+  {
+    "path": "/common/map/geofence/group/20467",
+    "http": 200,
+    "code": "00",
+    "bytes": 54
+  },
+  {
+    "path": "/common/map/geofence/group/34304",
+    "http": 200,
+    "code": "00",
+    "bytes": 54
+  },
+  {
+    "path": "/common/map/geofence/group/418",
+    "http": 200,
+    "code": "00",
+    "bytes": 54
+  },
+  {
+    "path": "/common/map/geofence/group/equipments?companyId=151",
+    "http": 200,
+    "code": "00",
+    "bytes": 26705
+  },
+  {
+    "path": "/common/map/geofence/group/equipments?groupId=1948",
+    "http": 200,
+    "code": "00",
+    "bytes": 4092
+  },
+  {
+    "path": "/common/map/geofence/group/equipments?groupId=20467",
+    "http": 200,
+    "code": "00",
+    "bytes": 14966
+  },
+  {
+    "path": "/common/map/geofence/group/equipments?groupId=34304",
+    "http": 200,
+    "code": "00",
+    "bytes": 1336
+  },
+  {
+    "path": "/common/map/geofence/group/equipments?groupId=418",
+    "http": 200,
+    "code": "00",
+    "bytes": 1028
+  },
+  {
+    "path": "/common/timezones",
+    "http": 200,
+    "code": "00",
+    "bytes": 29783
+  },
+  {
+    "path": "/common/user/user",
+    "http": 200,
+    "code": "00",
+    "bytes": 413
+  },
+  {
+    "path": "/common/user/user/equipment-stock",
+    "http": 200,
+    "code": "00",
+    "bytes": 92
+  },
+  {
+    "path": "/common/user/users",
+    "http": 200,
+    "code": "00",
+    "bytes": 256
+  },
+  {
+    "path": "/common/workingtime/company",
+    "http": 200,
+    "code": "00",
+    "bytes": 219
+  },
+  {
+    "path": "/common/workingtime/group/1948/current",
+    "http": 200,
+    "code": "00",
+    "bytes": 203
+  },
+  {
+    "path": "/common/workingtime/group/20467/current",
+    "http": 200,
+    "code": "00",
+    "bytes": 203
+  },
+  {
+    "path": "/common/workingtime/group/34304/current",
+    "http": 200,
+    "code": "00",
+    "bytes": 203
+  },
+  {
+    "path": "/common/workingtime/group/418/current",
+    "http": 200,
+    "code": "00",
+    "bytes": 203
+  },
+  {
+    "path": "/fleet/admin/account/companys",
+    "http": 200,
+    "code": "00",
+    "bytes": 76148
+  },
+  {
+    "path": "/fleet/admin/account/requests",
+    "http": 200,
+    "code": "00",
+    "bytes": 89
+  },
+  {
+    "path": "/fleet/admin/all-companies",
+    "http": 200,
+    "code": null,
+    "bytes": 8025
+  },
+  {
+    "path": "/fleet/admin/all-equipments",
+    "http": 200,
+    "code": null,
+    "bytes": 10928
+  },
+  {
+    "path": "/fleet/admin/companies?searchKeyword=&sortCol=companyId+DESC&pageNo=1&pageSize=30",
+    "http": 200,
+    "code": "00",
+    "bytes": 5891
+  },
+  {
+    "path": "/fleet/admin/equipment/companys",
+    "http": 200,
+    "code": "00",
+    "bytes": 9262
+  },
+  {
+    "path": "/fleet/admin/equipment/requests",
+    "http": 200,
+    "code": "00",
+    "bytes": 89
+  },
+  {
+    "path": "/fleet/admin/equipments?searchKeyword=&sortCol=equipmentId+DESC&pageNo=1&pageSize=30",
+    "http": 200,
+    "code": "00",
+    "bytes": 12434
+  },
+  {
+    "path": "/fleet/admin/groups?searchKeyword=&sortCol=groupId+DESC&pageNo=1&pageSize=30",
+    "http": 200,
+    "code": "00",
+    "bytes": 660
+  },
+  {
+    "path": "/fleet/admin/users?searchKeyword=&sortCol=userId+ASC&pageNo=1&pageSize=20",
+    "http": 200,
+    "code": "00",
+    "bytes": 1036
+  },
+  {
+    "path": "/fleet/analysis/calendar/company/151?companyId=151&periodTypeCode=monthly&startDate=20260801",
+    "http": 200,
+    "code": "00",
+    "bytes": 5224
+  },
+  {
+    "path": "/fleet/analysis/calendar/equipment/FBA32_224250271?periodTypeCode=monthly&startDate=20260801",
+    "http": 200,
+    "code": "00",
+    "bytes": 5212
+  },
+  {
+    "path": "/fleet/analysis/calendar/equipment/FBA32-002044?periodTypeCode=monthly&startDate=20260801",
+    "http": 200,
+    "code": "00",
+    "bytes": 5165
+  },
+  {
+    "path": "/fleet/analysis/calendar/equipment/FBA32-002415?periodTypeCode=monthly&startDate=20260801",
+    "http": 200,
+    "code": "00",
+    "bytes": 5187
+  },
+  {
+    "path": "/fleet/analysis/calendar/equipment/FBA36-003906?periodTypeCode=monthly&startDate=20260801",
+    "http": 200,
+    "code": "00",
+    "bytes": 5293
+  },
+  {
+    "path": "/fleet/analysis/calendar/group/1948?groupId=1948&periodTypeCode=monthly&startDate=20260801",
+    "http": 200,
+    "code": "00",
+    "bytes": 5364
+  },
+  {
+    "path": "/fleet/analysis/calendar/group/20467?groupId=20467&periodTypeCode=monthly&startDate=20260801",
+    "http": 200,
+    "code": "00",
+    "bytes": 5378
+  },
+  {
+    "path": "/fleet/analysis/calendar/group/34304?groupId=34304&periodTypeCode=monthly&startDate=20260801",
+    "http": 200,
+    "code": "00",
+    "bytes": 5420
+  },
+  {
+    "path": "/fleet/analysis/calendar/group/418?groupId=418&periodTypeCode=monthly&startDate=20260801",
+    "http": 200,
+    "code": "00",
+    "bytes": 5350
+  },
+  {
+    "path": "/fleet/analysis/fuel/graph/company/151?equipmentId=&periodTypeCode=monthly&startDate=20260801",
+    "http": 200,
+    "code": "00",
+    "bytes": 2278
+  },
+  {
+    "path": "/fleet/analysis/fuel/graph/group/1948?equipmentId=&periodTypeCode=monthly&startDate=20260801",
+    "http": 200,
+    "code": "00",
+    "bytes": 2288
+  },
+  {
+    "path": "/fleet/analysis/fuel/graph/group/20467?equipmentId=&periodTypeCode=monthly&startDate=20260801",
+    "http": 200,
+    "code": "00",
+    "bytes": 2289
+  },
+  {
+    "path": "/fleet/analysis/fuel/graph/group/34304?equipmentId=&periodTypeCode=monthly&startDate=20260801",
+    "http": 200,
+    "code": "00",
+    "bytes": 2292
+  },
+  {
+    "path": "/fleet/analysis/fuel/graph/group/418?equipmentId=&periodTypeCode=monthly&startDate=20260801",
+    "http": 200,
+    "code": "00",
+    "bytes": 2287
+  },
+  {
+    "path": "/fleet/analysis/fuel/summary/company/151?equipmentId=&periodTypeCode=monthly&startDate=20260801",
+    "http": 200,
+    "code": "00",
+    "bytes": 160
+  },
+  {
+    "path": "/fleet/analysis/fuel/summary/group/1948?equipmentId=&periodTypeCode=monthly&startDate=20260801",
+    "http": 200,
+    "code": "00",
+    "bytes": 154
+  },
+  {
+    "path": "/fleet/analysis/fuel/summary/group/20467?equipmentId=&periodTypeCode=monthly&startDate=20260801",
+    "http": 200,
+    "code": "00",
+    "bytes": 160
+  },
+  {
+    "path": "/fleet/analysis/fuel/summary/group/34304?equipmentId=&periodTypeCode=monthly&startDate=20260801",
+    "http": 200,
+    "code": "00",
+    "bytes": 154
+  },
+  {
+    "path": "/fleet/analysis/fuel/summary/group/418?equipmentId=&periodTypeCode=monthly&startDate=20260801",
+    "http": 200,
+    "code": "00",
+    "bytes": 156
+  },
+  {
+    "path": "/fleet/analysis/hi/error/group/1948?periodTypeCode=monthly&startDate=20260801&endDate=20260813",
+    "http": 200,
+    "code": "00",
+    "bytes": 54
+  },
+  {
+    "path": "/fleet/analysis/hi/error/group/20467?periodTypeCode=monthly&startDate=20260801&endDate=20260813",
+    "http": 200,
+    "code": "00",
+    "bytes": 54
+  },
+  {
+    "path": "/fleet/analysis/hi/error/group/34304?periodTypeCode=monthly&startDate=20260801&endDate=20260813",
+    "http": 200,
+    "code": "00",
+    "bytes": 54
+  },
+  {
+    "path": "/fleet/analysis/hi/error/group/418?periodTypeCode=monthly&startDate=20260801&endDate=20260813",
+    "http": 200,
+    "code": "00",
+    "bytes": 54
+  },
+  {
+    "path": "/fleet/analysis/hi/graph/charge/group/1948?equipmentId=FBA32_224250271&periodTypeCode=monthly&startDate=20260801&endDate=20260813",
+    "http": 200,
+    "code": "00",
+    "bytes": 18329
+  },
+  {
+    "path": "/fleet/analysis/hi/graph/charge/group/20467?equipmentId=FBA36-003906&periodTypeCode=monthly&startDate=20260801&endDate=20260813",
+    "http": 200,
+    "code": "00",
+    "bytes": 18325
+  },
+  {
+    "path": "/fleet/analysis/hi/graph/charge/group/34304?equipmentId=FBA32-002044&periodTypeCode=monthly&startDate=20260801&endDate=20260813",
+    "http": 200,
+    "code": "00",
+    "bytes": 18327
+  },
+  {
+    "path": "/fleet/analysis/hi/graph/charge/group/418?equipmentId=FBA32-002415&periodTypeCode=monthly&startDate=20260801&endDate=20260813",
+    "http": 200,
+    "code": "00",
+    "bytes": 18322
+  },
+  {
+    "path": "/fleet/analysis/hi/stat/company/151?pageNo=1&pageSize=20",
+    "http": 200,
+    "code": "00",
+    "bytes": 89
+  },
+  {
+    "path": "/fleet/analysis/hi/stat/equipment/FBA32_224250271",
+    "http": 200,
+    "code": "02",
+    "bytes": 224
+  },
+  {
+    "path": "/fleet/analysis/hi/stat/equipment/FBA32-002044",
+    "http": 200,
+    "code": "02",
+    "bytes": 224
+  },
+  {
+    "path": "/fleet/analysis/hi/stat/equipment/FBA32-002415",
+    "http": 200,
+    "code": "02",
+    "bytes": 224
+  },
+  {
+    "path": "/fleet/analysis/hi/stat/equipment/FBA36-003906",
+    "http": 200,
+    "code": "02",
+    "bytes": 224
+  },
+  {
+    "path": "/fleet/analysis/hi/stat/group/1948?pageNo=1&pageSize=20",
+    "http": 200,
+    "code": "00",
+    "bytes": 89
+  },
+  {
+    "path": "/fleet/analysis/hi/stat/group/20467?pageNo=1&pageSize=20",
+    "http": 200,
+    "code": "00",
+    "bytes": 89
+  },
+  {
+    "path": "/fleet/analysis/hi/stat/group/34304?pageNo=1&pageSize=20",
+    "http": 200,
+    "code": "00",
+    "bytes": 89
+  },
+  {
+    "path": "/fleet/analysis/hi/stat/group/418?pageNo=1&pageSize=20",
+    "http": 200,
+    "code": "00",
+    "bytes": 89
+  },
+  {
+    "path": "/fleet/analysis/la/graph/company/151?equipmentId=&periodTypeCode=monthly&startDate=20260801",
+    "http": 200,
+    "code": "00",
+    "bytes": 1972
+  },
+  {
+    "path": "/fleet/analysis/la/graph/group/1948?equipmentId=&periodTypeCode=monthly&startDate=20260801",
+    "http": 200,
+    "code": "00",
+    "bytes": 1972
+  },
+  {
+    "path": "/fleet/analysis/la/graph/group/20467?equipmentId=&periodTypeCode=monthly&startDate=20260801",
+    "http": 200,
+    "code": "00",
+    "bytes": 2113
+  },
+  {
+    "path": "/fleet/analysis/la/graph/group/34304?equipmentId=&periodTypeCode=monthly&startDate=20260801",
+    "http": 200,
+    "code": "00",
+    "bytes": 1972
+  },
+  {
+    "path": "/fleet/analysis/la/graph/group/418?equipmentId=&periodTypeCode=monthly&startDate=20260801",
+    "http": 200,
+    "code": "00",
+    "bytes": 1972
+  },
+  {
+    "path": "/fleet/analysis/la/summary/company/151?equipmentId=&periodTypeCode=monthly&startDate=20260801",
+    "http": 200,
+    "code": "00",
+    "bytes": 145
+  },
+  {
+    "path": "/fleet/analysis/la/summary/group/1948?equipmentId=&periodTypeCode=monthly&startDate=20260801",
+    "http": 200,
+    "code": "00",
+    "bytes": 151
+  },
+  {
+    "path": "/fleet/analysis/la/summary/group/20467?equipmentId=&periodTypeCode=monthly&startDate=20260801",
+    "http": 200,
+    "code": "00",
+    "bytes": 145
+  },
+  {
+    "path": "/fleet/analysis/la/summary/group/34304?equipmentId=&periodTypeCode=monthly&startDate=20260801",
+    "http": 200,
+    "code": "00",
+    "bytes": 151
+  },
+  {
+    "path": "/fleet/analysis/la/summary/group/418?equipmentId=&periodTypeCode=monthly&startDate=20260801",
+    "http": 200,
+    "code": "00",
+    "bytes": 151
+  },
+  {
+    "path": "/fleet/analysis/li/error/group/1948?equipmentId=FBA32_224250271&periodTypeCode=monthly&startDate=20260801&endDate=20260813",
+    "http": 200,
+    "code": "00",
+    "bytes": 54
+  },
+  {
+    "path": "/fleet/analysis/li/error/group/20467?equipmentId=FBA36-003906&periodTypeCode=monthly&startDate=20260801&endDate=20260813",
+    "http": 200,
+    "code": "00",
+    "bytes": 2125
+  },
+  {
+    "path": "/fleet/analysis/li/error/group/34304?equipmentId=FBA32-002044&periodTypeCode=monthly&startDate=20260801&endDate=20260813",
+    "http": 200,
+    "code": "00",
+    "bytes": 54
+  },
+  {
+    "path": "/fleet/analysis/li/error/group/418?equipmentId=FBA32-002415&periodTypeCode=monthly&startDate=20260801&endDate=20260813",
+    "http": 200,
+    "code": "00",
+    "bytes": 2105
+  },
+  {
+    "path": "/fleet/analysis/li/graph/charge/group/1948?equipmentId=FBA32_224250271&periodTypeCode=monthly&startDate=20260801&endDate=20260813",
+    "http": 200,
+    "code": "00",
+    "bytes": 7000
+  },
+  {
+    "path": "/fleet/analysis/li/graph/charge/group/20467?equipmentId=FBA36-003906&periodTypeCode=monthly&startDate=20260801&endDate=20260813",
+    "http": 200,
+    "code": "00",
+    "bytes": 7196
+  },
+  {
+    "path": "/fleet/analysis/li/graph/charge/group/34304?equipmentId=FBA32-002044&periodTypeCode=monthly&startDate=20260801&endDate=20260813",
+    "http": 200,
+    "code": "00",
+    "bytes": 7057
+  },
+  {
+    "path": "/fleet/analysis/li/graph/charge/group/418?equipmentId=FBA32-002415&periodTypeCode=monthly&startDate=20260801&endDate=20260813",
+    "http": 200,
+    "code": "00",
+    "bytes": 7025
+  },
+  {
+    "path": "/fleet/analysis/li/stat/company/151?pageNo=1&pageSize=20",
+    "http": 200,
+    "code": "00",
+    "bytes": 14351
+  },
+  {
+    "path": "/fleet/analysis/li/stat/equipment/FBA32_224250271",
+    "http": 200,
+    "code": "00",
+    "bytes": 778
+  },
+  {
+    "path": "/fleet/analysis/li/stat/equipment/FBA32-002044",
+    "http": 200,
+    "code": "00",
+    "bytes": 773
+  },
+  {
+    "path": "/fleet/analysis/li/stat/equipment/FBA32-002415",
+    "http": 200,
+    "code": "00",
+    "bytes": 770
+  },
+  {
+    "path": "/fleet/analysis/li/stat/equipment/FBA36-003906",
+    "http": 200,
+    "code": "02",
+    "bytes": 65
+  },
+  {
+    "path": "/fleet/analysis/li/stat/group/1948?pageNo=1&pageSize=20",
+    "http": 200,
+    "code": "00",
+    "bytes": 11575
+  },
+  {
+    "path": "/fleet/analysis/li/stat/group/20467?pageNo=1&pageSize=20",
+    "http": 200,
+    "code": "00",
+    "bytes": 10036
+  },
+  {
+    "path": "/fleet/analysis/li/stat/group/34304?pageNo=1&pageSize=20",
+    "http": 200,
+    "code": "00",
+    "bytes": 3628
+  },
+  {
+    "path": "/fleet/analysis/li/stat/group/418?pageNo=1&pageSize=20",
+    "http": 200,
+    "code": "00",
+    "bytes": 1521
+  },
+  {
+    "path": "/fleet/analysis/operating/graph/company/151?companyId=151&equipmentId=&periodTypeCode=monthly&startDate=20260801",
+    "http": 200,
+    "code": "00",
+    "bytes": 4391
+  },
+  {
+    "path": "/fleet/analysis/operating/graph/group/1948?groupId=1948&equipmentId=&periodTypeCode=monthly&startDate=20260801",
+    "http": 200,
+    "code": "00",
+    "bytes": 4401
+  },
+  {
+    "path": "/fleet/analysis/operating/graph/group/20467?groupId=20467&equipmentId=&periodTypeCode=monthly&startDate=20260801",
+    "http": 200,
+    "code": "00",
+    "bytes": 4402
+  },
+  {
+    "path": "/fleet/analysis/operating/graph/group/34304?groupId=34304&equipmentId=&periodTypeCode=monthly&startDate=20260801",
+    "http": 200,
+    "code": "00",
+    "bytes": 4405
+  },
+  {
+    "path": "/fleet/analysis/operating/graph/group/418?groupId=418&equipmentId=&periodTypeCode=monthly&startDate=20260801",
+    "http": 200,
+    "code": "00",
+    "bytes": 4400
+  },
+  {
+    "path": "/fleet/analysis/operating/ranking/company/151?companyId=151&rankType=operatingTime&periodTypeCode=monthly&startDate=20260801",
+    "http": 200,
+    "code": "02",
+    "bytes": 2999
+  },
+  {
+    "path": "/fleet/analysis/operating/ranking/group/1948?groupId=1948&rankType=operatingTime&periodTypeCode=monthly&startDate=20260801",
+    "http": 200,
+    "code": "02",
+    "bytes": 2999
+  },
+  {
+    "path": "/fleet/analysis/operating/ranking/group/20467?groupId=20467&rankType=operatingTime&periodTypeCode=monthly&startDate=20260801",
+    "http": 200,
+    "code": "02",
+    "bytes": 2999
+  },
+  {
+    "path": "/fleet/analysis/operating/ranking/group/34304?groupId=34304&rankType=operatingTime&periodTypeCode=monthly&startDate=20260801",
+    "http": 200,
+    "code": "02",
+    "bytes": 2999
+  },
+  {
+    "path": "/fleet/analysis/operating/ranking/group/418?groupId=418&rankType=operatingTime&periodTypeCode=monthly&startDate=20260801",
+    "http": 200,
+    "code": "02",
+    "bytes": 2999
+  },
+  {
+    "path": "/fleet/analysis/operating/summary/company/151?comapnyId=151&equipmentId=&periodTypeCode=monthly&startDate=20260801",
+    "http": 200,
+    "code": "00",
+    "bytes": 281
+  },
+  {
+    "path": "/fleet/analysis/operating/summary/group/1948?groupId=1948&equipmentId=&periodTypeCode=monthly&startDate=20260801",
+    "http": 200,
+    "code": "00",
+    "bytes": 284
+  },
+  {
+    "path": "/fleet/analysis/operating/summary/group/20467?groupId=20467&equipmentId=&periodTypeCode=monthly&startDate=20260801",
+    "http": 200,
+    "code": "00",
+    "bytes": 285
+  },
+  {
+    "path": "/fleet/analysis/operating/summary/group/34304?groupId=34304&equipmentId=&periodTypeCode=monthly&startDate=20260801",
+    "http": 200,
+    "code": "00",
+    "bytes": 288
+  },
+  {
+    "path": "/fleet/analysis/operating/summary/group/418?groupId=418&equipmentId=&periodTypeCode=monthly&startDate=20260801",
+    "http": 200,
+    "code": "00",
+    "bytes": 283
+  },
+  {
+    "path": "/fleet/analysis/shock/graph/company/151?equipmentId=&periodTypeCode=monthly&startDate=20260801",
+    "http": 200,
+    "code": "00",
+    "bytes": 4365
+  },
+  {
+    "path": "/fleet/analysis/shock/graph/group/1948?equipmentId=&periodTypeCode=monthly&startDate=20260801",
+    "http": 200,
+    "code": "00",
+    "bytes": 4199
+  },
+  {
+    "path": "/fleet/analysis/shock/graph/group/20467?equipmentId=&periodTypeCode=monthly&startDate=20260801",
+    "http": 200,
+    "code": "00",
+    "bytes": 4254
+  },
+  {
+    "path": "/fleet/analysis/shock/graph/group/34304?equipmentId=&periodTypeCode=monthly&startDate=20260801",
+    "http": 200,
+    "code": "00",
+    "bytes": 4238
+  },
+  {
+    "path": "/fleet/analysis/shock/graph/group/418?equipmentId=&periodTypeCode=monthly&startDate=20260801",
+    "http": 200,
+    "code": "00",
+    "bytes": 4255
+  },
+  {
+    "path": "/fleet/analysis/shock/ranking/company/151?periodTypeCode=monthly&startDate=20260801",
+    "http": 200,
+    "code": "00",
+    "bytes": 73247
+  },
+  {
+    "path": "/fleet/analysis/shock/ranking/group/1948?periodTypeCode=monthly&startDate=20260801",
+    "http": 200,
+    "code": "00",
+    "bytes": 73247
+  },
+  {
+    "path": "/fleet/analysis/shock/ranking/group/20467?periodTypeCode=monthly&startDate=20260801",
+    "http": 200,
+    "code": "00",
+    "bytes": 73247
+  },
+  {
+    "path": "/fleet/analysis/shock/ranking/group/34304?periodTypeCode=monthly&startDate=20260801",
+    "http": 200,
+    "code": "00",
+    "bytes": 73247
+  },
+  {
+    "path": "/fleet/analysis/shock/ranking/group/418?periodTypeCode=monthly&startDate=20260801",
+    "http": 200,
+    "code": "00",
+    "bytes": 73247
+  },
+  {
+    "path": "/fleet/analysis/summary-equipment-company?companyId=151&equipmentId=&startDate=20260801&endDate=20260813&pageNo=1&pageSize=20",
+    "http": 200,
+    "code": "00",
+    "bytes": 9258
+  },
+  {
+    "path": "/fleet/analysis/summary-equipment-group?groupId=1948&equipmentId=&startDate=20260801&endDate=20260813&pageNo=1&pageSize=20",
+    "http": 200,
+    "code": "00",
+    "bytes": 6034
+  },
+  {
+    "path": "/fleet/analysis/summary-equipment-group?groupId=20467&equipmentId=&startDate=20260801&endDate=20260813&pageNo=1&pageSize=20",
+    "http": 200,
+    "code": "00",
+    "bytes": 9268
+  },
+  {
+    "path": "/fleet/analysis/summary-equipment-group?groupId=34304&equipmentId=&startDate=20260801&endDate=20260813&pageNo=1&pageSize=20",
+    "http": 200,
+    "code": "00",
+    "bytes": 1454
+  },
+  {
+    "path": "/fleet/analysis/summary-equipment-group?groupId=418&equipmentId=&startDate=20260801&endDate=20260813&pageNo=1&pageSize=20",
+    "http": 200,
+    "code": "00",
+    "bytes": 1379
+  },
+  {
+    "path": "/fleet/analysis/summary/company/151?equipmentId=&startDate=20260801&endDate=20260813",
+    "http": 200,
+    "code": "00",
+    "bytes": 461
+  },
+  {
+    "path": "/fleet/analysis/summary/equipment/FBA32_224250271?startDate=20260801&endDate=20260813",
+    "http": 200,
+    "code": "02",
+    "bytes": 358
+  },
+  {
+    "path": "/fleet/analysis/summary/equipment/FBA32-002044?startDate=20260801&endDate=20260813",
+    "http": 200,
+    "code": "02",
+    "bytes": 358
+  },
+  {
+    "path": "/fleet/analysis/summary/equipment/FBA32-002415?startDate=20260801&endDate=20260813",
+    "http": 200,
+    "code": "02",
+    "bytes": 358
+  },
+  {
+    "path": "/fleet/analysis/summary/equipment/FBA36-003906?startDate=20260801&endDate=20260813",
+    "http": 200,
+    "code": "02",
+    "bytes": 358
+  },
+  {
+    "path": "/fleet/analysis/summary/group/1948?equipmentId=&startDate=20260801&endDate=20260813",
+    "http": 200,
+    "code": "00",
+    "bytes": 450
+  },
+  {
+    "path": "/fleet/analysis/summary/group/20467?equipmentId=&startDate=20260801&endDate=20260813",
+    "http": 200,
+    "code": "00",
+    "bytes": 460
+  },
+  {
+    "path": "/fleet/analysis/summary/group/34304?equipmentId=&startDate=20260801&endDate=20260813",
+    "http": 200,
+    "code": "00",
+    "bytes": 450
+  },
+  {
+    "path": "/fleet/analysis/summary/group/418?equipmentId=&startDate=20260801&endDate=20260813",
+    "http": 200,
+    "code": "00",
+    "bytes": 445
+  },
+  {
+    "path": "/fleet/dashboard/ranking-company-widget?startDate=20260801&endDate=20260813&companyId=151",
+    "http": 200,
+    "code": "00",
+    "bytes": 2299
+  },
+  {
+    "path": "/fleet/dashboard/ranking?startDate=20260801&endDate=20260813",
+    "http": 200,
+    "code": "00",
+    "bytes": 2313
+  },
+  {
+    "path": "/fleet/dashboard/summary-company-widget?startDate=20260801&endDate=20260813&companyId=151",
+    "http": 200,
+    "code": "00",
+    "bytes": 566
+  },
+  {
+    "path": "/fleet/dashboard/summary-company?startDate=20260801&endDate=20260813",
+    "http": 200,
+    "code": "00",
+    "bytes": 7826
+  },
+  {
+    "path": "/fleet/dashboard/summary?startDate=20260801&endDate=20260813",
+    "http": 200,
+    "code": "00",
+    "bytes": 566
+  },
+  {
+    "path": "/fleet/management/company/daily-summary?startDate=20260813&endDate=20260813&companyId=&dealerCompanyId=151&rentalCompanyId=",
+    "http": 200,
+    "code": "00",
+    "bytes": 460
+  },
+  {
+    "path": "/fleet/management/company/ranking?companyId=&startDate=20260801&endDate=20260831&pageNo=1&pageSize=10",
+    "http": 200,
+    "code": "00",
+    "bytes": 2092
+  },
+  {
+    "path": "/fleet/management/company/search-daily-equipments?companyId=&rentalCompanyId=&dealerCompanyId=151&startDate=20260813&endDate=20260813&pageNo=1&pageSize=100&sortCol=equipmentName&sortOrder=ASC",
+    "http": 200,
+    "code": "00",
+    "bytes": 151889
+  },
+  {
+    "path": "/fleet/management/company/summary-operation?startDate=20260801&endDate=20260831&companyId=&dealerCompanyId=151&rentalCompanyId=",
+    "http": 200,
+    "code": "00",
+    "bytes": 156
+  },
+  {
+    "path": "/fleet/management/equipment/category",
+    "http": 200,
+    "code": "02",
+    "bytes": 224
+  },
+  {
+    "path": "/fleet/management/equipment/FBA32_224250271",
+    "http": 200,
+    "code": "00",
+    "bytes": 888
+  },
+  {
+    "path": "/fleet/management/equipment/FBA32-002044",
+    "http": 200,
+    "code": "00",
+    "bytes": 888
+  },
+  {
+    "path": "/fleet/management/equipment/FBA32-002415",
+    "http": 200,
+    "code": "00",
+    "bytes": 876
+  },
+  {
+    "path": "/fleet/management/equipment/FBA36-003906",
+    "http": 200,
+    "code": "00",
+    "bytes": 898
+  },
+  {
+    "path": "/fleet/menu/equipment/equipments",
+    "http": 200,
+    "code": "00",
+    "bytes": 34048
+  },
+  {
+    "path": "/fleet/menu/equipment/group/1948",
+    "http": 200,
+    "code": "00",
+    "bytes": 1415
+  },
+  {
+    "path": "/fleet/menu/equipment/group/20467",
+    "http": 200,
+    "code": "00",
+    "bytes": 1403
+  },
+  {
+    "path": "/fleet/menu/equipment/group/34304",
+    "http": 200,
+    "code": "00",
+    "bytes": 748
+  },
+  {
+    "path": "/fleet/menu/equipment/group/418",
+    "http": 200,
+    "code": "00",
+    "bytes": 604
+  },
+  {
+    "path": "/fleet/report/diffcompany/graph?companyIds=1933%2C8029&periodTypeCode=monthly&startDate=20260801",
+    "http": 200,
+    "code": "00",
+    "bytes": 32593
+  },
+  {
+    "path": "/fleet/report/diffcompnay?companyIds=1933%2C8029&periodTypeCode=monthly&startDate=20260801",
+    "http": 200,
+    "code": "00",
+    "bytes": 579
+  },
+  {
+    "path": "/fleet/report/heatmap/graph/company?companyIds=1933%2C8029&periodTypeCode=monthly&startDate=20260801",
+    "http": 200,
+    "code": "00",
+    "bytes": 19175
+  },
+  {
+    "path": "/fleet/report/summary?groupId=1948&periodTypeCode=monthly&startDate=20260801",
+    "http": 200,
+    "code": "00",
+    "bytes": 934
+  },
+  {
+    "path": "/fleet/report/summary?groupId=20467&periodTypeCode=monthly&startDate=20260801",
+    "http": 200,
+    "code": "00",
+    "bytes": 956
+  },
+  {
+    "path": "/fleet/report/summary?groupId=34304&periodTypeCode=monthly&startDate=20260801",
+    "http": 200,
+    "code": "00",
+    "bytes": 930
+  },
+  {
+    "path": "/fleet/report/summary?groupId=418&periodTypeCode=monthly&startDate=20260801",
+    "http": 200,
+    "code": "00",
+    "bytes": 928
+  },
+  {
+    "path": "/fleet/report/summary/company?companyId=151&periodTypeCode=monthly&startDate=20260801",
+    "http": 200,
+    "code": "00",
+    "bytes": 948
+  },
+  {
+    "path": "/fleet/report/summary/graph?groupId=1948&periodTypeCode=monthly&startDate=20260801",
+    "http": 200,
+    "code": "00",
+    "bytes": 34073
+  },
+  {
+    "path": "/fleet/report/summary/graph?groupId=20467&periodTypeCode=monthly&startDate=20260801",
+    "http": 200,
+    "code": "00",
+    "bytes": 34331
+  },
+  {
+    "path": "/fleet/report/summary/graph?groupId=34304&periodTypeCode=monthly&startDate=20260801",
+    "http": 200,
+    "code": "00",
+    "bytes": 34089
+  },
+  {
+    "path": "/fleet/report/summary/graph?groupId=418&periodTypeCode=monthly&startDate=20260801",
+    "http": 200,
+    "code": "00",
+    "bytes": 34107
+  },
+  {
+    "path": "/fleet/report/summary/graph/company?companyId=151&periodTypeCode=monthly&startDate=20260801",
+    "http": 200,
+    "code": "00",
+    "bytes": 34443
+  },
+  {
+    "path": "/fleet/service/errors?companyId=151&groupId=&equipmentId=&startDate=20260801&endDate=20260813&periodTypeCode=monthly&pageNo=1&pageSize=20&sortCol=eventDatetime+DESC",
+    "http": 200,
+    "code": "00",
+    "bytes": 9686
+  },
+  {
+    "path": "/fleet/service/errors/battery?companyId=151&groupId=&equipmentId=&startDate=20260801&endDate=20260813&periodTypeCode=monthly&pageNo=1&pageSize=20&sortCol=eventDatetime+DESC",
+    "http": 200,
+    "code": "00",
+    "bytes": 11289
+  },
+  {
+    "path": "/fleet/service/ocses?companyId=151&groupId=&equipmentId=&startDate=20260801&endDate=20260813&periodTypeCode=monthly&pageNo=1&pageSize=20&sortCol=regDatetime+DESC",
+    "http": 200,
+    "code": "00",
+    "bytes": 89
+  },
+  {
+    "path": "/fleet/service/schedules?companyId=151&groupId=&equipmentId=&startDate=20260801&endDate=20260813&periodTypeCode=monthly&pageNo=1&pageSize=20&sortCol=exchangeDatetime+DESC",
+    "http": 200,
+    "code": "00",
+    "bytes": 10527
+  },
+  {
+    "path": "/fleet/service/service-count?companyId=151&groupId=&equipmentId=&startDate=20260801&endDate=20260813&periodTypeCode=monthly",
+    "http": 200,
+    "code": "00",
+    "bytes": 163
+  },
+  {
+    "path": "/fleet/service/services?companyId=151&groupId=&equipmentId=&startDate=20260801&endDate=20260813&periodTypeCode=monthly&pageNo=1&pageSize=20&sortCol=regDatetime+DESC",
+    "http": 200,
+    "code": "00",
+    "bytes": 6121
+  },
+  {
+    "path": "/fleet/userWidgets?widgetType=group",
+    "http": 200,
+    "code": "00",
+    "bytes": 3014
+  },
+  {
+    "path": "/fleet/widgets",
+    "http": 200,
+    "code": "00",
+    "bytes": 1600
+  },
+  {
+    "path": "/menu/FLEET",
+    "http": 200,
+    "code": "00",
+    "bytes": 10366
+  }
+]

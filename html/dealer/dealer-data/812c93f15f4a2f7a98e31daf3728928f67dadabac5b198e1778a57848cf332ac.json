@@ -1,0 +1,8 @@
+{
+  "method": "GET",
+  "path": "/fleet/management/company/daily-summary?startDate=20260813&endDate=20260813&companyId=&dealerCompanyId=&rentalCompanyId=",
+  "status": 200,
+  "contentType": "application/json",
+  "bodyEncoding": "base64",
+  "body": "eyJjb2RlIjoiMDAiLCJtc2ciOiJzdWNjZXNzIiwic3RhdHVzIjoyMDAsInJlc3VsdCI6eyJkaXN0YW5jZSI6Mjc3LjAsIm9wZXJhdGluZ1RpbWUiOjgxMi4wLCJzdHJEaXN0YW5jZSI6IjI3NkttIiwic3RyT3BlcmF0aW5nVGltZSI6IjgxMkggMk0iLCJzaG9ja0NvdW50IjoyNDUsInNob2NrMUNvdW50IjoxMjY0LCJzaG9jazJDb3VudCI6MzYzLCJzaG9jazNDb3VudCI6MTE5LCJzaG9jazRDb3VudCI6MTIyLCJzaG9jazVDb3VudCI6NCwiZXJyb3JDb3VudCI6MTAsImJhdHRlcnlFcnJvckNvdW50IjoyMCwiaW5zcGVjdGlvbkNvdW50IjpudWxsLCJzY2hlZHVsZUNvdW50IjoyMTMsInJlcGFpckNvdW50IjpudWxsLCJnZW9mZW5jZUNvdW50IjpudWxsLCJ0aW1lZmVuY2VDb3VudCI6bnVsbCwiZXF1aXBtZW50Q291bnQiOjEwMiwid29ya2luZ0VxdWlwbWVudENvdW50Ijo4NCwiZWZmaWNpZW5jeSI6NjEuOH19"
+}

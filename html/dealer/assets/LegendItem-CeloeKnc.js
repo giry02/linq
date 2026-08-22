@@ -1,0 +1,1 @@
+import{_ as t,o as s,c as a,t as c,n}from"./index-dGkWfo-f.js";const o={__name:"LegendItem",props:{color:String,text:String},setup(e){return(r,l)=>(s(),a("span",{class:n(["legend-item",e.color])},c(e.text),3))}},_=t(o,[["__scopeId","data-v-cc02b246"]]);export{_ as L};

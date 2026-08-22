@@ -1,0 +1,19 @@
+#map > .offline-map-fallback {
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  object-fit: cover;
+  object-position: left center;
+}
+
+#map[data-offline-fallback="true"] {
+  overflow: hidden;
+}
+
+#map > .offline-map-fallback.geofence-fallback {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}

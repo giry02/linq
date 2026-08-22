@@ -1,0 +1,8 @@
+{
+  "method": "GET",
+  "path": "/fleet/menu/equipment/group/34315",
+  "status": 200,
+  "contentType": "application/json",
+  "bodyEncoding": "base64",
+  "body": "eyJjb2RlIjoiMDAiLCJtc2ciOiJzdWNjZXNzIiwic3RhdHVzIjoyMDAsInJlc3VsdCI6W10sInBhZ2VObyI6MSwicGFnZVNpemUiOjEwLCJ0b3RhbCI6MH0="
+}

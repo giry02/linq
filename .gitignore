@@ -28,6 +28,8 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 .dev-server.*.log
+.local-dev.*.log
+.codex-vite*.log
 
 # env files (can opt-in for committing if needed)
 .env*
@@ -41,3 +43,10 @@ next-env.d.ts
 /.wrangler/
 /outputs/
 /work/
+
+# local source/reference material and Codex work files
+/.codex-remote-attachments/
+/.codex-tmp/
+/.tmp/
+/input/
+/AGENTS.md
