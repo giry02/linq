@@ -21,7 +21,7 @@ button { color:inherit; }
 .brand[hidden] { display:none !important; }
 .brand strong { font-size:22px; font-weight:900; letter-spacing:-1px; }
 .brand span { font-size:12px; font-weight:500; }
-.header-button { position:relative; display:grid; place-items:center; width:42px; height:42px; padding:0; border:0; color:#fff; background:transparent; cursor:pointer; }
+.header-button { position:relative; display:grid; place-items:center; width:42px; height:42px; margin-left:auto; padding:0; border:0; color:#fff; background:transparent; cursor:pointer; }
 .header-button > svg { width:21px; height:21px; stroke-width:2; }
 .bell { position:relative; width:19px; height:21px; color:transparent; border:2px solid #fff; border-radius:10px 10px 5px 5px; }
 .bell::before { position:absolute; top:-5px; left:6px; width:4px; height:5px; border-radius:4px 4px 0 0; background:#fff; content:''; }
