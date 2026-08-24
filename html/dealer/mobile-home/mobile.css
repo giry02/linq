@@ -7,6 +7,12 @@
   --mobile-font-body:14px;
 }
 * { box-sizing:border-box; }
+html.is-customer-preview a,
+html.is-customer-preview button,
+html.is-customer-preview input,
+html.is-customer-preview select,
+html.is-customer-preview textarea,
+html.is-customer-preview [role="button"] { cursor:default!important; }
 html, body { margin:0; min-height:100%; color:#171717; background:#eceff1; }
 body { font-family:inherit; font-size:var(--mobile-font-body); }
 .sr-only { position:absolute !important; width:1px !important; height:1px !important; padding:0 !important; overflow:hidden !important; clip:rect(0,0,0,0) !important; white-space:nowrap !important; border:0 !important; }
