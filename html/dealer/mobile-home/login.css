@@ -31,10 +31,7 @@ button { cursor:pointer; }
 .login-actions { display:grid; gap:0; margin-top:7px; overflow:hidden; border-radius:5px; }
 .login-actions button { height:50px; border:0; color:#fff; font-size:15px; font-weight:800; }
 .login-submit { background:#ff3600; }
-.join-button { background:#bcbcbc; }
-.account-help { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-top:22px; color:#666; font-size:12px; }
-.account-help button { height:36px; padding:0 13px; color:#111; border:1px solid #ccc; border-radius:4px; background:#fff; font-size:12px; }
-.security-copy { margin:14px 0 0; font-size:9px; font-weight:700; line-height:1.5; }
+.security-copy { margin:18px 0 0; font-size:9px; font-weight:700; line-height:1.5; }
 .login-terms { display:flex; align-items:center; flex-wrap:wrap; gap:5px 8px; margin-top:9px; }
 .login-terms button { padding:0; color:#ff3600; border:0; background:transparent; font-size:9px; font-weight:700; }
 .login-terms i { width:1px; height:10px; background:#aaa; }
@@ -46,7 +43,6 @@ button { cursor:pointer; }
   .login-card { margin:8px auto 16px; padding-top:18px; }
   .login-card h1 { margin-bottom:17px; font-size:28px; }
   .login-field input, .password-input button, .login-actions button { height:46px; }
-  .account-help { margin-top:16px; }
 }
 @media (min-width:700px) {
   .login-page { padding:30px; }

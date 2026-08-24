@@ -1,0 +1,34 @@
+:root { color-scheme:light; font-family:"Noto Sans KR","Malgun Gothic",sans-serif; }
+* { box-sizing:border-box; }
+html,body { margin:0; min-height:100%; color:#171717; background:#eceff1; }
+a { color:inherit; text-decoration:none; }
+.collection-header { color:#fff; background:#ff3600; }
+.collection-header__inner { display:grid; grid-template-columns:auto minmax(0,1fr) auto; align-items:center; gap:32px; width:min(100% - 40px,1320px); min-height:128px; margin:auto; }
+.collection-brand { display:flex; align-items:baseline; gap:7px; padding-right:28px; border-right:1px solid rgba(255,255,255,.35); white-space:nowrap; }
+.collection-brand strong { font-size:27px; font-weight:900; letter-spacing:-1.2px; }
+.collection-brand span { font-size:13px; }
+.collection-header p { margin:0 0 5px; font-size:11px; font-weight:800; letter-spacing:1.4px; }
+.collection-header h1 { margin:0; font-size:28px; letter-spacing:-1px; }
+.collection-header h1 + span { display:block; margin-top:7px; color:rgba(255,255,255,.82); font-size:13px; }
+.collection-header__inner > a { padding:10px 14px; border:1px solid rgba(255,255,255,.8); border-radius:5px; font-size:13px; font-weight:800; }
+.collection-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:20px; width:min(100% - 40px,1320px); margin:26px auto 40px; }
+.preview-card { min-width:0; overflow:hidden; border:1px solid #d8d8d8; border-radius:12px; background:#fff; box-shadow:0 8px 22px rgba(0,0,0,.06); }
+.preview-card > header { min-height:166px; padding:18px 18px 15px; border-bottom:1px solid #e5e5e5; }
+.preview-card header span { color:#ff3600; font-size:11px; font-weight:900; }
+.preview-card h2 { margin:5px 0 6px; font-size:21px; letter-spacing:-.5px; }
+.preview-card p { min-height:40px; margin:0; color:#666; font-size:13px; line-height:1.55; }
+.preview-card header a { display:block; margin-top:13px; padding:9px 12px; color:#fff; text-align:center; border-radius:5px; background:#ff3600; font-size:12px; font-weight:800; }
+.device-preview { height:720px; overflow:hidden; background:#e8ebed; }
+.device-preview iframe { display:block; width:100%; height:100%; border:0; background:#f6f6f6; }
+@media (max-width:980px) {
+  .collection-header__inner { grid-template-columns:1fr auto; padding:20px 0; }
+  .collection-brand { display:none; }
+  .collection-grid { grid-template-columns:1fr; width:min(100% - 28px,520px); }
+  .preview-card > header { min-height:0; }
+}
+@media (max-width:520px) {
+  .collection-header__inner { grid-template-columns:1fr; gap:14px; width:calc(100% - 32px); }
+  .collection-header__inner > a { width:max-content; }
+  .collection-header h1 { font-size:23px; }
+  .device-preview { height:760px; }
+}
