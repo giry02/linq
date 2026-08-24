@@ -709,7 +709,7 @@
       });
     });
     $('#language').addEventListener('change', event => showToast(event.target.value === 'ko' ? '한국어로 설정했습니다.' : 'English 화면은 다국어 연결 시 적용됩니다.'));
-    $('#logout').addEventListener('click', () => showToast('로컬 검토 화면에서는 로그아웃 동작만 확인합니다.'));
+    $('#logout').addEventListener('click', () => { window.location.href = './login.html'; });
     window.lucide?.createIcons({attrs:{'stroke-width':2}});
   }
 
