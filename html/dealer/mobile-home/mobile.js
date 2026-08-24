@@ -289,6 +289,12 @@
     return String(value).replace(/^\d{4}-/, '').replace('-', '.');
   }
 
+  function formatDateOnly(value) {
+    if (!value) return '-';
+    const datePart = String(value).trim().split(/[ T]/)[0];
+    return datePart.replaceAll('-', '.');
+  }
+
   function priorityMarkup(item) {
     const isSupply = item.type === 'supply';
     const detail = isSupply
@@ -381,7 +387,8 @@
       ? `<button class="inline-pdf-button" type="button" data-error-pdf="${index}" aria-label="에러코드 ${item.errorCode || '-'} PDF 내려받기"><i data-lucide="file-down"></i><span>PDF</span></button>`
       : '';
     const editLabel = type === 'supply' ? `<em class="service-mobile-row__edit"><i data-lucide="pen-line"></i>수정</em>` : '';
-    return `<article class="service-mobile-row is-${type}" role="button" tabindex="0" data-open-service="${index}"><div class="service-mobile-row__head"><div><strong>${item.equipmentNumber}</strong><small>${item.model} · ${item.company}</small></div><div class="service-mobile-row__badges"><span class="service-kind-pill ${kindClass}">${kind}</span><span class="status-pill ${type === 'error' && isCurrentError(item) ? 'is-danger' : ''}">${item.status}</span></div></div><p>${item.title}</p><div class="service-mobile-row__meta"><span>${item.detail}${pdfButton}</span><span class="service-mobile-row__tail"><b>${formatCompactDate(item.datetime)}</b>${editLabel}</span></div></article>`;
+    const displayDate = type === 'supply' ? formatDateOnly(item.registeredAt) : formatCompactDate(item.datetime);
+    return `<article class="service-mobile-row is-${type}" role="button" tabindex="0" data-open-service="${index}"><div class="service-mobile-row__head"><div><strong>${item.equipmentNumber}</strong><small>${item.model} · ${item.company}</small></div><div class="service-mobile-row__badges"><span class="service-kind-pill ${kindClass}">${kind}</span><span class="status-pill ${type === 'error' && isCurrentError(item) ? 'is-danger' : ''}">${item.status}</span></div></div><p>${item.title}</p><div class="service-mobile-row__meta"><span>${item.detail}${pdfButton}</span><span class="service-mobile-row__tail"><b>${displayDate}</b>${editLabel}</span></div></article>`;
   }
 
   function renderService(type = serviceTab) {
