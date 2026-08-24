@@ -7,7 +7,7 @@
   <title>MACHINE IQ 딜러 모바일</title>
   <link rel="icon" href="../favicon.ico">
   <link rel="stylesheet" href="../assets/local-fonts.css">
-  <link rel="stylesheet" href="./mobile.css?v=20260824-4">
+  <link rel="stylesheet" href="./mobile.css?v=20260824-6">
 </head>
 <body>
   <div class="mobile-app">
@@ -49,10 +49,19 @@
           <div class="dashboard-distribution">
             <div class="dashboard-donut" id="service-donut"><span>미처리<strong id="service-donut-total">0</strong></span></div>
             <div class="dashboard-legend">
-              <button type="button" data-filter="error"><i class="is-error"></i><span>차량 에러</span><strong id="legend-error-total">0</strong></button>
+              <button type="button" data-filter="error"><i class="is-error"></i><span>에러(차량·배터리)</span><strong id="legend-error-total">0</strong></button>
               <button type="button" data-filter="supply"><i class="is-supply"></i><span>소모품</span><strong id="legend-supply-total">0</strong></button>
             </div>
           </div>
+        </section>
+
+        <section class="dashboard-panel dashboard-vehicles" aria-labelledby="vehicle-summary-title">
+          <div class="dashboard-panel__head"><h2 id="vehicle-summary-title">관리 차량</h2><button type="button" data-open-vehicles>차량 보기<i data-lucide="chevron-right"></i></button></div>
+          <button class="dashboard-vehicle-summary" type="button" data-open-vehicles>
+            <span><small>전체</small><strong id="home-vehicle-total">0</strong></span>
+            <span class="is-normal"><small>정상</small><strong id="home-vehicle-normal">0</strong></span>
+            <span class="is-attention"><small>확인 필요</small><strong id="home-vehicle-attention">0</strong></span>
+          </button>
         </section>
 
         <section class="dashboard-panel dashboard-recent">
@@ -93,10 +102,14 @@
         <p class="empty-state" id="vehicle-empty" hidden>검색 결과가 없습니다.</p>
       </section>
 
-      <section class="app-view sub-view" data-view-panel="maintenance" data-title="정비" aria-labelledby="maintenance-title">
-        <div class="sub-head"><div><h1 id="maintenance-title">정비</h1><p>차량·배터리 에러와 정비 내역을 함께 확인합니다.</p></div><span id="maintenance-list-total"></span></div>
+      <section class="app-view sub-view" data-view-panel="maintenance" data-title="에러" aria-labelledby="maintenance-title">
+        <div class="sub-head"><div><h1 id="maintenance-title">에러</h1><p>차량·배터리 에러와 관련 정비 내역을 확인합니다.</p></div><span id="maintenance-list-total"></span></div>
         <label class="vehicle-search sub-search"><i data-lucide="search"></i><input id="maintenance-list-search" type="search" placeholder="호기·기종·고객명·내용 검색" autocomplete="off"></label>
-        <div class="service-counts service-counts--two" role="tablist" aria-label="정비 현황"><button class="is-active" type="button" role="tab" aria-selected="true" data-service-type="error"><i data-lucide="triangle-alert"></i><span>에러</span><strong id="service-error-count"></strong></button><button type="button" role="tab" aria-selected="false" data-service-type="maintenance"><i data-lucide="clipboard-check"></i><span>정비</span><strong id="service-maintenance-count"></strong></button></div>
+        <div class="service-counts" role="tablist" aria-label="에러·정비 현황">
+          <button class="is-active" type="button" role="tab" aria-selected="true" data-service-type="vehicleError"><i data-lucide="triangle-alert"></i><span>차량 에러</span><strong id="service-vehicle-error-count"></strong></button>
+          <button type="button" role="tab" aria-selected="false" data-service-type="batteryError"><i data-lucide="battery"></i><span>배터리 에러</span><strong id="service-battery-error-count"></strong></button>
+          <button type="button" role="tab" aria-selected="false" data-service-type="maintenance"><i data-lucide="clipboard-check"></i><span>정비 이력</span><strong id="service-maintenance-count"></strong></button>
+        </div>
         <div class="service-mobile-list" id="maintenance-mobile-list"></div>
         <p class="empty-state" id="maintenance-empty" hidden>검색 결과가 없습니다.</p>
       </section>
@@ -135,7 +148,10 @@
           <h2>상세 정보</h2>
           <dl class="detail-definition" id="service-detail-info"></dl>
         </section>
-        <button class="detail-primary-button" type="button" id="service-detail-vehicle"><i data-lucide="truck"></i>차량 상세 보기</button>
+        <div class="detail-action-row">
+          <button class="detail-secondary-button" type="button" id="service-detail-list"><i data-lucide="list"></i>목록으로</button>
+          <button class="detail-primary-button" type="button" id="service-detail-vehicle"><i data-lucide="truck"></i>차량 상세 보기</button>
+        </div>
       </section>
 
       <section class="app-view" data-view-panel="settings" aria-labelledby="settings-title">
@@ -166,7 +182,7 @@
     <nav class="bottom-nav" aria-label="주 메뉴">
       <button type="button" class="is-active" data-nav="home"><i data-lucide="house"></i><span>홈</span></button>
       <button type="button" data-nav="vehicles"><i data-lucide="truck"></i><span>차량</span></button>
-      <button type="button" data-nav="maintenance"><i data-lucide="clipboard-check"></i><span>정비</span></button>
+      <button type="button" data-nav="maintenance"><i data-lucide="triangle-alert"></i><span>에러</span></button>
       <button type="button" data-nav="supplies"><i data-lucide="wrench"></i><span>소모품</span></button>
       <button type="button" data-nav="settings"><i data-lucide="settings"></i><span>설정</span></button>
     </nav>
@@ -179,10 +195,34 @@
     <footer><span id="location-dialog-coordinate"></span><a id="location-map-link" target="_blank" rel="noopener">큰 지도에서 보기</a></footer>
   </dialog>
 
+  <dialog class="bottom-dialog" id="error-guide-dialog" aria-labelledby="error-guide-title">
+    <div class="sheet-handle" aria-hidden="true"></div>
+    <header class="bottom-dialog__head"><div><small id="error-guide-kind">에러코드 안내</small><h2 id="error-guide-title"></h2></div><button type="button" id="error-guide-close" aria-label="에러 안내 닫기"><i data-lucide="x"></i></button></header>
+    <div class="bottom-dialog__body">
+      <div class="dialog-summary"><strong id="error-guide-equipment"></strong><span id="error-guide-company"></span></div>
+      <dl class="dialog-info" id="error-guide-info"></dl>
+      <section class="guide-copy"><h3>에러 안내</h3><p id="error-guide-copy"></p></section>
+      <a class="pdf-download" id="error-guide-pdf" download hidden><i data-lucide="file-down"></i><span><strong>PDF 매뉴얼</strong><small>조치 매뉴얼 내려받기</small></span></a>
+    </div>
+    <footer class="bottom-dialog__actions"><button class="detail-secondary-button" type="button" id="error-guide-list"><i data-lucide="list"></i>목록으로</button><button class="detail-primary-button" type="button" id="error-guide-vehicle"><i data-lucide="truck"></i>차량 상세 보기</button></footer>
+  </dialog>
+
+  <dialog class="bottom-dialog" id="supply-edit-dialog" aria-labelledby="supply-edit-title">
+    <div class="sheet-handle" aria-hidden="true"></div>
+    <header class="bottom-dialog__head"><div><small>소모품 관리</small><h2 id="supply-edit-title">소모품 수정</h2></div><button type="button" id="supply-edit-close" aria-label="소모품 수정 닫기"><i data-lucide="x"></i></button></header>
+    <form class="bottom-dialog__body supply-edit-form" id="supply-edit-form">
+      <div class="dialog-summary"><strong id="supply-edit-name"></strong><span id="supply-edit-equipment"></span></div>
+      <label class="completion-check"><span><strong>교환 완료</strong><small>완료 처리 시 사용량이 0으로 초기화됩니다.</small></span><input type="checkbox" id="supply-edit-completed"></label>
+      <label class="dialog-field"><span>교환일자</span><input type="date" id="supply-edit-date" required></label>
+      <label class="dialog-field is-textarea"><span>조치사항</span><textarea id="supply-edit-note" rows="3" placeholder="교환 및 점검 내용을 입력해 주세요."></textarea></label>
+    </form>
+    <footer class="bottom-dialog__actions"><button class="detail-secondary-button" type="button" id="supply-edit-cancel">취소</button><button class="detail-primary-button" type="submit" form="supply-edit-form"><i data-lucide="save"></i>저장</button></footer>
+  </dialog>
+
   <div class="toast" role="status" aria-live="polite" hidden></div>
 
   <script src="./layouts/vendor/lucide.min.js"></script>
-  <script src="./data.js?v=20260824-4"></script>
-  <script src="./mobile.js?v=20260824-4"></script>
+  <script src="./data.js?v=20260824-6"></script>
+  <script src="./mobile.js?v=20260824-6"></script>
 </body>
 </html>

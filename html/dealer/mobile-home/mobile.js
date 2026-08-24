@@ -5,7 +5,7 @@
   const toast = $('.toast');
   let toastTimer;
   let vehicleFilter = 'all';
-  let serviceTab = 'error';
+  let serviceTab = 'vehicleError';
   let selectedPeriod = 'month';
   let notificationState = 'unresolved';
   let previousView = 'home';
@@ -15,6 +15,83 @@
 
   function displayValue(value, fallback = '정보 없음') {
     return value == null || value === '' || value === 'undefined' ? fallback : value;
+  }
+
+  function supplyKey(item) {
+    return String(item.serviceId || `${item.equipmentNumber}|${item.scheduleId || item.title}`);
+  }
+
+  function isSupplyActionable(item) {
+    return !item.completed;
+  }
+
+  function manualPathForError(item) {
+    if (item.manualUrl) return item.manualUrl;
+    const code = String(item.errorCode || '').trim();
+    if (item.errorKind === '차량 에러' && code === '51') return './manuals/error-code-51.pdf';
+    if (item.errorKind === '배터리 에러' && code === '16') return './manuals/battery-error-code-16.pdf';
+    return '';
+  }
+
+  function downloadErrorPdf(item) {
+    const url = manualPathForError(item);
+    if (!url) {
+      showToast('이 에러코드에는 등록된 PDF가 없습니다.');
+      return;
+    }
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = url.split('/').pop() || `error-${item.errorCode || 'guide'}.pdf`;
+    link.target = '_blank';
+    link.rel = 'noopener';
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+  }
+
+  function bindPdfButtons(rows) {
+    $$('[data-error-pdf]').forEach(button => button.addEventListener('click', event => {
+      event.stopPropagation();
+      const item = rows[Number(button.dataset.errorPdf)];
+      if (item) downloadErrorPdf(item);
+    }));
+  }
+
+  function applySupplyOverrides() {
+    const overrides = JSON.parse(localStorage.getItem('linqDealerSupplyOverrides') || '{}');
+    data.service.supply.forEach(item => Object.assign(item, overrides[supplyKey(item)] || {}));
+  }
+
+  function persistSupplyOverride(item) {
+    const overrides = JSON.parse(localStorage.getItem('linqDealerSupplyOverrides') || '{}');
+    overrides[supplyKey(item)] = {
+      completed: Boolean(item.completed),
+      exchangeDate: item.exchangeDate || '',
+      actionNote: item.actionNote || '',
+      usage: item.usage,
+      percent: item.percent,
+      status: item.status
+    };
+    localStorage.setItem('linqDealerSupplyOverrides', JSON.stringify(overrides));
+  }
+
+  function refreshSupplyDerivedState() {
+    const activeSupplies = data.service.supply.filter(isSupplyActionable);
+    const supplyCounts = new Map();
+    activeSupplies.forEach(item => supplyCounts.set(item.equipmentNumber, (supplyCounts.get(item.equipmentNumber) || 0) + 1));
+    data.vehicles.forEach(item => {
+      item.supplyCount = supplyCounts.get(item.equipmentNumber) || 0;
+      const issues = [];
+      if (item.vehicleErrorCount) issues.push(`차량 에러 ${item.vehicleErrorCount}건`);
+      if (item.batteryErrorCount) issues.push(`배터리 에러 ${item.batteryErrorCount}건`);
+      if (item.supplyCount) issues.push(`소모품 ${item.supplyCount}건`);
+      item.status = issues.length ? 'attention' : 'normal';
+      item.issue = issues.join(' · ') || '정상';
+    });
+    data.priority = [
+      ...data.service.error.filter(isCurrentError).map(item => ({ ...item, type: 'error', code: item.errorCode })),
+      ...activeSupplies.map(item => ({ ...item, type: 'supply', usage: `${item.usage} / 기준 ${item.cycle}` }))
+    ].sort((a, b) => String(b.datetime).localeCompare(String(a.datetime)));
   }
 
   function showToast(message) {
@@ -63,6 +140,7 @@
       const dailyByEquipment = new Map((daily.result || []).map(vehicle => [vehicle.equipmentNumber, vehicle]));
 
       const mappedVehicleErrors = (vehicleErrors.result || []).map(item => ({
+        seq: item.seq,
         equipmentNumber: item.equipmentNumber,
         model: item.equipmentName || menuByEquipment.get(item.equipmentNumber)?.equipmentName || '-',
         company: item.companyName || menuByEquipment.get(item.equipmentNumber)?.companyName || '-',
@@ -71,12 +149,16 @@
         detail: `에러코드 ${item.errorCode || '-'}`,
         errorCode: item.errorCode || '-',
         errorKind: '차량 에러',
+        errorSolution: item.errorSolution || '',
+        resolveMethod: item.resolveMethod || '',
+        manualUrl: item.manualUrl || item.pdfUrl || '',
         status: item.resolveNm || '과거',
         datetime: item.eventDatetimeTz || item.eventDatetime,
         resolvedAt: item.resolveDatetime || ''
       }));
 
       const mappedBatteryErrors = (batteryErrors.result || []).map(item => ({
+        seq: item.equipmentErrorSeq,
         equipmentNumber: item.equipmentNumber,
         model: item.codeName || menuByEquipment.get(item.equipmentNumber)?.equipmentName || '-',
         company: item.companyName || menuByEquipment.get(item.equipmentNumber)?.companyName || '-',
@@ -85,6 +167,9 @@
         detail: `에러코드 ${item.errorCode || '-'}${item.errorLevelCodeName ? ` · 등급 ${item.errorLevelCodeName}` : ''}`,
         errorCode: item.errorCode || '-',
         errorKind: '배터리 에러',
+        errorSolution: item.errorSolution || '',
+        resolveMethod: item.resolveMethod || '',
+        manualUrl: item.manualUrl || item.pdfUrl || '',
         status: item.resolveNm || (item.resolveYn === 'Y' ? '과거' : '현재'),
         datetime: item.eventDatetime,
         resolvedAt: item.resolveDatetime || ''
@@ -95,6 +180,8 @@
       data.service.error = [...sampleVehicleErrors, ...sampleBatteryErrors]
         .sort((a, b) => String(b.datetime).localeCompare(String(a.datetime)));
       data.service.supply = (supplies.result || []).slice(0, 3).map(item => ({
+        serviceId: item.serviceId,
+        scheduleId: item.scheduleId,
         equipmentNumber: item.equipmentNumber,
         model: item.equipmentName || menuByEquipment.get(item.equipmentNumber)?.equipmentName || '-',
         company: item.companyName || menuByEquipment.get(item.equipmentNumber)?.companyName || '-',
@@ -106,7 +193,11 @@
         percent: `${Number(item.per).toLocaleString('ko-KR', { maximumFractionDigits: 2 })}%`,
         status: Number(item.per) >= 100 ? '교체 초과' : '교체 권유',
         datetime: data.referenceDate,
-        registeredAt: item.regDatetime || ''
+        registeredAt: item.regDatetime || '',
+        exchangeCycleHour: Number(item.exchangeCycleHour) || 0,
+        exchangeUseHour: Number(item.exchangeUseHour) || 0,
+        exchangeCumulativeTimeVal: Number(item.exchangeCumulativeTimeVal) || 0,
+        cumulativeTimeVal: Number(item.cumulativeTimeVal) || 0
       }));
 
       const currentErrors = data.service.error.filter(isCurrentError);
@@ -230,7 +321,7 @@
       state: isCurrentError(item) ? 'unresolved' : 'resolved',
       occurredAt: item.datetime
     }));
-    const supplies = data.service.supply.map(item => ({ ...item, type: 'supply', state: 'unresolved', occurredAt: item.datetime }));
+    const supplies = data.service.supply.map(item => ({ ...item, type: 'supply', state: item.completed ? 'resolved' : 'unresolved', occurredAt: item.exchangeDate || item.datetime }));
     const maintenance = data.service.maintenance.map(item => ({ ...item, type: 'maintenance', state: 'resolved', occurredAt: item.datetime }));
     return [...errors, ...supplies, ...maintenance].sort((a, b) => String(b.occurredAt).localeCompare(String(a.occurredAt)));
   }
@@ -286,38 +377,48 @@
   function serviceMarkup(item, type, index) {
     const kind = type === 'error' ? item.errorKind : type === 'supply' ? '소모품' : '정비';
     const kindClass = item.errorKind === '배터리 에러' ? 'is-battery' : type === 'supply' ? 'is-advisory' : '';
-    return `<button type="button" class="service-mobile-row is-${type}" data-service-index="${index}"><div class="service-mobile-row__head"><div><strong>${item.equipmentNumber}</strong><small>${item.model} · ${item.company}</small></div><div class="service-mobile-row__badges"><span class="service-kind-pill ${kindClass}">${kind}</span><span class="status-pill ${type === 'error' && isCurrentError(item) ? 'is-danger' : ''}">${item.status}</span></div></div><p>${item.title}</p><div class="service-mobile-row__meta"><span>${item.detail}</span><b>${formatCompactDate(item.datetime)}</b></div></button>`;
+    const pdfButton = type === 'error' && manualPathForError(item)
+      ? `<button class="inline-pdf-button" type="button" data-error-pdf="${index}" aria-label="에러코드 ${item.errorCode || '-'} PDF 내려받기"><i data-lucide="file-down"></i><span>PDF</span></button>`
+      : '';
+    const editLabel = type === 'supply' ? `<em class="service-mobile-row__edit"><i data-lucide="pen-line"></i>수정</em>` : '';
+    return `<article class="service-mobile-row is-${type}" role="button" tabindex="0" data-open-service="${index}"><div class="service-mobile-row__head"><div><strong>${item.equipmentNumber}</strong><small>${item.model} · ${item.company}</small></div><div class="service-mobile-row__badges"><span class="service-kind-pill ${kindClass}">${kind}</span><span class="status-pill ${type === 'error' && isCurrentError(item) ? 'is-danger' : ''}">${item.status}</span></div></div><p>${item.title}</p><div class="service-mobile-row__meta"><span>${item.detail}${pdfButton}</span><span class="service-mobile-row__tail"><b>${formatCompactDate(item.datetime)}</b>${editLabel}</span></div></article>`;
   }
 
   function renderService(type = serviceTab) {
-    serviceTab = type === 'maintenance' ? 'maintenance' : 'error';
+    serviceTab = ['vehicleError', 'batteryError', 'maintenance'].includes(type) ? type : 'vehicleError';
     const query = $('#maintenance-list-search').value.trim().toLowerCase();
-    const source = data.service[type] || [];
+    const sourceType = serviceTab === 'maintenance' ? 'maintenance' : 'error';
+    const source = sourceType === 'maintenance'
+      ? data.service.maintenance
+      : data.service.error.filter(item => serviceTab === 'batteryError' ? item.errorKind === '배터리 에러' : item.errorKind !== '배터리 에러');
     const rows = source.filter(item => !query || [item.equipmentNumber,item.model,item.company,item.title,item.detail,item.errorKind].join(' ').toLowerCase().includes(query));
-    $('#maintenance-mobile-list').innerHTML = rows.map((item, index) => serviceMarkup(item, type, index)).join('');
+    $('#maintenance-mobile-list').innerHTML = rows.map((item, index) => serviceMarkup(item, sourceType, index)).join('');
     $('#maintenance-list-total').textContent = `표시 ${rows.length}건`;
     $('#maintenance-empty').hidden = rows.length > 0;
     $$('[data-service-type]').forEach(button => {
-      const selected = button.dataset.serviceType === type;
+      const selected = button.dataset.serviceType === serviceTab;
       button.classList.toggle('is-active', selected);
       button.setAttribute('aria-selected', String(selected));
     });
-    $$('#maintenance-mobile-list .service-mobile-row').forEach((button, index) => button.addEventListener('click', () => {
+    $$('#maintenance-mobile-list [data-open-service]').forEach((button, index) => button.addEventListener('click', () => {
       const item = rows[index];
-      if (item) openServiceDetail(item, type, 'maintenance');
+      if (item) openServiceDetail(item, sourceType, 'maintenance');
     }));
+    bindPdfButtons(rows);
+    window.lucide?.createIcons({attrs:{'stroke-width':2}});
   }
 
   function renderSupplies() {
     const query = $('#supply-list-search').value.trim().toLowerCase();
-    const rows = data.service.supply.filter(item => !query || [item.equipmentNumber,item.model,item.company,item.title,item.detail].join(' ').toLowerCase().includes(query));
+    const rows = data.service.supply.filter(item => isSupplyActionable(item) && (!query || [item.equipmentNumber,item.model,item.company,item.title,item.detail].join(' ').toLowerCase().includes(query)));
     $('#supply-mobile-list').innerHTML = rows.map((item, index) => serviceMarkup(item, 'supply', index)).join('');
     $('#supply-list-total').textContent = `표시 ${rows.length}건`;
     $('#supply-empty').hidden = rows.length > 0;
-    $$('#supply-mobile-list .service-mobile-row').forEach((button, index) => button.addEventListener('click', () => {
+    $$('#supply-mobile-list [data-open-service]').forEach((button, index) => button.addEventListener('click', () => {
       const item = rows[index];
       if (item) openServiceDetail(item, 'supply', 'supplies');
     }));
+    window.lucide?.createIcons({attrs:{'stroke-width':2}});
   }
 
   function showView(name, origin) {
@@ -330,7 +431,7 @@
     $('[data-header-brand]').hidden = !home;
     $('[data-header-title]').hidden = home;
     $('.header-back').hidden = home;
-    const titles = { vehicles:'차량', 'vehicle-detail':'차량 상세', maintenance:'정비', supplies:'소모품', 'service-detail':'상세 정보', notifications:'알림 내역', settings:'설정' };
+    const titles = { vehicles:'차량', 'vehicle-detail':'차량 상세', maintenance:'에러', supplies:'소모품', 'service-detail':'상세 정보', notifications:'알림 내역', settings:'설정' };
     $('[data-header-title]').textContent = titles[name] || '';
     if (name === 'notifications') renderNotificationHistory();
     window.scrollTo({ top: 0, behavior: 'instant' });
@@ -359,12 +460,14 @@
   function openVehicleDetail(item, origin = 'vehicles') {
     const attention = item.status === 'attention';
     const records = serviceRecordsFor(item.equipmentNumber);
-    const errorCount = (item.vehicleErrorCount || 0) + (item.batteryErrorCount || 0);
+    const vehicleErrorCount = item.vehicleErrorCount || 0;
+    const batteryErrorCount = item.batteryErrorCount || 0;
     const maintenanceCount = records.filter(record => record.type === 'maintenance').length;
-    const firstError = records.find(record => record.type === 'error');
+    const firstVehicleError = records.find(record => record.type === 'error' && record.errorKind !== '배터리 에러');
+    const firstBatteryError = records.find(record => record.type === 'error' && record.errorKind === '배터리 에러');
     const firstSupply = records.find(record => record.type === 'supply');
     const firstMaintenance = records.find(record => record.type === 'maintenance');
-    const categoryCount = [errorCount, item.supplyCount || 0, maintenanceCount].filter(Boolean).length;
+    const categoryCount = [vehicleErrorCount, batteryErrorCount, item.supplyCount || 0, maintenanceCount].filter(Boolean).length;
     const hasLocation = Number.isFinite(item.latitude) && Number.isFinite(item.longitude);
     const locationMarkup = hasLocation
       ? `<dd><button class="vehicle-location-button" type="button"><span>${displayValue(item.lastAddress)}</span><i data-lucide="map-pin"></i></button></dd>`
@@ -378,11 +481,12 @@
     $('.vehicle-location-button')?.addEventListener('click', () => openLocationDialog(item));
     $('#vehicle-service-total').textContent = categoryCount ? `${categoryCount}개 항목` : '정상';
     $('#vehicle-service-empty').hidden = categoryCount > 0;
-    $('#vehicle-service-list').innerHTML = categoryCount ? [
-      `<button type="button" data-vehicle-section="error" ${errorCount ? '' : 'disabled'}><span><strong>에러 ${errorCount}건</strong><small>${displayValue(firstError?.title, '현재 에러 정보')} · 차량 ${item.vehicleErrorCount || 0} · 배터리 ${item.batteryErrorCount || 0}</small></span><i data-lucide="chevron-right"></i></button>`,
-      `<button type="button" data-vehicle-section="supply" ${(item.supplyCount || 0) ? '' : 'disabled'}><span><strong>소모품 ${item.supplyCount || 0}건</strong><small>${displayValue(firstSupply?.title, '교체 기준 도달·초과 항목')}</small></span><i data-lucide="chevron-right"></i></button>`,
-      `<button type="button" data-vehicle-section="maintenance" ${maintenanceCount ? '' : 'disabled'}><span><strong>정비 이력 ${maintenanceCount}건</strong><small>${displayValue(firstMaintenance?.title, '접수·완료된 정비 내역')}</small></span><i data-lucide="chevron-right"></i></button>`
-    ].join('') : '';
+    const serviceLinks = [];
+    if (vehicleErrorCount) serviceLinks.push(`<button type="button" data-vehicle-section="vehicleError"><span><strong>차량 에러 ${vehicleErrorCount}건</strong><small>${displayValue(firstVehicleError?.title, '현재 차량 에러 정보')}</small></span><i data-lucide="chevron-right"></i></button>`);
+    if (batteryErrorCount) serviceLinks.push(`<button type="button" data-vehicle-section="batteryError"><span><strong>배터리 에러 ${batteryErrorCount}건</strong><small>${displayValue(firstBatteryError?.title, '현재 배터리 에러 정보')}</small></span><i data-lucide="chevron-right"></i></button>`);
+    if (item.supplyCount) serviceLinks.push(`<button type="button" data-vehicle-section="supply"><span><strong>소모품 ${item.supplyCount}건</strong><small>${displayValue(firstSupply?.title, '교체 기준 도달·초과 항목')}</small></span><i data-lucide="chevron-right"></i></button>`);
+    if (maintenanceCount) serviceLinks.push(`<button type="button" data-vehicle-section="maintenance"><span><strong>정비 이력 ${maintenanceCount}건</strong><small>${displayValue(firstMaintenance?.title, '접수·완료된 정비 내역')}</small></span><i data-lucide="chevron-right"></i></button>`);
+    $('#vehicle-service-list').innerHTML = serviceLinks.join('');
     $$('[data-vehicle-section]').forEach(button => button.addEventListener('click', () => {
       const section = button.dataset.vehicleSection;
       if (section === 'supply') {
@@ -393,13 +497,49 @@
       }
       $('#maintenance-list-search').value = item.equipmentNumber;
       showView('maintenance');
-      renderService(section === 'maintenance' ? 'maintenance' : 'error');
+      renderService(section);
     }));
     window.lucide?.createIcons({attrs:{'stroke-width':2}});
     showView('vehicle-detail', origin);
   }
 
+  function openErrorGuide(item, origin = 'maintenance') {
+    selectedServiceItem = {item, type: 'error', origin};
+    const typeName = item.errorKind || '차량 에러';
+    $('#error-guide-kind').textContent = `${typeName} · 에러코드 안내`;
+    $('#error-guide-title').textContent = item.title;
+    $('#error-guide-equipment').textContent = `${item.equipmentNumber} · ${item.model}`;
+    $('#error-guide-company').textContent = item.company;
+    $('#error-guide-info').innerHTML = `<div><dt>에러코드</dt><dd>${item.errorCode || '-'}</dd></div><div><dt>처리 상태</dt><dd>${item.status || '-'}</dd></div><div><dt>발생 일시</dt><dd>${item.datetime || '-'}</dd></div><div><dt>완료 일시</dt><dd>${item.resolvedAt || '-'}</dd></div>`;
+    $('#error-guide-copy').textContent = item.errorSolution || item.resolveMethod || '등록된 별도 조치 안내가 없습니다. 에러코드와 현상을 확인한 뒤 공식 정비 절차에 따라 점검해 주세요.';
+    const pdfLink = $('#error-guide-pdf');
+    const manualUrl = manualPathForError(item);
+    pdfLink.hidden = !manualUrl;
+    pdfLink.href = manualUrl || '#';
+    if (manualUrl) pdfLink.setAttribute('download', manualUrl.split('/').pop());
+    window.lucide?.createIcons({attrs:{'stroke-width':2}});
+    $('#error-guide-dialog').showModal();
+  }
+
+  function openSupplyEdit(item) {
+    selectedServiceItem = {item, type: 'supply', origin: 'supplies'};
+    $('#supply-edit-name').textContent = item.title;
+    $('#supply-edit-equipment').textContent = `${item.equipmentNumber} · ${item.model} · ${item.usage || '-'} / 기준 ${item.cycle || '-'}`;
+    $('#supply-edit-completed').checked = Boolean(item.completed);
+    $('#supply-edit-date').value = item.exchangeDate || data.referenceDate;
+    $('#supply-edit-note').value = item.actionNote || '';
+    $('#supply-edit-dialog').showModal();
+  }
+
   function openServiceDetail(item, type, origin = 'maintenance') {
+    if (type === 'error') {
+      openErrorGuide(item, origin);
+      return;
+    }
+    if (type === 'supply') {
+      openSupplyEdit(item);
+      return;
+    }
     selectedServiceItem = {item, type};
     const typeName = type === 'error' ? item.errorKind || '차량 에러' : type === 'supply' ? '소모품' : '정비 이력';
     const iconName = type === 'error' ? 'triangle-alert' : type === 'supply' ? 'refresh-cw' : 'clipboard-check';
@@ -432,11 +572,15 @@
   }
 
   function updateSummaryCounts() {
-    const errorTotal = data.service.error.length;
-    const supplyTotal = data.service.supply.length;
+    const vehicleErrorTotal = data.service.error.filter(item => item.errorKind !== '배터리 에러').length;
+    const batteryErrorTotal = data.service.error.filter(item => item.errorKind === '배터리 에러').length;
+    const errorTotal = vehicleErrorTotal + batteryErrorTotal;
+    const supplyTotal = data.service.supply.filter(isSupplyActionable).length;
     const maintenanceTotal = data.service.maintenance.length;
     const activeUrgent = data.service.error.filter(isCurrentError).length;
     const actionTotal = activeUrgent + supplyTotal;
+    const vehicleTotal = data.vehicles.length;
+    const attentionVehicleTotal = data.vehicles.filter(item => item.status === 'attention').length;
     $('#notification-count').textContent = activeUrgent;
     $('#error-total').textContent = errorTotal;
     $('#schedule-total').textContent = supplyTotal;
@@ -446,12 +590,19 @@
     $('#legend-error-total').textContent = errorTotal;
     $('#legend-supply-total').textContent = supplyTotal;
     $('#service-donut').style.setProperty('--error-share', `${actionTotal ? (activeUrgent / actionTotal) * 100 : 0}%`);
-    $('#service-error-count').textContent = errorTotal;
+    $('#service-donut').classList.toggle('is-empty', actionTotal === 0);
+    $('#home-vehicle-total').textContent = vehicleTotal;
+    $('#home-vehicle-normal').textContent = vehicleTotal - attentionVehicleTotal;
+    $('#home-vehicle-attention').textContent = attentionVehicleTotal;
+    $('#service-vehicle-error-count').textContent = vehicleErrorTotal;
+    $('#service-battery-error-count').textContent = batteryErrorTotal;
     $('#service-maintenance-count').textContent = maintenanceTotal;
   }
 
   async function init() {
     await hydrateCapturedData();
+    applySupplyOverrides();
+    refreshSupplyDerivedState();
     $('#account-id').textContent = data.account.id;
     updateSummaryCounts();
     renderVehicles();
@@ -488,6 +639,7 @@
     $$('[data-service-type]').forEach(button => button.addEventListener('click', () => renderService(button.dataset.serviceType)));
     $$('[data-nav]').forEach(button => button.addEventListener('click', () => showView(button.dataset.nav)));
     $('[data-back]').addEventListener('click', () => showView(previousView));
+    $('#service-detail-list').addEventListener('click', () => showView(previousView));
     $('#service-detail-vehicle').addEventListener('click', () => {
       if (!selectedServiceItem) return;
       const vehicle = data.vehicles.find(item => item.equipmentNumber === selectedServiceItem.item.equipmentNumber);
@@ -498,7 +650,46 @@
     $('#location-dialog').addEventListener('click', event => {
       if (event.target === $('#location-dialog')) $('#location-dialog').close();
     });
+    $('#error-guide-close').addEventListener('click', () => $('#error-guide-dialog').close());
+    $('#error-guide-list').addEventListener('click', () => $('#error-guide-dialog').close());
+    $('#error-guide-vehicle').addEventListener('click', () => {
+      if (!selectedServiceItem) return;
+      const vehicle = data.vehicles.find(item => item.equipmentNumber === selectedServiceItem.item.equipmentNumber);
+      $('#error-guide-dialog').close();
+      if (vehicle) openVehicleDetail(vehicle, selectedServiceItem.origin || 'maintenance');
+      else showToast('차량 목록에 등록된 호기가 아닙니다.');
+    });
+    $('#error-guide-dialog').addEventListener('click', event => {
+      if (event.target === $('#error-guide-dialog')) $('#error-guide-dialog').close();
+    });
+    $('#supply-edit-close').addEventListener('click', () => $('#supply-edit-dialog').close());
+    $('#supply-edit-cancel').addEventListener('click', () => $('#supply-edit-dialog').close());
+    $('#supply-edit-dialog').addEventListener('click', event => {
+      if (event.target === $('#supply-edit-dialog')) $('#supply-edit-dialog').close();
+    });
+    $('#supply-edit-form').addEventListener('submit', event => {
+      event.preventDefault();
+      if (!selectedServiceItem || selectedServiceItem.type !== 'supply') return;
+      const item = selectedServiceItem.item;
+      item.completed = $('#supply-edit-completed').checked;
+      item.exchangeDate = $('#supply-edit-date').value;
+      item.actionNote = $('#supply-edit-note').value.trim();
+      if (item.completed) {
+        item.usage = '0H';
+        item.percent = '0%';
+        item.status = '교체 완료';
+      }
+      persistSupplyOverride(item);
+      refreshSupplyDerivedState();
+      updateSummaryCounts();
+      renderVehicles();
+      renderSupplies();
+      updatePeriod();
+      $('#supply-edit-dialog').close();
+      showToast(item.completed ? '교환 완료로 처리하고 사용량을 초기화했습니다.' : '소모품 수정 내용을 저장했습니다.');
+    });
     $$('[data-open-notifications], [data-open-notifications-page]').forEach(button => button.addEventListener('click', () => showView('notifications', 'home')));
+    $$('[data-open-vehicles]').forEach(button => button.addEventListener('click', () => showView('vehicles', 'home')));
 
     const savedSettings = JSON.parse(localStorage.getItem('linqDealerMobileSettings') || '{}');
     $$('[data-setting]').forEach(input => {
