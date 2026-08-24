@@ -53,3 +53,81 @@
   .compact-summary button { gap:4px; }
   .compact-summary span { font-size:11px; }
 }
+
+/* 2안: 다크 관제 스타일 */
+body[data-home-variant="detail"] { background:#15181c; }
+body[data-home-variant="detail"] .mobile-app { color:#f4f5f6; background:#20242a; box-shadow:0 0 30px rgba(0,0,0,.35); }
+body[data-home-variant="detail"] .app-header { height:64px; border-bottom:3px solid #ff4b1b; background:#15181c; }
+body[data-home-variant="detail"] .brand strong { color:#fff; }
+body[data-home-variant="detail"] .brand span { color:#aeb5bd; }
+body[data-home-variant="detail"] .header-button b { color:#fff; border-color:#15181c; background:#ff4b1b; }
+body[data-home-variant="detail"] .variant-home { background:linear-gradient(180deg,#242930 0,#20242a 240px); }
+body[data-home-variant="detail"] .dashboard-period { margin-bottom:13px; padding:2px 0 4px; }
+body[data-home-variant="detail"] .dashboard-period strong { color:#f6f7f8; }
+body[data-home-variant="detail"] .dashboard-period small { color:#939ba5; }
+body[data-home-variant="detail"] .period-tabs { border-color:#4b535d; background:#2a3037; }
+body[data-home-variant="detail"] .period-tabs button { color:#bbc1c8; border-color:#4b535d; background:#2a3037; }
+body[data-home-variant="detail"] .period-tabs button.is-active { color:#fff; border-color:#ff4b1b; background:#ff4b1b; }
+body[data-home-variant="detail"] .dashboard-kpi { border-color:#3a414a; background:#2a3037; box-shadow:0 6px 14px rgba(0,0,0,.15); }
+body[data-home-variant="detail"] .dashboard-kpi > svg { color:#d5d9dd; }
+body[data-home-variant="detail"] .dashboard-kpi span { color:#c3c8ce; }
+body[data-home-variant="detail"] .dashboard-kpi strong { color:#fff; }
+body[data-home-variant="detail"] .dashboard-kpi small { color:#858e98; }
+body[data-home-variant="detail"] .dashboard-kpi.is-danger { border-top:3px solid #ff5147; }
+body[data-home-variant="detail"] .dashboard-kpi.is-danger > svg,
+body[data-home-variant="detail"] .dashboard-kpi.is-danger strong { color:#ff655c; }
+body[data-home-variant="detail"] .dashboard-kpi.is-warning { border-top:3px solid #ff9b2f; }
+body[data-home-variant="detail"] .dashboard-kpi.is-warning > svg,
+body[data-home-variant="detail"] .dashboard-kpi.is-warning strong { color:#ffac4f; }
+body[data-home-variant="detail"] .dashboard-kpi:not(.is-danger):not(.is-warning) { border-top:3px solid #43c695; }
+body[data-home-variant="detail"] .dashboard-kpi:not(.is-danger):not(.is-warning) > svg,
+body[data-home-variant="detail"] .dashboard-kpi:not(.is-danger):not(.is-warning) strong { color:#54d5a5; }
+body[data-home-variant="detail"] .variant-panel { border-color:#3a414a; border-radius:7px; background:#292f36; box-shadow:0 8px 18px rgba(0,0,0,.14); }
+body[data-home-variant="detail"] .variant-panel h2 { color:#fff; }
+body[data-home-variant="detail"] .variant-panel header p,
+body[data-home-variant="detail"] .variant-panel header > span,
+body[data-home-variant="detail"] .variant-panel header button { color:#929ba5; }
+body[data-home-variant="detail"] .detail-status-row,
+body[data-home-variant="detail"] .variant-alert-row { color:#f0f2f3; border-color:#3b424b; }
+body[data-home-variant="detail"] .detail-status-row > i { color:#ff6259; background:#3a292b; }
+body[data-home-variant="detail"] .detail-status-row.is-supply > i { color:#ffac4f; background:#3b3327; }
+body[data-home-variant="detail"] .detail-status-row small,
+body[data-home-variant="detail"] .detail-status-row em,
+body[data-home-variant="detail"] .variant-alert-row small,
+body[data-home-variant="detail"] .variant-alert-row time { color:#9da5ae; }
+body[data-home-variant="detail"] .bottom-nav { border-color:#353b43; background:#171a1f; box-shadow:0 -5px 15px rgba(0,0,0,.25); }
+body[data-home-variant="detail"] .bottom-nav button { color:#828a94; }
+body[data-home-variant="detail"] .bottom-nav button.is-active { color:#ff5a2b; }
+
+/* 3안: 밝은 모바일 앱 스타일 */
+body[data-home-variant="compact"] { background:#dfe5e9; }
+body[data-home-variant="compact"] .mobile-app { background:#f2f5f7; box-shadow:0 0 28px rgba(35,52,64,.14); }
+body[data-home-variant="compact"] .app-header { height:62px; color:#ff3600; border-bottom:1px solid #e5e8ea; background:#fff; }
+body[data-home-variant="compact"] .brand strong { color:#1b252c; }
+body[data-home-variant="compact"] .brand span { color:#69747b; }
+body[data-home-variant="compact"] .header-button { color:#ff3600; }
+body[data-home-variant="compact"] .header-button b { color:#fff; border-color:#fff; background:#ff3600; }
+body[data-home-variant="compact"] .variant-home { background:linear-gradient(180deg,#f9fbfc 0,#f2f5f7 310px); }
+body[data-home-variant="compact"] .compact-period { padding:11px 12px; border:1px solid #e3e8eb; border-radius:13px; background:#fff; box-shadow:0 4px 12px rgba(38,58,70,.05); }
+body[data-home-variant="compact"] .compact-period small { color:#7d8a92; }
+body[data-home-variant="compact"] .period-tabs { padding:3px; border:0; border-radius:10px; background:#eef1f3; }
+body[data-home-variant="compact"] .period-tabs button { height:31px; color:#657179; border:0; border-radius:7px; background:transparent; }
+body[data-home-variant="compact"] .period-tabs button.is-active { color:#fff; background:#ff4a17; box-shadow:0 3px 8px rgba(255,54,0,.2); }
+body[data-home-variant="compact"] .compact-summary { margin-top:9px; }
+body[data-home-variant="compact"] .compact-summary button { height:72px; border:0; border-radius:13px; box-shadow:0 5px 14px rgba(38,58,70,.07); }
+body[data-home-variant="compact"] .compact-summary .is-error { background:#fff2f0; }
+body[data-home-variant="compact"] .compact-summary .is-supply { background:#fff7e9; }
+body[data-home-variant="compact"] .compact-summary .is-done { background:#eaf8f2; }
+body[data-home-variant="compact"] .variant-panel { margin-top:12px; border:0; border-radius:15px; background:#fff; box-shadow:0 6px 18px rgba(38,58,70,.07); }
+body[data-home-variant="compact"] .variant-panel h2 { color:#1f2a31; }
+body[data-home-variant="compact"] .variant-panel header p,
+body[data-home-variant="compact"] .variant-panel header > span,
+body[data-home-variant="compact"] .variant-panel header button { color:#7c8991; }
+body[data-home-variant="compact"] .compact-action-row { border-color:#edf0f2; }
+body[data-home-variant="compact"] .compact-action-row > i { border-radius:10px; }
+body[data-home-variant="compact"] .compact-vehicle-summary { border-color:#e8ecee; border-radius:10px; background:#f8fafb; }
+body[data-home-variant="compact"] .compact-vehicle-summary span { border-color:#e8ecee; }
+body[data-home-variant="compact"] .bottom-nav { height:72px; border:0; border-radius:16px 16px 0 0; background:#fff; box-shadow:0 -7px 20px rgba(38,58,70,.11); }
+body[data-home-variant="compact"] .bottom-nav button { color:#849098; }
+body[data-home-variant="compact"] .bottom-nav button.is-active { color:#ff3600; }
+body[data-home-variant="compact"] .bottom-nav button.is-active i { color:#fff; border-radius:9px; background:#ff3600; }
