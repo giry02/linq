@@ -7,7 +7,7 @@
   <title>MACHINE IQ 딜러 모바일</title>
   <link rel="icon" href="../favicon.ico">
   <link rel="stylesheet" href="../assets/local-fonts.css">
-  <link rel="stylesheet" href="./mobile.css?v=20260824-1">
+  <link rel="stylesheet" href="./mobile.css?v=20260824-4">
 </head>
 <body>
   <div class="mobile-app">
@@ -22,58 +22,90 @@
 
     <main>
       <section class="app-view is-active" data-view-panel="home" aria-labelledby="home-title">
-        <div class="dashboard-heading">
-          <div><p>딜러 관리자</p><h1 id="home-title">대시보드</h1></div>
-          <small id="period-label"></small>
+        <h1 class="sr-only" id="home-title">딜러 모바일 홈</h1>
+        <div class="dashboard-period">
+          <div><strong>조회 기간</strong><small id="period-label"></small></div>
+          <div class="period-tabs" role="group" aria-label="조회 기간">
+            <button type="button" data-period="day">금일</button>
+            <button type="button" data-period="week">주</button>
+            <button class="is-active" type="button" data-period="month">월</button>
+          </div>
         </div>
-
-        <label class="vehicle-search dashboard-search">
-          <i data-lucide="search" aria-hidden="true"></i>
-          <input id="vehicle-search" type="search" placeholder="호기·기종·고객명 검색" autocomplete="off">
-        </label>
 
         <section class="dashboard-kpis" aria-label="주요 업무 현황">
           <button class="dashboard-kpi is-danger" type="button" data-filter="error">
-            <i data-lucide="triangle-alert" aria-hidden="true"></i><span>차량 에러</span><strong id="error-total">0</strong><small>차량·배터리 통합</small>
+            <i data-lucide="triangle-alert" aria-hidden="true"></i><span>미처리 에러</span><strong id="error-total">0</strong><small>차량·배터리 통합</small>
           </button>
           <button class="dashboard-kpi is-warning" type="button" data-filter="supply">
-            <i data-lucide="refresh-cw" aria-hidden="true"></i><span>소모품 도래</span><strong id="schedule-total">0</strong><small>교체 대상</small>
+            <i data-lucide="refresh-cw" aria-hidden="true"></i><span>소모품</span><strong id="schedule-total">0</strong><small>교체 대상</small>
           </button>
           <button class="dashboard-kpi" type="button" data-filter="maintenance">
-            <i data-lucide="clipboard-check" aria-hidden="true"></i><span>정비 이력</span><strong id="maintenance-total">0</strong><small>등록 내역</small>
+            <i data-lucide="clipboard-check" aria-hidden="true"></i><span>처리 완료</span><strong id="maintenance-total">0</strong><small>완료된 정비</small>
           </button>
         </section>
 
         <section class="dashboard-panel" aria-labelledby="work-summary-title">
-          <div class="dashboard-panel__head"><h2 id="work-summary-title">업무 구성</h2><span id="service-total">총 0건</span></div>
+          <div class="dashboard-panel__head"><h2 id="work-summary-title">조치 필요 현황</h2><span id="service-total">미처리 0건</span></div>
           <div class="dashboard-distribution">
-            <div class="dashboard-donut" id="service-donut"><span>전체 업무<strong id="service-donut-total">0</strong></span></div>
+            <div class="dashboard-donut" id="service-donut"><span>미처리<strong id="service-donut-total">0</strong></span></div>
             <div class="dashboard-legend">
               <button type="button" data-filter="error"><i class="is-error"></i><span>차량 에러</span><strong id="legend-error-total">0</strong></button>
-              <button type="button" data-filter="supply"><i class="is-supply"></i><span>소모품 도래</span><strong id="legend-supply-total">0</strong></button>
+              <button type="button" data-filter="supply"><i class="is-supply"></i><span>소모품</span><strong id="legend-supply-total">0</strong></button>
             </div>
           </div>
         </section>
 
         <section class="dashboard-panel dashboard-recent">
-          <div class="dashboard-panel__head"><h2>최근 알림</h2><span id="priority-count">0건</span></div>
+          <div class="dashboard-panel__head"><h2>최근 알림</h2><div class="panel-actions"><span id="priority-count">0건</span><button type="button" data-open-notifications-page>더보기<i data-lucide="chevron-right"></i></button></div></div>
           <div class="dashboard-alert-list" id="priority-list"></div>
-          <p class="empty-state" id="empty-state" hidden>검색 결과가 없습니다.</p>
+          <p class="empty-state" id="empty-state" hidden>선택한 기간의 미처리 알림이 없습니다.</p>
         </section>
+      </section>
+
+      <section class="app-view sub-view notification-view" data-view-panel="notifications" data-title="알림 내역" aria-labelledby="notifications-title">
+        <div class="sub-head"><div><h1 id="notifications-title">알림 내역</h1><p>미처리 건과 처리 완료 내역을 기간별로 확인합니다.</p></div><span id="notification-history-total"></span></div>
+        <div class="notification-period-row">
+          <strong>조회 기간</strong>
+          <div class="period-tabs" role="group" aria-label="알림 내역 조회 기간">
+            <button type="button" data-period="day">금일</button>
+            <button type="button" data-period="week">주</button>
+            <button class="is-active" type="button" data-period="month">월</button>
+          </div>
+        </div>
+        <div class="filter-chips notification-state-filters" aria-label="알림 처리 상태">
+          <button class="is-active" type="button" data-notification-state="unresolved">미처리</button>
+          <button type="button" data-notification-state="resolved">처리완료</button>
+          <button type="button" data-notification-state="all">전체</button>
+        </div>
+        <div class="notification-history-list" id="notification-history-list"></div>
+        <p class="empty-state" id="notification-history-empty" hidden>선택한 조건의 알림이 없습니다.</p>
       </section>
 
       <section class="app-view sub-view" data-view-panel="vehicles" data-title="차량" aria-labelledby="vehicles-title">
         <div class="sub-head"><div><h1 id="vehicles-title">차량</h1><p>고객사 보유 차량과 상태를 확인합니다.</p></div><span id="vehicle-total"></span></div>
         <label class="vehicle-search sub-search"><i data-lucide="search"></i><input id="vehicle-list-search" type="search" placeholder="호기·기종·고객명 검색" autocomplete="off"></label>
-        <div class="filter-chips" aria-label="차량 상태 필터"><button class="is-active" type="button" data-vehicle-filter="all">전체</button><button type="button" data-vehicle-filter="attention">확인 필요</button><button type="button" data-vehicle-filter="normal">정상</button></div>
+        <div class="filter-chips vehicle-filter-chips" aria-label="차량 상태 필터">
+          <button class="is-active" type="button" data-vehicle-filter="all"><i data-lucide="list-filter"></i><span>전체</span><b id="vehicle-filter-all-count">0</b></button>
+          <button type="button" data-vehicle-filter="attention"><i data-lucide="triangle-alert"></i><span>확인 필요</span><b id="vehicle-filter-attention-count">0</b></button>
+          <button type="button" data-vehicle-filter="normal"><i data-lucide="circle-check"></i><span>정상</span><b id="vehicle-filter-normal-count">0</b></button>
+        </div>
         <div class="vehicle-mobile-list" id="vehicle-mobile-list"></div>
         <p class="empty-state" id="vehicle-empty" hidden>검색 결과가 없습니다.</p>
       </section>
 
-      <section class="app-view sub-view" data-view-panel="service" data-title="서비스" aria-labelledby="service-title">
-        <div class="sub-head"><div><h1 id="service-title">서비스</h1><p>차량 에러·소모품·정비 상태를 한곳에서 확인합니다.</p></div></div>
-        <div class="service-counts" role="tablist" aria-label="서비스 현황"><button class="is-active" type="button" role="tab" aria-selected="true" data-service-type="error"><i data-lucide="triangle-alert"></i><span>차량 에러</span><strong id="service-error-count"></strong></button><button type="button" role="tab" aria-selected="false" data-service-type="supply"><i data-lucide="wrench"></i><span>소모품</span><strong id="service-supply-count"></strong></button><button type="button" role="tab" aria-selected="false" data-service-type="maintenance"><i data-lucide="clipboard-check"></i><span>정비</span><strong id="service-maintenance-count"></strong></button></div>
-        <div class="service-mobile-list" id="service-mobile-list"></div>
+      <section class="app-view sub-view" data-view-panel="maintenance" data-title="정비" aria-labelledby="maintenance-title">
+        <div class="sub-head"><div><h1 id="maintenance-title">정비</h1><p>차량·배터리 에러와 정비 내역을 함께 확인합니다.</p></div><span id="maintenance-list-total"></span></div>
+        <label class="vehicle-search sub-search"><i data-lucide="search"></i><input id="maintenance-list-search" type="search" placeholder="호기·기종·고객명·내용 검색" autocomplete="off"></label>
+        <div class="service-counts service-counts--two" role="tablist" aria-label="정비 현황"><button class="is-active" type="button" role="tab" aria-selected="true" data-service-type="error"><i data-lucide="triangle-alert"></i><span>에러</span><strong id="service-error-count"></strong></button><button type="button" role="tab" aria-selected="false" data-service-type="maintenance"><i data-lucide="clipboard-check"></i><span>정비</span><strong id="service-maintenance-count"></strong></button></div>
+        <div class="service-mobile-list" id="maintenance-mobile-list"></div>
+        <p class="empty-state" id="maintenance-empty" hidden>검색 결과가 없습니다.</p>
+      </section>
+
+      <section class="app-view sub-view" data-view-panel="supplies" data-title="소모품" aria-labelledby="supplies-title">
+        <div class="sub-head"><div><h1 id="supplies-title">소모품</h1><p>교체 기준에 도달하거나 초과한 소모품을 확인합니다.</p></div><span id="supply-list-total"></span></div>
+        <label class="vehicle-search sub-search"><i data-lucide="search"></i><input id="supply-list-search" type="search" placeholder="호기·기종·고객명·소모품 검색" autocomplete="off"></label>
+        <div class="service-mobile-list" id="supply-mobile-list"></div>
+        <p class="empty-state" id="supply-empty" hidden>검색 결과가 없습니다.</p>
       </section>
 
       <section class="app-view sub-view detail-view" data-view-panel="vehicle-detail" data-title="차량 상세" aria-labelledby="vehicle-detail-title">
@@ -87,9 +119,9 @@
           <dl class="detail-definition" id="vehicle-detail-info"></dl>
         </section>
         <section class="detail-card">
-          <div class="detail-card__head"><h2>서비스 현황</h2><span id="vehicle-service-total"></span></div>
+          <div class="detail-card__head"><h2>상태별 상세 보기</h2><span id="vehicle-service-total"></span></div>
           <div class="detail-service-list" id="vehicle-service-list"></div>
-          <p class="empty-state compact" id="vehicle-service-empty" hidden>등록된 서비스 내역이 없습니다.</p>
+          <p class="empty-state compact" id="vehicle-service-empty" hidden>현재 확인이 필요한 항목이 없습니다.</p>
         </section>
       </section>
 
@@ -116,8 +148,8 @@
 
         <section class="settings-group">
           <h2>알림</h2>
-          <label class="setting-row"><span><strong>차량 에러</strong><small>새 차량·배터리 에러 알림</small></span><input type="checkbox" data-setting="vehicleError" checked><i></i></label>
-          <label class="setting-row"><span><strong>소모품 도래</strong><small>교체 기준 도달 및 초과 알림</small></span><input type="checkbox" data-setting="supplies" checked><i></i></label>
+          <label class="setting-row"><span><strong>긴급 에러 푸시</strong><small>차량·배터리 에러 발생 시 즉시 알림</small></span><input type="checkbox" data-setting="vehicleError" checked><i></i></label>
+          <label class="setting-row"><span><strong>소모품 푸시</strong><small>교체 기준 도달·초과 안내(선택)</small></span><input type="checkbox" data-setting="supplies"><i></i></label>
           <label class="setting-row"><span><strong>정비 상태</strong><small>정비 접수 및 완료 알림</small></span><input type="checkbox" data-setting="maintenance" checked><i></i></label>
           <label class="setting-row"><span><strong>로그인 보안</strong><small>새 기기 로그인 알림</small></span><input type="checkbox" data-setting="loginSecurity" checked><i></i></label>
         </section>
@@ -134,21 +166,23 @@
     <nav class="bottom-nav" aria-label="주 메뉴">
       <button type="button" class="is-active" data-nav="home"><i data-lucide="house"></i><span>홈</span></button>
       <button type="button" data-nav="vehicles"><i data-lucide="truck"></i><span>차량</span></button>
-      <button type="button" data-nav="service"><i data-lucide="wrench"></i><span>서비스</span></button>
+      <button type="button" data-nav="maintenance"><i data-lucide="clipboard-check"></i><span>정비</span></button>
+      <button type="button" data-nav="supplies"><i data-lucide="wrench"></i><span>소모품</span></button>
       <button type="button" data-nav="settings"><i data-lucide="settings"></i><span>설정</span></button>
     </nav>
   </div>
 
-  <div class="sheet-backdrop" data-close-sheet hidden></div>
-  <aside class="notification-sheet" aria-labelledby="notification-title" hidden>
-    <div class="sheet-handle"></div>
-    <div class="sheet-head"><h2 id="notification-title">알림</h2><button type="button" data-close-sheet aria-label="알림 닫기">×</button></div>
-    <div id="notification-list"></div>
-  </aside>
+  <dialog class="location-dialog" id="location-dialog" aria-labelledby="location-dialog-title">
+    <header><div><small>차량 위치</small><h2 id="location-dialog-title"></h2></div><button type="button" id="location-dialog-close" aria-label="지도 닫기"><i data-lucide="x"></i></button></header>
+    <p id="location-dialog-address"></p>
+    <iframe id="location-map" title="차량 현재 위치 지도" loading="lazy"></iframe>
+    <footer><span id="location-dialog-coordinate"></span><a id="location-map-link" target="_blank" rel="noopener">큰 지도에서 보기</a></footer>
+  </dialog>
+
   <div class="toast" role="status" aria-live="polite" hidden></div>
 
   <script src="./layouts/vendor/lucide.min.js"></script>
-  <script src="./data.js"></script>
-  <script src="./mobile.js"></script>
+  <script src="./data.js?v=20260824-4"></script>
+  <script src="./mobile.js?v=20260824-4"></script>
 </body>
 </html>
