@@ -36,6 +36,26 @@
   pointer-events: auto !important;
 }
 
+.linq-review-period-info-button.is-open::after {
+  position: absolute;
+  z-index: 10030;
+  top: calc(100% + 8rem);
+  right: 0;
+  display: block;
+  width: max-content;
+  max-width: 360rem;
+  padding: 10rem 12rem;
+  color: #333;
+  border: 1px solid #d8d8d8;
+  border-radius: 4rem;
+  background: #fff;
+  box-shadow: 0 4rem 14rem rgba(0, 0, 0, .14);
+  content: attr(aria-label);
+  font: 400 13rem/1.5 Arial, sans-serif;
+  text-align: left;
+  white-space: normal;
+}
+
 .content-head.linq-review-title-filter-row {
   display: flex !important;
   width: 100% !important;

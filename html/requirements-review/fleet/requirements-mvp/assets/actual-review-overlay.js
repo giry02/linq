@@ -299,11 +299,22 @@
           info = document.createElement('button');
           info.type = 'button';
           info.textContent = 'i';
-          custom.parentElement.insertBefore(info, custom);
         }
-        info.className = 'linq-review-period-info-button';
+        info.classList.add('linq-review-period-info-button');
         info.setAttribute('title', helpText);
         info.setAttribute('aria-label', helpText);
+        custom.parentElement.insertBefore(info, custom.nextSibling);
+        if (info.dataset.periodInfoBound !== 'true') {
+          info.dataset.periodInfoBound = 'true';
+          info.addEventListener('click', event => {
+            event.preventDefault();
+            event.stopPropagation();
+            info.classList.toggle('is-open');
+          });
+          document.addEventListener('click', event => {
+            if (!info.contains(event.target)) info.classList.remove('is-open');
+          });
+        }
         markReview(info, 'R-SVC-003');
       }
       content.querySelectorAll('.linq-review-period-help').forEach(node => node.remove());
@@ -800,6 +811,52 @@
       .forEach(section => section.remove());
     markReview(content, 'R-BAT-001');
 
+    const compare = new URLSearchParams(location.search).get('batteryCompare') === '1';
+    window.__linqBatteryFunctionVersion = 'restore-original-v3';
+    window.__linqBatteryCompareValue = compare;
+    if (!compare) {
+      content.querySelectorAll('.linq-review-battery-compare').forEach(node => node.remove());
+      content.querySelectorAll('.linq-review-battery-production-chart').forEach(node => node.remove());
+      [...content.querySelectorAll(':scope > .content-section')]
+        .filter(section => /배터리\s*충전.*방전량|온도\s*정보/.test(section.textContent.replace(/\s+/g, ' ')))
+        .forEach(section => {
+          section.style.display = '';
+          const host = section.querySelector('.content-section__body');
+          if (host) [...host.children].forEach(child => { child.style.display = ''; });
+        });
+
+      const vehicleSelect = [...content.querySelectorAll('select')]
+        .find(select => [...select.options].some(option => option.textContent.trim() === 'FBA32_224250383'));
+      const vehicleOption = vehicleSelect
+        ? [...vehicleSelect.options].find(option => option.textContent.trim() === 'FBA32_224250383')
+        : null;
+      if (vehicleSelect && vehicleOption) {
+        vehicleSelect.value = vehicleOption.value;
+        [...vehicleSelect.options].forEach(option => { option.selected = option === vehicleOption; });
+      }
+
+      const summaryText = content.querySelector('.battery-graph.mode-detail .battery-graph__text');
+      if (summaryText) summaryText.textContent = '84%';
+      const summaryBar = content.querySelector('.battery-graph.mode-detail .battery-graph__bar');
+      if (summaryBar) {
+        summaryBar.style.width = '84%';
+        summaryBar.classList.add('charge-active');
+      }
+      [...content.querySelectorAll('.battery-status__value')].slice(0, 3).forEach(value => { value.textContent = '정상'; });
+      const infoValues = ['7시간 6분', '3.692kWh', '0.064kWh', '96시간 0분', '0.052kWh'];
+      [...content.querySelectorAll('.battery-info__info em')].slice(0, infoValues.length).forEach((value, index) => {
+        value.textContent = infoValues[index];
+      });
+      const healthBar = content.querySelector('.battery-graph.mode-soh .battery-graph__bar');
+      if (healthBar) {
+        healthBar.style.height = '100%';
+        healthBar.classList.add('charge-active');
+        const value = healthBar.querySelector('span');
+        if (value) value.textContent = '100%';
+      }
+      return;
+    }
+
     const batteryRanges = [
       {day:6,low:100,high:100,value:100,tone:'charge'}, {day:7,low:100,high:100,value:100,tone:'charge'},
       {day:8,low:100,high:100,value:100,tone:'charge'}, {day:10,low:61,high:98,value:61},
@@ -882,7 +939,6 @@
       host.insertAdjacentHTML('beforeend', rangeChartMarkup(records, type));
     });
 
-    const compare = new URLSearchParams(location.search).get('batteryCompare') === '1';
     if (!compare || content.querySelector('.linq-review-battery-compare')) return;
 
     [...content.querySelectorAll('.content-section, section')]
@@ -1212,7 +1268,12 @@
       attempts += 1;
       const content = contentBody();
       if (content) applyLithiumBattery(content);
-      const ready = content?.querySelectorAll('.linq-review-battery-production-chart').length >= 2;
+      const compare = new URLSearchParams(location.search).get('batteryCompare') === '1';
+      const hasErrorSection = [...(content?.querySelectorAll('.content-section, section') || [])]
+        .some(section => /^(에러|오류)\s*정보/.test(section.textContent.trim()));
+      const ready = compare
+        ? content?.querySelectorAll('.linq-review-battery-production-chart').length >= 2
+        : Boolean(content && !hasErrorSection && !content.querySelector('.linq-review-battery-compare'));
       if (ready || attempts >= 24) {
         window.clearInterval(window.__linqLithiumBatteryGuard);
         window.__linqLithiumBatteryGuard = null;

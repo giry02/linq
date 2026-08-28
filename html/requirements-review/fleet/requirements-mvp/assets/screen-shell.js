@@ -100,17 +100,17 @@
     }
     const reviewStyle = doc.querySelector('link[data-requirements-review]');
     if (reviewStyle) {
-      reviewStyle.href = '/requirements-mvp/assets/actual-review-overlay.css?v=20260828-1';
+      reviewStyle.href = '/requirements-mvp/assets/actual-review-overlay.css?v=20260828-2';
     } else {
       const style = doc.createElement('link');
       style.rel = 'stylesheet';
-      style.href = '/requirements-mvp/assets/actual-review-overlay.css?v=20260828-1';
+      style.href = '/requirements-mvp/assets/actual-review-overlay.css?v=20260828-2';
       style.dataset.requirementsReview = '';
       doc.head.append(style);
     }
     if (!doc.querySelector('script[data-requirements-review]')) {
       const script = doc.createElement('script');
-    script.src = '/requirements-mvp/assets/actual-review-overlay.js?v=20260828-1';
+    script.src = '/requirements-mvp/assets/actual-review-overlay.js?v=20260828-3';
       script.async = false;
       script.dataset.requirementsReview = '';
       doc.head.append(script);
@@ -210,10 +210,21 @@
           info.textContent = 'i';
         }
         info.className = 'linq-static-period-info';
-        custom.parentElement.insertBefore(info, custom);
+        custom.parentElement.insertBefore(info, custom.nextSibling);
         const helpText = '사용자설정 조회 가능 기간은 서버 기준 확인이 필요합니다.';
         info.title = helpText;
         info.setAttribute('aria-label', helpText);
+        if (info.dataset.periodInfoBound !== 'true') {
+          info.dataset.periodInfoBound = 'true';
+          info.addEventListener('click', event => {
+            event.preventDefault();
+            event.stopPropagation();
+            info.classList.toggle('is-open');
+          });
+          doc.addEventListener('click', event => {
+            if (!info.contains(event.target)) info.classList.remove('is-open');
+          });
+        }
       }
     }
     doc.querySelectorAll('.linq-review-period-help').forEach(node => node.remove());
@@ -248,6 +259,8 @@
         .linq-static-title-filter-row > .filter-form { flex:0 0 auto !important; margin:0 0 0 auto !important; }
         .linq-static-title-filter-row .filter-form__body { display:flex !important; align-items:center !important; justify-content:flex-end !important; gap:0 !important; }
         .linq-static-period-info {
+          position:relative !important;
+          z-index:2 !important;
           display:inline-grid !important;
           flex:0 0 22rem !important;
           width:22rem !important;
@@ -262,6 +275,25 @@
           font:700 12rem/1 Arial,sans-serif !important;
           cursor:help !important;
           pointer-events:auto !important;
+        }
+        .linq-static-period-info.is-open::after {
+          position:absolute;
+          z-index:10030;
+          top:calc(100% + 8rem);
+          right:0;
+          display:block;
+          width:max-content;
+          max-width:360rem;
+          padding:10rem 12rem;
+          color:#333;
+          border:1px solid #d8d8d8;
+          border-radius:4rem;
+          background:#fff;
+          box-shadow:0 4rem 14rem rgba(0,0,0,.14);
+          content:attr(aria-label);
+          font:400 13rem/1.5 Arial,sans-serif;
+          text-align:left;
+          white-space:normal;
         }
       `;
       doc.head.append(style);
