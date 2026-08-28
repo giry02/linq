@@ -100,17 +100,17 @@
     }
     const reviewStyle = doc.querySelector('link[data-requirements-review]');
     if (reviewStyle) {
-      reviewStyle.href = new URL('./assets/actual-review-overlay.css?v=20260828-2', location.href).href;
+      reviewStyle.href = new URL('./assets/actual-review-overlay.css?v=20260828-3', location.href).href;
     } else {
       const style = doc.createElement('link');
       style.rel = 'stylesheet';
-      style.href = new URL('./assets/actual-review-overlay.css?v=20260828-2', location.href).href;
+      style.href = new URL('./assets/actual-review-overlay.css?v=20260828-3', location.href).href;
       style.dataset.requirementsReview = '';
       doc.head.append(style);
     }
     if (!doc.querySelector('script[data-requirements-review]')) {
       const script = doc.createElement('script');
-      script.src = new URL('./assets/actual-review-overlay.js?v=20260828-2', location.href).href;
+      script.src = new URL('./assets/actual-review-overlay.js?v=20260828-4', location.href).href;
       script.async = false;
       script.dataset.requirementsReview = '';
       doc.head.append(script);

@@ -15,6 +15,50 @@
   cursor: pointer;
 }
 
+.linq-review-period-info-button {
+  position: relative !important;
+  z-index: 2 !important;
+  display: inline-grid !important;
+  flex: 0 0 22rem !important;
+  width: 22rem !important;
+  height: 22rem !important;
+  margin: 0 0 0 6rem !important;
+  padding: 0 !important;
+  place-items: center !important;
+  color: #666 !important;
+  border: 1px solid #999 !important;
+  border-radius: 50% !important;
+  background: #fff !important;
+  font: 700 12rem/1 Arial, sans-serif !important;
+  cursor: help !important;
+  pointer-events: auto !important;
+}
+
+.linq-review-period-info-button.is-open::after { content: none !important; }
+
+.linq-review-period-control-row {
+  display: inline-flex !important;
+  flex-wrap: nowrap !important;
+  align-items: center !important;
+}
+
+.linq-review-period-popover {
+  position: fixed;
+  z-index: 10040;
+  box-sizing: border-box;
+  padding: 10px 12px;
+  color: #333;
+  border: 1px solid #d8d8d8;
+  border-radius: 4px;
+  background: #fff;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, .14);
+  font: 400 13px/1.5 Arial, sans-serif;
+  text-align: left;
+  white-space: normal;
+}
+
+.linq-review-period-popover[hidden] { display: none !important; }
+
 .linq-review-marker:hover,
 .linq-review-marker:focus,
 .linq-review-marker.is-active {

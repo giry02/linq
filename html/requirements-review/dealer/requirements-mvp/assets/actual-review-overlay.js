@@ -218,7 +218,7 @@
     return header;
   }
 
-  function configurePeriodFilter(content) {
+  function configurePeriodFilterBase(content) {
     const dayText = exactText(content, '.radio__text, button', '일');
     const customText = exactText(content, '.radio__text, button', '사용자설정');
     const day = dayText?.closest('label, button') || dayText;
@@ -251,6 +251,96 @@
       head.classList.add('linq-review-title-filter-row');
       if (form.parentElement !== head) head.append(form);
     }
+  }
+
+  function configurePeriodFilter(content) {
+    configurePeriodFilterBase(content);
+
+    const customText = exactText(content, '.radio__text, button', '사용자설정');
+    const custom = customText?.closest('label, button') || customText;
+    if (!custom?.parentElement) return;
+
+    const helpText = '시작일과 종료일을 직접 선택합니다. 서버에서 허용하는 최대 조회 범위는 확인이 필요합니다.';
+    custom.parentElement.classList.add('linq-review-period-control-row');
+    const duplicates = [...custom.parentElement.querySelectorAll('.linq-review-period-info-button, .linq-static-period-info')];
+    let info = duplicates.shift();
+    duplicates.forEach(node => node.remove());
+    if (!info) {
+      info = document.createElement('button');
+      info.type = 'button';
+      info.textContent = 'i';
+    }
+    info.classList.add('linq-review-period-info-button');
+    info.setAttribute('title', helpText);
+    info.setAttribute('aria-label', helpText);
+    custom.parentElement.insertBefore(info, custom.nextSibling);
+
+    let popover = document.getElementById('linq-review-period-popover');
+    if (!popover) {
+      popover = document.createElement('div');
+      popover.id = 'linq-review-period-popover';
+      popover.className = 'linq-review-period-popover';
+      popover.hidden = true;
+      popover.setAttribute('role', 'tooltip');
+      popover.setAttribute('aria-hidden', 'true');
+      document.body.append(popover);
+    }
+    popover.textContent = helpText;
+    info.setAttribute('aria-controls', popover.id);
+    info.setAttribute('aria-expanded', 'false');
+
+    const closePopover = () => {
+      info.classList.remove('is-open');
+      info.setAttribute('aria-expanded', 'false');
+      popover.hidden = true;
+      popover.setAttribute('aria-hidden', 'true');
+    };
+    const positionPopover = () => {
+      if (popover.hidden) return;
+      const rect = info.getBoundingClientRect();
+      const width = Math.min(360, Math.max(240, window.innerWidth - 32));
+      const left = Math.min(window.innerWidth - width - 16, Math.max(16, rect.right - width));
+      popover.style.width = `${width}px`;
+      popover.style.left = `${left}px`;
+      popover.style.top = `${rect.bottom + 8}px`;
+    };
+
+    info.onclick = event => {
+      event.preventDefault();
+      event.stopPropagation();
+      if (!popover.hidden) {
+        closePopover();
+        return;
+      }
+      info.classList.add('is-open');
+      info.setAttribute('aria-expanded', 'true');
+      popover.hidden = false;
+      popover.setAttribute('aria-hidden', 'false');
+      positionPopover();
+    };
+    info.onkeydown = event => {
+      if (event.key === 'Escape') closePopover();
+    };
+    if (document.body.dataset.periodInfoOutsideBound !== 'true') {
+      document.body.dataset.periodInfoOutsideBound = 'true';
+      document.addEventListener('click', event => {
+        const activeButton = document.querySelector('.linq-review-period-info-button.is-open');
+        const activePopover = document.getElementById('linq-review-period-popover');
+        if (activeButton && activePopover && !activeButton.contains(event.target) && !activePopover.contains(event.target)) {
+          activeButton.classList.remove('is-open');
+          activeButton.setAttribute('aria-expanded', 'false');
+          activePopover.hidden = true;
+          activePopover.setAttribute('aria-hidden', 'true');
+        }
+      });
+    }
+    window.__linqPositionPeriodPopover = positionPopover;
+    if (window.__linqPeriodPopoverWindowBound !== true) {
+      window.__linqPeriodPopoverWindowBound = true;
+      window.addEventListener('resize', () => window.__linqPositionPeriodPopover?.());
+      window.addEventListener('scroll', () => window.__linqPositionPeriodPopover?.(), true);
+    }
+    markReview(info, 'R-SVC-003');
   }
 
   function removeHeaderCompanySearch() {
