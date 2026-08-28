@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MACHINE IQ · 운행이력 요약정보 · 1안</title>
+  <link rel="stylesheet" href="../assets/local-fonts.css">
+  <link rel="stylesheet" href="./analysis-summary-prototype.css">
+</head>
+<body data-layout="top">
+  <div id="wrap">
+    <header class="page-head">
+      <div class="page-head__inner">
+        <a class="page-head__logo" href="../" aria-label="Bobcat MACHINE IQ">
+          <img src="../favicon.ico" alt=""><strong>Bobcat</strong><span>MACHINE IQ</span>
+        </a>
+        <nav class="page-head__nav" aria-label="주 메뉴">
+          <button type="button" data-global="대시보드">대시보드</button>
+          <button type="button" data-global="차량관리">차량관리</button>
+          <button type="button" class="active" data-global="운행이력">운행이력</button>
+          <button type="button" data-global="서비스">서비스</button>
+          <button type="button" data-global="리포트">리포트</button>
+          <button type="button" data-global="지도">지도</button>
+          <button type="button" data-global="관리기능">관리기능</button>
+        </nav>
+        <div class="page-head__account"><span id="account"></span><button type="button">로그아웃</button></div>
+      </div>
+    </header>
+
+    <section class="top-selection collapsed" id="selector-dock" aria-label="업체 및 차량 선택">
+      <div class="top-selection__inner">
+        <strong>조회 대상</strong>
+        <label><span>업체</span><select id="quick-company-select"></select></label>
+        <label><span>차량</span><select id="quick-vehicle-select"></select></label>
+        <span class="selection-context" id="context-pill"></span>
+        <button class="line-button" id="selector-toggle" type="button">차량 상세검색</button>
+      </div>
+      <div class="top-selection__detail">
+        <div class="detail-search-field">
+          <span>전체 업체 차량번호 검색</span>
+          <div class="detail-search-control">
+            <input id="vehicle-search" type="search" aria-label="전체 업체 차량번호 검색" placeholder="차량번호 5자 이상 입력 (예: FBA32)">
+            <button id="vehicle-search-submit" type="button">조회</button>
+          </div>
+          <small>업체 선택과 관계없이 전체 차량에서 차량번호 일부가 일치하는 차량을 조회합니다. 5자 이상 입력해 주세요.</small>
+        </div>
+        <div class="detail-result-area">
+          <div class="detail-result-head"><strong id="vehicle-result-count">조회 결과</strong><span>차량번호 · 소속 업체 · 모델 · 동력 유형</span></div>
+          <div class="vehicle-result" id="vehicle-strip"></div>
+        </div>
+      </div>
+    </section>
+
+    <div class="page-body">
+      <aside class="local-side analysis-side">
+        <div class="local-side__inner">
+          <div class="page-side">
+            <div class="page-side__title">운행이력</div>
+            <div class="page-side__content">
+              <nav class="analysis-menu-list" aria-label="운행이력 하위 메뉴">
+                <button class="side-item type2 active" type="button" data-section="summary"><em>요약정보</em></button>
+                <button class="side-item type2" type="button" data-section="usage"><em>사용시간</em></button>
+                <button class="side-item type2" type="button" data-section="efficiency"><em>운영효율</em></button>
+                <button class="side-item type2" type="button" data-section="shock"><em>충격</em></button>
+                <button class="side-item type2" type="button" data-section="engine"><em>엔진</em></button>
+                <button class="side-item type2" type="button" data-section="lithium"><em>리튬배터리</em></button>
+                <button class="side-item type2" type="button" data-section="hydrogen"><em>수소배터리</em></button>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </aside>
+      <button class="local-side-func" type="button" aria-label="좌측 메뉴 접기">‹</button>
+      <main class="local-body">
+        <section class="content-path"><span>⌂</span><span>운행이력</span><span id="breadcrumb-current">요약정보</span></section>
+        <div class="content-head">
+          <div class="content-head__main"><h3 id="page-title">요약정보</h3><div class="content-head__dataset">- <span id="dataset-name">기본그룹</span></div></div>
+          <div class="filter-form"><div class="period-tabs"><button>일</button><button>주</button><button class="active">월</button><button>사용자설정</button></div><input disabled value="2026. 08. 01."><span>~</span><input disabled value="2026. 08. 17."><button class="primary-button" type="button">조회</button></div>
+        </div>
+        <div class="content-body">
+          <div class="display-table" id="summary-table"></div>
+          <div class="vehicle-cards" id="vehicle-cards"></div>
+        </div>
+      </main>
+    </div>
+    <footer class="page-foot"><strong>Bobcat <span>MACHINE IQ</span></strong><p>이용약관　 위치정보 및 위치기반서비스 이용약관　 개인(위치)정보 처리방침　 오픈소스 고지</p><p>©2024 Bobcat Company. ALL RIGHTS RESERVED.</p></footer>
+  </div>
+  <div class="toast" id="toast" hidden></div>
+  <script src="./analysis-summary-prototype.js" defer></script>
+</body>
+</html>

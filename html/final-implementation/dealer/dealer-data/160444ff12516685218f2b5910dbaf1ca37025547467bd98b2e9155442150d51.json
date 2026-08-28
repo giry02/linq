@@ -1,0 +1,8 @@
+{
+  "method": "GET",
+  "path": "/fleet/admin/equipment/FRA0V-001110",
+  "status": 200,
+  "contentType": "application/json",
+  "bodyEncoding": "base64",
+  "body": "eyJjb2RlIjoiMDAiLCJtc2ciOiJzdWNjZXNzIiwic3RhdHVzIjoyMDAsInJlc3VsdCI6eyJlcXVpcG1lbnRJZCI6IkZSQTBWLTAwMTExMCIsImVxdWlwbWVudE51bWJlciI6IkZSQTBWLTAwMTExMCIsImVxdWlwbWVudE5hbWUiOiJCUjI1Uy05IiwidGVybWluYWxJZCI6MjI1NTAwMjc5LCJtb2RlbFllYXIiOm51bGwsInJlbnRhbFluIjpudWxsLCJlcXVpcG1lbnRDb2RlSWQiOjc0NiwiY29kZU5hbWUiOiJCUjI1Uy05IiwidHlwZUNvZGUiOiJNT1RPUiIsInR5cGVDb2RlTmFtZSI6IuyghOuPmSIsImZ1ZWxUeXBlQ29kZSI6bnVsbCwiZnVlbFR5cGVDb2RlTmFtZSI6bnVsbCwibWFrZXJDb2RlIjoiRG9vc2FuIiwiZXF1aXBtZW50Q29kZSI6IkZSQTBWIiwiZ3JvdXBJZCI6MjA0NjcsImdyb3VwTmFtZSI6Iuq4sOuzuOq3uOujuSIsImN1bXVsYXRpdmVEaXN0YW5jZSI6NDM2Njc1LjAsImN1bXVsYXRpdmVUaW1lVmFsIjo5MjY2MTA1fX0="
+}

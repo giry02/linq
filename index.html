@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="format-detection" content="telephone=no, date=no, address=no, email=no" />
-    <title>LIN-Q 서비스 선택</title>
+    <title>MACHINE IQ 서비스 선택</title>
     <style>
       :root {
         color-scheme: light;
@@ -161,7 +161,7 @@
   </head>
   <body>
     <header>
-      <div class="brand"><strong>Bobcat</strong><span>MACHINE IQ · LIN-Q</span></div>
+      <div class="brand"><strong>Bobcat</strong><span>MACHINE IQ</span></div>
     </header>
     <main>
       <h1>서비스를 선택해 주세요.</h1>
@@ -192,17 +192,17 @@
           <span class="enter">모바일 웹 열기 <b aria-hidden="true">→</b></span>
         </a>
       </section>
-      <footer>LIN-Q offline HTML mirror · Local JSON API</footer>
+      <footer>MACHINE IQ HTML mirror · Local JSON API</footer>
     </main>
     <script>
       const host = location.hostname || "localhost";
       const protocol = location.protocol === "https:" ? "https:" : "http:";
       if (host === "localhost" || host === "127.0.0.1") {
-        document.querySelector("#fleet-link").href = `${protocol}//${host}:3000/fleet/ko/login`;
-        document.querySelector("#dealer-link").href = `${protocol}//${host}:3001/dealer/ko/login`;
+        document.querySelector("#fleet-link").href = `${protocol}//${host}:3210/fleet/ko/page/dashboard/widget`;
+        document.querySelector("#dealer-link").href = `${protocol}//${host}:3211/dealer/ko/page/dashboard/widget-company`;
       } else {
-        document.querySelector("#fleet-link").href = "./html/fleet/";
-        document.querySelector("#dealer-link").href = "./html/dealer/";
+        document.querySelector("#fleet-link").href = "./html/final-implementation/fleet/";
+        document.querySelector("#dealer-link").href = "./html/final-implementation/dealer/";
       }
     </script>
   </body>

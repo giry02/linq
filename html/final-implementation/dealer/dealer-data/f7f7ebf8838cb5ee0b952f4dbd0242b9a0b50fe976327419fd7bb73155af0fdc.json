@@ -1,0 +1,8 @@
+{
+  "method": "GET",
+  "path": "/fleet/analysis/hi/error/group/34304?periodTypeCode=monthly&startDate=20260801&endDate=20260813",
+  "status": 200,
+  "contentType": "application/json",
+  "bodyEncoding": "base64",
+  "body": "eyJjb2RlIjoiMDAiLCJtc2ciOiJzdWNjZXNzIiwic3RhdHVzIjoyMDAsInJlc3VsdCI6W119"
+}

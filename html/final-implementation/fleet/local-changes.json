@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "mutations": [
+    {
+      "method": "POST",
+      "path": "/common/auth/refresh-token",
+      "body": {},
+      "updatedAt": "2026-08-27T10:31:13.357Z"
+    }
+  ]
+}

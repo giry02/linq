@@ -1,0 +1,8 @@
+{
+  "method": "GET",
+  "path": "/fleet/management/equipment/category",
+  "status": 200,
+  "contentType": "application/json",
+  "bodyEncoding": "base64",
+  "body": "eyJjb2RlIjoiMDIiLCJtc2ciOiJDYW5ub3QgaW52b2tlICZxdW90O1N0cmluZy5lcXVhbHMoT2JqZWN0KSZxdW90OyBiZWNhdXNlIHRoZSByZXR1cm4gdmFsdWUgb2YgJnF1b3Q7Y29tLmRvb3Nhbi5saW5xLmFwcC5mbGVldC5tYW5hZ2VtZW50Lm1vZGVsLkZpbmRWZWhpY2xlQ2F0ZWdvcnlSZXEuZ2V0Q2F0ZWdvcnkoKSZxdW90OyBpcyBudWxsIiwic3RhdHVzIjoyMDAsInJlc3VsdCI6bnVsbH0="
+}

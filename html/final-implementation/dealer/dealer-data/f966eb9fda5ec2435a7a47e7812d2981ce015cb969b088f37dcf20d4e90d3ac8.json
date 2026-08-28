@@ -1,0 +1,8 @@
+{
+  "method": "GET",
+  "path": "/fleet/analysis/fuel/summary/group/1948?equipmentId=&periodTypeCode=monthly&startDate=20260801",
+  "status": 200,
+  "contentType": "application/json",
+  "bodyEncoding": "base64",
+  "body": "eyJjb2RlIjoiMDAiLCJtc2ciOiJzdWNjZXNzIiwic3RhdHVzIjoyMDAsInJlc3VsdCI6eyJzdGRGdWVsTGgiOjAsInByZXZGdWVsTGgiOjAsImF2Z0Z1ZWxMaCI6MCwic3RkRnVlbEFjYyI6MCwicHJldkZ1ZWxBY2MiOjAsImF2Z0Z1ZWxBY2MiOjB9fQ=="
+}

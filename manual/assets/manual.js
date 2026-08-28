@@ -2,7 +2,7 @@
   const root = document.documentElement;
   const service = root.dataset.service || 'fleet';
   const lang = root.lang === 'en' || root.dataset.lang === 'en' ? 'en' : 'ko';
-  const data = window.LINQ_MANUAL;
+  const data = window.MACHINEIQ_MANUAL;
   const screens = data.screens[service];
   const groups = data.menuGroups[service];
   const glossary = data.glossary;
@@ -39,7 +39,7 @@
   function renderSidebar() {
     return `
       <aside class="manual-sidebar">
-        <div class="side-brand"><strong>Bobcat MACHINE IQ</strong><span>LIN-Q ${esc(txt(data.serviceName[service]).toUpperCase())} ${esc(ui.manual.toUpperCase())}</span></div>
+        <div class="side-brand"><strong>Bobcat MACHINE IQ</strong><span>${esc(txt(data.serviceName[service]).toUpperCase())} ${esc(ui.manual.toUpperCase())}</span></div>
         <div class="side-tools">
           <input class="manual-search" type="search" data-manual-search placeholder="${esc(ui.search)}" aria-label="${esc(ui.search)}">
           <div class="side-switches">
@@ -67,7 +67,7 @@
     return `<section class="page-card cover" id="top">
       <div class="cover-top"></div>
       <div class="cover-body">
-        <p class="eyebrow">LIN-Q · ${esc(txt(data.serviceName[service]))}</p>
+        <p class="eyebrow">${esc(txt(data.serviceName[service]))}</p>
         <h1>${esc(txt(data.serviceName[service]))} ${esc(ui.manual)}</h1>
         <p class="cover-desc">${esc(intro)}</p>
         <div class="cover-meta">
@@ -137,7 +137,7 @@
       <dialog class="image-dialog" data-image-dialog><div class="dialog-head"><h2 data-image-dialog-title></h2><button class="dialog-close" type="button" data-image-close aria-label="${esc(ui.close)}">×</button></div><div class="image-dialog-body"><img data-image-dialog-img alt=""></div></dialog>`;
   }
 
-  document.title = `LIN-Q ${txt(data.serviceName[service])} ${ui.manual}`;
+  document.title = `${txt(data.serviceName[service])} ${ui.manual}`;
   document.body.innerHTML = `<div class="manual-shell">${renderSidebar()}<main class="manual-main"><div class="content-width">${renderCover()}<div data-screen-list>${screens.map(renderScreen).join('')}</div><div class="empty-state" data-screen-empty>${esc(ui.noResult)}</div>${renderGlossary()}</div></main>${renderDialogs()}</div>`;
 
   const screenSearch = document.querySelector('[data-manual-search]');

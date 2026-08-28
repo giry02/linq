@@ -1,0 +1,8 @@
+{
+  "method": "GET",
+  "path": "/fleet/management/company/summary-operation?startDate=20260801&endDate=20260831&companyId=&dealerCompanyId=151&rentalCompanyId=",
+  "status": 200,
+  "contentType": "application/json",
+  "bodyEncoding": "base64",
+  "body": "eyJjb2RlIjoiMDAiLCJtc2ciOiJzdWNjZXNzIiwic3RhdHVzIjoyMDAsInJlc3VsdCI6eyJkaXN0YW5jZSI6NCwib3BlcmF0aW5nVGltZSI6MTMsInN0ckRpc3RhbmNlIjoiM0ttIiwic3RyT3BlcmF0aW5nVGltZSI6IjEzSCAyM00iLCJlZmZpY2llbmN5Ijo1NC41fX0="
+}

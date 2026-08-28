@@ -1,0 +1,8 @@
+{
+  "method": "GET",
+  "path": "/fleet/management/equipment/",
+  "status": 200,
+  "contentType": "application/json",
+  "bodyEncoding": "base64",
+  "body": "eyJjb2RlIjoiMDIiLCJtc2ciOiLtlbTri7kg7KCV67O066W8IOywvuydhCDsiJgg7JeG7Iq164uI64ukLiIsInN0YXR1cyI6NDA0LCJyZXN1bHQiOm51bGx9"
+}

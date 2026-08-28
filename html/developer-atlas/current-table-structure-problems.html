@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MACHINE IQ 현재 테이블 구조 문제</title>
+  <link rel="stylesheet" href="assets/atlas.css">
+  <link rel="stylesheet" href="assets/current-table-problems.css">
+</head>
+<body class="structure-page">
+  <header class="topbar structure-topbar">
+    <a href="index.html" class="brand-link"><img src="../dealer/mobile-home/bobcat-machine-iq.svg" alt="Bobcat MACHINE IQ"><span>현재 테이블 구조 문제</span></a>
+    <nav><a href="#verdict">판정</a><a href="#structure">현재 구조</a><a href="#problems">문제점</a><a href="#direction">개선 방향</a><button type="button" onclick="window.print()">PDF 출력</button></nav>
+  </header>
+  <main class="structure-main">
+    <section class="structure-hero" id="verdict">
+      <p class="eyebrow">CURRENT DATABASE / API STRUCTURE REVIEW</p>
+      <h1>현재 테이블로 플릿·딜러 API를<br>효율적으로 만들 수 있는가?</h1>
+      <div class="verdict-box"><strong>판정</strong><b>원천 데이터 재사용은 가능하지만, 현재 테이블을 그대로 직접 조회해 플릿·딜러 API를 만드는 구조는 비효율적</b><p>화면별 데이터는 존재하나 사용자·권한·차량 관계·오류·정비·다국어 기준이 분산되어 있음. 서비스마다 같은 데이터를 다른 조건과 조인으로 재구성하게 되어 API 중복과 정합성 문제가 커짐</p></div>
+      <div class="score-grid">
+        <article><span>데이터 보유</span><b class="score good">양호</b><p>차량·운행·오류·정비·소모품 원천 존재</p></article>
+        <article><span>플릿·딜러 공통화</span><b class="score bad">낮음</b><p>서비스 구분·권한·필드 노출 기준 분산</p></article>
+        <article><span>API 유지보수성</span><b class="score warn">주의</b><p>화면별·원천별 API와 조건 분기 증가</p></article>
+        <article><span>SQL 실행 성능</span><b class="score unknown">판정 불가</b><p>백엔드 쿼리·인덱스·실행계획 미제공</p></article>
+      </div>
+      <div class="scope-note"><b>중요</b><span>이 문서는 구조적 효율을 판정. 실제 응답속도·DB 부하는 SQL, 인덱스, 통계정보, 실행계획을 추가 확인해야 확정 가능</span></div>
+    </section>
+
+    <section class="structure-section" id="structure">
+      <header><p class="eyebrow">01 · CURRENT CALL STRUCTURE</p><h2>현재 플릿·딜러 호출 구조에서 생기는 문제</h2></header>
+      <div class="current-diagram">
+        <div class="service-pair"><article class="fleet"><small>플릿 화면</small><b>소속 업체·그룹 중심</b><span>플릿 관리자 권한</span></article><article class="dealer"><small>딜러 화면</small><b>관리 업체·차량 중심</b><span>딜러·서비스 권한</span></article></div>
+        <div class="arrow-down">↓ 같은 프론트 모듈과 `/fleet/*` API 경로 사용</div>
+        <div class="api-band"><article><b>화면별 API</b><span>summary · operating · service · errors · supplies · equipment</span></article><article><b>공통 조회 변수</b><span>companyId · groupId · equipmentId · 기간 · 정렬</span></article><article><b>서비스 분기</b><span>역할·companyKind·조회 범위·노출 컬럼 조건 처리</span></article></div>
+        <div class="arrow-down danger">↓ 필요한 데이터를 만들기 위해 여러 테이블과 상태 기준 조합</div>
+        <div class="table-clusters">
+          <article><h3>사용자·권한</h3><p>TB_USER · TB_MEMBER</p><p>TB_MENU · TB_MENU_ROLE</p><p>TB_COMPANY_MENU 계열</p></article>
+          <article><h3>조회 대상</h3><p>TB_COMPANY · TB_GROUP</p><p>TB_EQUIPMENT</p><p>동의·고객·소유 이력</p></article>
+          <article><h3>오류</h3><p>TB_EVENT_ERROR</p><p>TB_EVENT_BM_ERROR</p><p>TB_EVENT_LI_ERROR</p></article>
+          <article><h3>정비·소모품</h3><p>TB_SERVICE_OCS</p><p>TB_SERVICE_REPAIR_RESULT</p><p>TB_SERVICE_SCHEDULE 계열</p></article>
+          <article><h3>다국어·지역</h3><p>TB_CODE_LANG</p><p>언어별 고정 컬럼</p><p>LOCALE · LANGUAGE · TIMEZONE</p></article>
+        </div>
+      </div>
+      <div class="why-inefficient"><h3>왜 비효율적인가</h3><ol><li><b>같은 화면도 서비스별 조건이 달라짐</b><span>플릿은 소속 그룹, 딜러는 관리 업체·판매 관계를 기준으로 하므로 WHERE·JOIN·응답 필드가 달라짐</span></li><li><b>서비스 구분이 API 계약에 명확하지 않음</b><span>딜러 화면도 `/fleet/*` 경로와 공통 모듈을 사용. 재사용 자체는 가능하지만 책임과 권한 경계가 불분명</span></li><li><b>권한을 확인하려면 여러 모델을 해석해야 함</b><span>USER/MEMBER와 메뉴·업체·역할 테이블이 분산되어 API마다 접근 범위를 다시 계산할 가능성</span></li><li><b>통합 요구를 원천 테이블이 지원하지 않음</b><span>차량·엔진·배터리 오류를 한 화면에 표시하려면 서로 다른 상태 의미를 API에서 매번 병합해야 함</span></li><li><b>화면별 DTO가 DB 컬럼에 끌려감</b><span>업무 용어·식별자·단위가 표준화되지 않아 프론트와 API에 예외 처리와 변환 코드가 늘어남</span></li></ol></div>
+    </section>
+
+    <section class="structure-section" id="problems">
+      <header><p class="eyebrow">02 · STRUCTURAL PROBLEMS</p><h2>현재 테이블 구조 문제를 한눈에 보기</h2><p>문제 테이블, API 영향, 실제 발생 가능한 결과를 직접 연결</p></header>
+      <div class="problem-table">
+        <div class="problem-row problem-head"><b>구조 문제</b><b>확인된 테이블·필드</b><b>플릿·딜러 API 영향</b><b>결과</b><b>심각도</b></div>
+        <article class="problem-row"><h3>사용자 체계가 두 개</h3><p>TB_USER / TB_MEMBER와 각각의 설정·인증·토큰 테이블</p><p>플릿·딜러 로그인 사용자를 어느 기준으로 권한 계산할지 API마다 달라질 수 있음</p><em>사용자 누락·중복, 서로 다른 메뉴·차량 접근 결과</em><strong class="critical">치명</strong></article>
+        <article class="problem-row"><h3>권한 구조가 여러 테이블로 분산</h3><p>TB_MENU, TB_MENU_ROLE, TB_COMPANY_MENU, TB_COMPANY_MENU_GROUP, TB_COMPANY_ROLE, TB_USER_ROLE</p><p>메뉴 표시, 데이터 조회, 상세 필드, 수정 실행 권한이 하나의 규칙으로 연결되지 않음</p><em>화면은 숨겨졌지만 API 직접 접근 가능 또는 정상 사용자 차단</em><strong class="critical">치명</strong></article>
+        <article class="problem-row"><h3>SITE_TYPE 정의 불일치</h3><p>TB_MENU: ADMIN/FLEET/RENTAL/APP · TB_COMPANY_MENU: MEMBER/DEALER 포함</p><p>딜러 메뉴가 기본 메뉴 정의와 업체별 메뉴 정의에서 다르게 해석될 가능성</p><em>딜러 메뉴·권한 설정의 예외 분기 증가</em><strong class="high">높음</strong></article>
+        <article class="problem-row"><h3>역할·그룹 ID가 문자열 목록</h3><p>TB_MENU.DENY_ROLE_ID varchar(200) · TB_USER.GROUP_SET_LIST varchar(700)</p><p>정규 JOIN 대신 문자열 검색·파싱 필요. 변경·검증·인덱스 사용이 어려움</p><em>권한 누락과 느린 조건 검색, 잘못된 부분 일치</em><strong class="high">높음</strong></article>
+        <article class="problem-row"><h3>차량 기준 ID가 불명확</h3><p>EQUIPMENT_ID, EQUIPMENT_ID_PP, EQUIPMENT_NUMBER, TERMINAL_ID, SAP 관련 ID</p><p>화면 이동·API·외부 연계에서 어떤 ID가 불변 기준인지 명확하지 않음</p><em>차량이 바뀌거나 재등록될 때 이력 단절·잘못된 차량 조회</em><strong class="critical">치명</strong></article>
+        <article class="problem-row"><h3>소유·관리·동의 관계가 분산</h3><p>TB_EQUIPMENT, TB_COMPANY_EQUIPMENT, TB_EQUIPMENT_AGREE2, TB_COMPANY_CUSTOMER, TB_EQUIPMENT_HISTORY</p><p>플릿 소속, 딜러 관리, 현재 고객, 동의 여부를 조회할 기준 관계가 한곳에 없음</p><em>미동의·이전 고객 차량 노출, 전체 카운트 불일치</em><strong class="critical">치명</strong></article>
+        <article class="problem-row"><h3>오류 테이블이 원천별로 중복</h3><p>TB_EVENT_ERROR / TB_EVENT_BM_ERROR / TB_EVENT_LI_ERROR / TB_EQUIPMENT_ERROR</p><p>차량 에러 통합 API가 서로 다른 컬럼·완료 기준을 병합해야 함</p><em>중복 건수, 현재/과거 오판, 배터리·차량 분류 오류</em><strong class="critical">치명</strong></article>
+        <article class="problem-row"><h3>정비 식별자 관계가 없음</h3><p>AUFNR, QMNUM, ORDER_NO, LINQ_NO는 있으나 Claim 명칭 필드 없음</p><p>정비 이력 API에 Claim을 표시하려면 어떤 값을 써야 할지 확정 불가</p><em>임의 Claim 표기, SAP 정합성 오류</em><strong class="high">높음</strong></article>
+        <article class="problem-row"><h3>완료·현재 상태 정의가 제각각</h3><p>USE_YN, REPAIR_YN, RESOLUTION_YN, CONFIRM·RESULT·CHECK 시각</p><p>서비스 카운트와 목록 필터가 서로 다른 완료 판정을 사용할 수 있음</p><em>KPI와 상세 목록 건수 불일치</em><strong class="high">높음</strong></article>
+        <article class="problem-row"><h3>다국어 모델이 혼합</h3><p>TB_CODE_LANG의 2자리 LANG_CODE, 언어별 고정 컬럼, USER의 LOCALE_CODE와 LANGUAGE</p><p>메뉴·오류코드·소모품·알림마다 번역 조회 방식과 fallback이 달라짐</p><em>신규 국가 추가 시 컬럼·API·프론트 동시 수정</em><strong class="high">높음</strong></article>
+        <article class="problem-row"><h3>시간대·날짜 형식이 혼합</h3><p>TIMEZONE_ID varchar(20/50/64), UTC_OFFSET 문자열, datetime과 날짜·시간 문자열</p><p>일·주·월 집계와 발생일시 경계가 사용자·업체·차량 기준으로 달라질 수 있음</p><em>날짜별 그래프와 카운트가 지역마다 달라짐</em><strong class="high">높음</strong></article>
+        <article class="problem-row"><h3>백업·구버전·오타 테이블 혼재</h3><p>BAK/OLD/DEV/날짜 테이블, HISTROY·COMULATIVE/CUMULATIVE 등</p><p>개발자가 기준 테이블과 기준 컬럼을 잘못 선택할 위험</p><em>동일 기능이 서로 다른 원천을 조회하는 유지보수 문제</em><strong class="medium">중간</strong></article>
+      </div>
+    </section>
+
+    <section class="structure-section" id="direction">
+      <header><p class="eyebrow">03 · EFFICIENT API DIRECTION</p><h2>테이블을 전부 갈아엎지 않고 API 효율을 높이는 방법</h2></header>
+      <div class="bad-good">
+        <article class="bad"><small>피해야 할 방식</small><h3>플릿·딜러 API가 원천 테이블을 각각 직접 조합</h3><p>각 화면에서 USER/MEMBER, 권한, 업체·그룹·차량, 오류 원천을 별도 JOIN·분기</p><div>화면 수 × 서비스 수 × 원천 테이블 수만큼 예외 증가</div></article>
+        <article class="good"><small>권장 방식</small><h3>공통 도메인 조회 계층 뒤에 플릿·딜러 정책 적용</h3><p>기존 테이블은 adapter/view로 읽고, 표준 차량·권한·오류·정비 DTO를 만든 뒤 서비스별 범위와 필드만 적용</p><div>같은 데이터 계산·상태·식별자를 한 번만 정의</div></article>
+      </div>
+      <div class="target-diagram">
+        <div class="target-services"><span>플릿 화면</span><span>딜러 화면</span></div><i>↓</i><article class="policy"><b>서비스 정책 계층</b><p>플릿: 소속 업체·그룹·허용 필드</p><p>딜러: 관리 업체·판매 관계·조치 권한</p></article><i>↓</i><article class="domain"><b>공통 도메인 API</b><p>EquipmentQuery · FaultQuery · MaintenanceQuery · SupplyQuery · MetricQuery</p></article><i>↓</i><div class="adapter-row"><span>사용자·권한 Adapter</span><span>차량 관계 Adapter</span><span>오류 통합 Adapter</span><span>정비·소모품 Adapter</span><span>다국어·단위 Adapter</span></div><i>↓</i><div class="legacy">현재 TB_* 원천 테이블</div>
+      </div>
+      <div class="recommendation-table">
+        <div><b>단계</b><b>해야 할 일</b><b>효과</b></div>
+        <article><span>1</span><p>불변 equipmentKey와 외부 식별자 매핑 정의</p><em>페이지 이동·외부 연계 차량 기준 통일</em></article>
+        <article><span>2</span><p>user/account와 역할·대상범위 권한을 공통 API로 분리</p><em>플릿·딜러 API마다 권한 JOIN 반복 제거</em></article>
+        <article><span>3</span><p>오류 원천을 fault DTO로 통합하고 상태·구분 코드 표준화</p><em>중복·현재/과거·차량/배터리 판정 일치</em></article>
+        <article><span>4</span><p>정비 외부 식별자와 상태·시각 의미 확정</p><em>Claim·완료 여부·정렬 기준 안정화</em></article>
+        <article><span>5</span><p>locale·timezone·unitCode 계약을 공통 응답에 포함</p><em>글로벌 화면별 변환·예외 감소</em></article>
+        <article><span>6</span><p>실제 SQL·인덱스·실행계획으로 고용량 테이블 검증</p><em>구조 개선과 물리 성능 개선을 분리해 확인</em></article>
+      </div>
+      <div class="final-answer"><b>최종 답변</b><p>현재 테이블만으로도 플릿·딜러 화면 데이터는 만들 수 있음. 그러나 원천 테이블을 각 API가 직접 조합하는 방식은 서비스가 늘수록 중복과 오류가 커짐. 기존 테이블 위에 <strong>공통 도메인 조회 계층 + 플릿·딜러 정책 계층</strong>을 두는 방식이 가장 현실적이고 효율적</p></div>
+    </section>
+    <footer class="structure-footer"><a href="data-structure-report.html">전체 요구사항·테이블 진단 보기</a><a href="index.html">개발 아틀라스로 돌아가기</a><span>분석 기준: 테이블 명세·현재 로컬 프론트 API 모듈. 백엔드 SQL·실행계획 별도 확인 필요</span></footer>
+  </main>
+</body>
+</html>

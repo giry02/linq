@@ -1,0 +1,8 @@
+{
+  "method": "GET",
+  "path": "/fleet/admin/company/1933/menugroups",
+  "status": 200,
+  "contentType": "application/json",
+  "bodyEncoding": "base64",
+  "body": "eyJjb2RlIjoiMDAiLCJtc2ciOiJzdWNjZXNzIiwic3RhdHVzIjoyMDAsInJlc3VsdCI6W119"
+}

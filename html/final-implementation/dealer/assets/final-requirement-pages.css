@@ -1,0 +1,1424 @@
+.linq-review-marker {
+  position: absolute;
+  z-index: 10020;
+  display: grid;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  place-items: center;
+  color: #fff;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  background: #d90000;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, .32);
+  font: 800 12px/1 Arial, sans-serif;
+  cursor: pointer;
+}
+
+.linq-review-marker:hover,
+.linq-review-marker:focus,
+.linq-review-marker.is-active {
+  outline: 0;
+  background: #a60000;
+  transform: scale(1.1);
+}
+
+.linq-review-target.is-active {
+  position: relative;
+  z-index: 10010;
+  outline: 2px solid #d90000 !important;
+  outline-offset: 3px;
+  box-shadow: 0 0 0 6px rgba(217, 0, 0, .1) !important;
+}
+
+.srvc-tab.linq-review-service-summary-compact {
+  display: flex !important;
+  width: 341px !important;
+  max-width: 100% !important;
+  height: 71px !important;
+  min-height: 71px !important;
+  justify-content: center !important;
+  gap: 0 !important;
+  margin: 0 !important;
+  padding: 10px 8px !important;
+  border: 1px solid #eaeaea !important;
+  border-radius: 10px !important;
+  background: #fff !important;
+}
+
+.srvc-tab.linq-review-service-summary-compact .srvc-tab__item {
+  display: grid !important;
+  width: 108px !important;
+  min-width: 108px !important;
+  grid-template-columns: 36px minmax(0, 1fr) !important;
+  grid-template-rows: 18px 26px !important;
+  align-items: center !important;
+  gap: 0 6px !important;
+  padding: 0 2px !important;
+  text-align: left !important;
+}
+
+.srvc-tab.linq-review-service-summary-compact .srvc-tab__item + .srvc-tab__item {
+  border-left: 1px solid #e5e5e5 !important;
+}
+
+.srvc-tab.linq-review-service-summary-compact .srvc-tab__item::before {
+  display: block !important;
+  width: 36px !important;
+  height: 36px !important;
+  grid-row: 1 / span 2 !important;
+  background-position: center !important;
+  background-size: contain !important;
+}
+
+.srvc-tab.linq-review-service-summary-compact .srvc-tab__text {
+  grid-column: 2;
+  grid-row: 1;
+  color: #5f5f5f !important;
+  line-height: 18px !important;
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  text-align: left !important;
+  white-space: nowrap !important;
+}
+
+.srvc-tab.linq-review-service-summary-compact .srvc-tab__count {
+  grid-column: 2;
+  grid-row: 2;
+  color: #111 !important;
+  line-height: 24px !important;
+  font-size: 24px !important;
+  font-weight: 800 !important;
+  text-align: left !important;
+  text-decoration: none !important;
+}
+
+.srvc-tab.linq-review-service-summary-compact .srvc-tab__item.active .srvc-tab__count {
+  color: #ff2424 !important;
+}
+
+.linq-review-service-toolbar-row {
+  display: flex;
+  width: 100%;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 12px 0 0;
+}
+
+.linq-review-service-toolbar-row + .display-table {
+  margin-top: -10rem !important;
+}
+
+.linq-review-service-toolbar-row > .srvc-tab {
+  flex: 0 0 auto;
+}
+
+.linq-review-service-toolbar-row > .section-top {
+  flex: 1 1 auto;
+  min-width: 0;
+  margin: 0 !important;
+  margin-left: auto !important;
+}
+
+.linq-review-service-toolbar-row .section-top__suffix,
+.linq-review-service-toolbar-row .filter-form {
+  width: 100%;
+  max-width: 100%;
+  margin-left: auto !important;
+}
+
+.linq-review-service-toolbar-row .filter-form__body {
+  display: flex !important;
+  width: 100% !important;
+  justify-content: flex-end !important;
+  margin-left: auto !important;
+  padding-right: 0 !important;
+}
+
+.linq-review-service-toolbar-row .linq-review-period-help {
+  order: -1;
+  margin: 0 0 7px !important;
+  text-align: right !important;
+}
+
+table[data-review-supplies-table="true"] th,
+table[data-review-supplies-table="true"] td {
+  box-sizing: border-box !important;
+  padding-right: 12rem !important;
+  padding-left: 12rem !important;
+}
+
+table[data-review-supplies-table="true"] th:nth-child(1),
+table[data-review-supplies-table="true"] td:nth-child(1),
+table[data-review-supplies-table="true"] th:nth-child(2),
+table[data-review-supplies-table="true"] td:nth-child(2),
+table[data-review-supplies-table="true"] th:nth-child(4),
+table[data-review-supplies-table="true"] td:nth-child(4),
+table[data-review-supplies-table="true"] th:nth-child(6),
+table[data-review-supplies-table="true"] td:nth-child(6) {
+  white-space: nowrap !important;
+  word-break: keep-all !important;
+}
+
+table[data-review-supplies-table="true"] td:nth-child(3) {
+  word-break: keep-all !important;
+}
+
+table[data-review-maintenance-table="true"] {
+  width: 100% !important;
+  min-width: 0 !important;
+  table-layout: fixed !important;
+}
+
+table[data-review-maintenance-table="true"] th,
+table[data-review-maintenance-table="true"] td {
+  box-sizing: border-box !important;
+  min-width: 0 !important;
+  padding-right: 10rem !important;
+  padding-left: 10rem !important;
+  white-space: normal !important;
+  word-break: keep-all !important;
+  overflow-wrap: break-word !important;
+  line-height: 1.45 !important;
+  vertical-align: middle !important;
+}
+
+.linq-review-service-toolbar-row .filter-form {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: stretch !important;
+}
+
+@media (min-width: 1600px) {
+  .srvc-tab.linq-review-service-summary-compact {
+    width: 600px !important;
+    height: 40px !important;
+    min-height: 40px !important;
+    align-self: flex-end !important;
+    padding: 0 8px !important;
+  }
+
+  .srvc-tab.linq-review-service-summary-compact .srvc-tab__item {
+    display: flex !important;
+    width: 194px !important;
+    min-width: 194px !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 10px !important;
+    padding: 0 8px !important;
+    height: 38px !important;
+    min-height: 38px !important;
+  }
+
+  .srvc-tab.linq-review-service-summary-compact .srvc-tab__item::before {
+    flex: 0 0 32px !important;
+    width: 32px !important;
+    height: 32px !important;
+    grid-column: 1 !important;
+    grid-row: 1 !important;
+  }
+
+  .srvc-tab.linq-review-service-summary-compact .srvc-tab__text {
+    flex: 0 0 auto !important;
+    font-size: 13px !important;
+  }
+
+  .srvc-tab.linq-review-service-summary-compact .srvc-tab__count {
+    flex: 0 0 auto !important;
+    font-size: 24px !important;
+  }
+}
+
+
+.linq-review-guide {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 10030;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 42px;
+  padding: 0 14px;
+  color: #444;
+  border: 1px solid #d3d5d9;
+  border-left: 4px solid #d90000;
+  border-radius: 5px;
+  background: #fff;
+  box-shadow: 0 5px 18px rgba(0, 0, 0, .12);
+  font: 500 12px/1.4 "Noto Sans KR", sans-serif;
+  cursor: pointer;
+}
+
+.linq-review-guide strong { color: #171717; }
+
+.linq-review-drawer {
+  position: fixed;
+  inset: 0 0 0 auto;
+  z-index: 10040;
+  width: 430px;
+  overflow-y: auto;
+  color: #20242b;
+  border-left: 1px solid #c7c9ce;
+  background: #fff;
+  box-shadow: -10px 0 28px rgba(0, 0, 0, .18);
+  font-family: "Noto Sans KR", sans-serif;
+}
+
+.linq-review-drawer[hidden] { display: none; }
+
+.linq-review-drawer__head {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  min-height: 92px;
+  padding: 18px;
+  color: #fff;
+  background: #25272b;
+}
+
+.linq-review-drawer__number {
+  display: grid;
+  flex: 0 0 40px;
+  width: 40px;
+  height: 40px;
+  place-items: center;
+  border-radius: 50%;
+  background: #d90000;
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.linq-review-drawer__head > div { min-width: 0; flex: 1; }
+.linq-review-drawer__head small { color: #cfd3da; font-size: 11px; }
+.linq-review-drawer__head h3 { margin: 4px 0 0; color: #fff; font-size: 18px; line-height: 25px; }
+.linq-review-drawer__close { align-self: flex-start; width: 32px; height: 32px; padding: 0; color: #fff; border: 1px solid rgba(255,255,255,.45); border-radius: 3px; background: transparent; font-size: 24px; }
+.linq-review-drawer__body { padding: 20px; }
+.linq-review-drawer__body > section { margin-top: 18px; padding-top: 17px; border-top: 1px solid #e2e4e7; }
+.linq-review-drawer__body h4 { margin: 0 0 7px; color: #292d34; font-size: 13px; }
+.linq-review-drawer__body p { margin: 0; color: #5e6672; font-size: 13px; line-height: 21px; }
+.linq-review-location { padding: 14px; border: 1px solid #f0c3b8; border-radius: 5px; background: #fff7f5; }
+.linq-review-location h4 { color: #b82400; }
+
+.linq-review-status-row { display: flex; flex-wrap: wrap; gap: 7px; }
+.linq-review-status,
+.linq-review-severity {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+  padding: 0 9px;
+  border-radius: 12px;
+  font-size: 10px;
+  font-weight: 800;
+}
+.linq-review-status { color: #067647; background: #dcfae6; }
+.linq-review-status.is-needed { color: #175cd3; background: #eaf2ff; }
+.linq-review-severity { color: #555d69; border: 1px solid #d9dce1; background: #f7f8f9; }
+.linq-review-severity.is-critical { color: #9b1c1c; border-color: #e8aaaa; background: #ffecec; }
+.linq-review-severity.is-high { color: #a13c00; border-color: #efc09d; background: #fff1e6; }
+.linq-review-severity.is-medium { color: #765700; border-color: #e3d092; background: #fff8dc; }
+
+.linq-review-problem {
+  margin-top: 9px;
+  padding: 13px 14px;
+  border: 1px solid #dfe2e6;
+  border-left: 4px solid #b58500;
+  border-radius: 5px;
+  background: #fff;
+}
+.linq-review-problem.is-critical { border-left-color: #b42318; background: #fffafa; }
+.linq-review-problem.is-high { border-left-color: #d65a00; background: #fffdf9; }
+.linq-review-problem__head { display: flex; justify-content: space-between; gap: 10px; margin-bottom: 6px; }
+.linq-review-problem h5 { margin: 0 0 6px; font-size: 13px; }
+.linq-review-problem p { font-size: 11px; line-height: 18px; }
+.linq-review-problem dl { margin: 8px 0 0; font-size: 11px; }
+.linq-review-problem dl div { display: grid; grid-template-columns: 62px 1fr; gap: 6px; margin-top: 4px; }
+.linq-review-problem dt { font-weight: 800; }
+.linq-review-problem dd { margin: 0; color: #626a78; }
+
+.linq-review-period-help {
+  width: 100%;
+  margin: 7px 0 0;
+  color: #777;
+  font-size: 11px;
+  text-align: right;
+}
+
+.linq-review-source-toolbar,
+.linq-review-role-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  min-height: 44px;
+  margin-bottom: 10px;
+  padding: 6px 10px;
+  border: 1px solid #e0e0e0;
+  background: #fff;
+  font-size: 12px;
+}
+
+.linq-review-source-toolbar strong,
+.linq-review-role-toolbar strong { margin-right: 8px; }
+.linq-review-source-toolbar span,
+.linq-review-role-toolbar > span { margin-left: auto; color: #777; }
+.linq-review-source-toolbar button,
+.linq-review-role-toolbar button {
+  height: 30px;
+  padding: 0 11px;
+  color: #555;
+  border: 1px solid #d6d6d6;
+  border-radius: 3px;
+  background: #fff;
+  font-size: 11px;
+  cursor: pointer;
+}
+.linq-review-source-toolbar button.is-active,
+.linq-review-role-toolbar button.is-active {
+  color: #fff;
+  border-color: #ff3600;
+  background: #ff3600;
+}
+
+table.is-customer-view [data-role-sensitive="true"] { display: none !important; }
+
+table[data-review-service-applied="true"] {
+  width: 100% !important;
+  min-width: 0 !important;
+  table-layout: fixed !important;
+}
+table[data-review-service-applied="true"] th,
+table[data-review-service-applied="true"] td {
+  min-width: 0 !important;
+  padding: 12px 8px;
+  white-space: normal !important;
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+  line-height: 1.45;
+  vertical-align: middle;
+}
+table[data-review-service-applied="true"] th:nth-child(1), table[data-review-service-applied="true"] td:nth-child(1) { width: 6%; }
+table[data-review-service-applied="true"] th:nth-child(2), table[data-review-service-applied="true"] td:nth-child(2) { width: 9%; }
+table[data-review-service-applied="true"] th:nth-child(3), table[data-review-service-applied="true"] td:nth-child(3) { width: 12%; }
+table[data-review-service-applied="true"] th:nth-child(4), table[data-review-service-applied="true"] td:nth-child(4) { width: 17%; }
+table[data-review-service-applied="true"] th:nth-child(5), table[data-review-service-applied="true"] td:nth-child(5) { width: 23%; }
+table[data-review-service-applied="true"] th:nth-child(6), table[data-review-service-applied="true"] td:nth-child(6) { width: 6%; }
+table[data-review-service-applied="true"] th:nth-child(7), table[data-review-service-applied="true"] td:nth-child(7) { width: 11%; }
+table[data-review-service-applied="true"] th:nth-child(8), table[data-review-service-applied="true"] td:nth-child(8) { width: 11%; }
+table[data-review-service-applied="true"] th:nth-child(9), table[data-review-service-applied="true"] td:nth-child(9) { width: 5%; }
+table[data-review-service-applied="true"] [data-review-wrap="true"] { white-space: normal !important; }
+.linq-review-pdf-icon {
+  display: inline-grid;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: 4px;
+  color: #d72828;
+  background: transparent;
+  cursor: pointer;
+}
+.linq-review-pdf-icon:hover,
+.linq-review-pdf-icon:focus-visible { background: #fff0ee; outline: none; }
+.linq-review-pdf-icon svg {
+  width: 25px;
+  height: 25px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.linq-review-table-scroll {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  border-bottom: 1px solid #ddd;
+}
+
+.linq-review-metric-strip {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(145px, 1fr));
+  gap: 8px;
+  margin: 14px 0;
+}
+.operate-top-group[data-review-pruned="true"] > .content-section {
+  width: 100% !important;
+}
+.linq-review-metric-strip > div {
+  min-height: 74px;
+  padding: 13px 15px;
+  border: 1px solid #e1e1e1;
+  background: #fff;
+}
+.linq-review-metric-strip small { display: block; color: #777; font-size: 11px; }
+.linq-review-metric-strip strong { display: block; margin-top: 7px; color: #222; font-size: 19px; }
+
+.linq-review-chart-panel {
+  width: 100%;
+  padding: 18px 20px 20px;
+  border: 1px solid #dfdfdf;
+  background: #fff;
+}
+.linq-review-chart-panel__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  margin-bottom: 12px;
+}
+.linq-review-chart-panel__head h4 { margin: 0; font-size: 16px; }
+.linq-review-chart-panel__head span { color: #777; font-size: 11px; }
+.linq-review-month-chart {
+  position: relative;
+  display: grid;
+  grid-template-columns: 38px minmax(0, 1fr);
+  grid-template-rows: 210px 30px;
+  padding: 15px 0 0;
+}
+.linq-review-month-chart__unit {
+  position: absolute;
+  top: -3px;
+  left: 0;
+  color: #666;
+  font-size: 10px;
+}
+.linq-review-month-chart__y {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 210px;
+  padding-right: 7px;
+  color: #777;
+  border-right: 1px solid #aaa;
+  font-size: 9px;
+  text-align: right;
+}
+.linq-review-month-chart__plot {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(31, minmax(0, 1fr));
+  align-items: end;
+  gap: 3px;
+  height: 210px;
+  padding: 0 4px;
+  border-bottom: 1px solid #aaa;
+  background-image: linear-gradient(to bottom, #ececec 1px, transparent 1px);
+  background-size: 100% 25%;
+}
+.linq-review-month-chart__bar {
+  position: relative;
+  height: var(--bar);
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 2px 2px 0 0;
+  background: transparent;
+  cursor: help;
+}
+.linq-review-month-chart__bar > span {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: var(--bar-color);
+  transition: filter .12s ease, transform .12s ease;
+  transform-origin: bottom;
+}
+.linq-review-month-chart__bar:hover > span,
+.linq-review-month-chart__bar:focus-visible > span { filter: brightness(.82); transform: scaleY(1.03); }
+.linq-review-month-chart__bar::after {
+  position: absolute;
+  z-index: 5;
+  right: 50%;
+  bottom: calc(100% + 8px);
+  display: none;
+  min-width: 190px;
+  padding: 8px 10px;
+  color: #fff;
+  border-radius: 4px;
+  content: attr(data-tooltip);
+  background: rgba(28, 30, 34, .94);
+  box-shadow: 0 3px 10px rgba(0,0,0,.2);
+  font-size: 11px;
+  line-height: 17px;
+  white-space: nowrap;
+}
+.linq-review-month-chart__bar:hover::after,
+.linq-review-month-chart__bar:focus-visible::after { display: block; }
+.linq-review-month-chart__dates {
+  grid-column: 2;
+  display: grid;
+  grid-template-columns: repeat(31, minmax(0, 1fr));
+  padding: 5px 4px 0;
+  color: #777;
+  font-size: 8px;
+  text-align: center;
+}
+.linq-review-month-chart__x-label { grid-column: 2; color: #777; font-size: 10px; text-align: right; }
+
+/* Operating efficiency: keep the original vertical chart direction, cap the axis at 100%,
+ * and fit all 31 daily bars inside the existing content width without horizontal scrolling. */
+.linq-review-efficiency-section .content-section__container,
+.linq-review-efficiency-section .content-section__body {
+  width: 100% !important;
+  min-width: 0 !important;
+  overflow-x: hidden !important;
+}
+.linq-review-period-metrics {
+  display: grid;
+  grid-template-columns: minmax(220px, 1.4fr) minmax(180px, 1fr) minmax(180px, 1fr);
+  border-bottom: 1px solid #e3e3e3;
+  background: #fff;
+}
+.linq-review-period-metrics > div {
+  min-width: 0;
+  padding: 18px 22px;
+  border-right: 1px solid #e3e3e3;
+}
+.linq-review-period-metrics > div:last-child { border-right: 0; }
+.linq-review-period-metrics small {
+  display: block;
+  margin-bottom: 7px;
+  color: #737373;
+  font-size: 12px;
+}
+.linq-review-period-metrics strong {
+  display: block;
+  color: #111;
+  font-size: 20px;
+  line-height: 1.25;
+}
+.linq-review-efficiency-chart {
+  position: relative;
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr);
+  grid-template-rows: 260px 34px;
+  width: 100%;
+  min-width: 0;
+  padding: 28px 24px 8px 18px;
+  box-sizing: border-box;
+  overflow: visible;
+}
+.linq-review-efficiency-axis {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 260px;
+  padding-right: 8px;
+  color: #555;
+  font-size: 11px;
+  text-align: right;
+  box-sizing: border-box;
+}
+.linq-review-efficiency-plot {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(var(--point-count), minmax(0, 1fr));
+  align-items: end;
+  gap: 5px;
+  height: 260px;
+  min-width: 0;
+  border-bottom: 1px solid #9f9f9f;
+  background-image: linear-gradient(to bottom, #e8e8e8 1px, transparent 1px);
+  background-size: 100% 25%;
+}
+.linq-review-efficiency-bar {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-self: end;
+  width: 100%;
+  min-width: 0;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: help;
+}
+.linq-review-efficiency-bar > span { display: block; width: 100%; min-height: 0; }
+.linq-review-efficiency-bar > .off { background: #c7c7c7; }
+.linq-review-efficiency-bar > .idle { background: #d7e0e5; }
+.linq-review-efficiency-bar > .work { background: #8faec0; }
+.linq-review-efficiency-bar:hover,
+.linq-review-efficiency-bar:focus-visible { outline: 2px solid #111; outline-offset: 1px; filter: brightness(.96); }
+.linq-review-efficiency-bar::after {
+  position: absolute;
+  z-index: 20;
+  display: none;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  min-width: 235px;
+  padding: 8px 10px;
+  color: #fff;
+  border-radius: 4px;
+  background: rgba(0,0,0,.86);
+  content: attr(data-tooltip);
+  font-size: 11px;
+  line-height: 1.5;
+  white-space: nowrap;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+.linq-review-efficiency-bar:first-child::after { left: 0; transform: none; }
+.linq-review-efficiency-bar:last-child::after { right: 0; left: auto; transform: none; }
+.linq-review-efficiency-bar:hover::after,
+.linq-review-efficiency-bar:focus-visible::after { display: block; }
+.linq-review-efficiency-dates {
+  grid-column: 2;
+  display: grid;
+  grid-template-columns: repeat(var(--point-count), minmax(0, 1fr));
+  gap: 5px;
+  min-width: 0;
+  padding-top: 7px;
+  color: #333;
+  font-size: 10px;
+  text-align: center;
+}
+.linq-review-efficiency-dates span { min-width: 0; white-space: nowrap; }
+.linq-review-efficiency-unit {
+  position: absolute;
+  top: 9px;
+  left: 18px;
+  color: #666;
+  font-size: 10px;
+}
+.linq-review-efficiency-chart.period-daily .linq-review-efficiency-plot,
+.linq-review-efficiency-chart.period-daily .linq-review-efficiency-dates { grid-template-columns: 80px; justify-content: start; }
+.linq-review-efficiency-chart.period-weekly .linq-review-efficiency-plot,
+.linq-review-efficiency-chart.period-weekly .linq-review-efficiency-dates { grid-template-columns: repeat(7, minmax(60px, 1fr)); }
+
+@media (max-width: 1100px) {
+  .linq-review-period-metrics { grid-template-columns: 1fr 1fr 1fr; }
+  .linq-review-period-metrics > div { padding: 14px; }
+  .linq-review-period-metrics strong { font-size: 17px; }
+  .linq-review-efficiency-plot,
+  .linq-review-efficiency-dates { gap: 3px; }
+  .linq-review-efficiency-dates { font-size: 9px; }
+}
+
+.linq-review-battery-scope,
+.linq-review-vehicle-scope {
+  margin: 12px 0;
+  padding: 10px 12px;
+  color: #555;
+  border-left: 3px solid #ff3600;
+  background: #f7f7f7;
+  font-size: 12px;
+}
+.linq-review-battery-charts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 15px;
+}
+.linq-review-battery-charts .linq-review-month-chart { grid-template-rows: 170px 30px; }
+.linq-review-battery-charts .linq-review-month-chart__y,
+.linq-review-battery-charts .linq-review-month-chart__plot { height: 170px; }
+
+.goods-summary { position: relative; }
+.linq-review-consent-badge,
+.linq-review-role-badge {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+  padding: 0 9px;
+  color: #067647;
+  border-radius: 12px;
+  background: #dcfae6;
+  font-size: 10px;
+  font-weight: 700;
+}
+.linq-review-consent-badge { position: absolute; top: 12px; right: 12px; }
+.linq-review-role-badge { margin-left: 10px; vertical-align: middle; }
+.linq-review-ownership {
+  margin: 12px 0 0;
+  padding-top: 10px;
+  border-top: 1px solid #e2e2e2;
+  font-size: 11px;
+}
+.linq-review-ownership summary { color: #b82400; font-weight: 700; cursor: pointer; }
+.linq-review-ownership dl { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; margin: 10px 0 0; }
+.linq-review-ownership dl div { min-width: 0; }
+.linq-review-ownership dt { color: #777; }
+.linq-review-ownership dd { margin: 3px 0 0; color: #222; font-weight: 700; }
+
+.linq-review-reset {
+  height: 34px;
+  padding: 0 14px;
+  color: #fff;
+  border: 0;
+  border-radius: 3px;
+  background: #ff3600;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.linq-review-reset.is-complete { color: #067647; background: #dcfae6; }
+
+.linq-review-map-card {
+  position: absolute;
+}
+
+.linq-review-fullscreen-button {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 35;
+  display: grid;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  place-items: center;
+  color: #333;
+  border: 1px solid #d8d8d8;
+  border-radius: 4px;
+  background: #fff;
+  box-shadow: 0 2px 7px rgba(0, 0, 0, .12);
+  cursor: pointer;
+}
+
+.linq-review-fullscreen-button:hover,
+.linq-review-fullscreen-button:focus-visible {
+  color: #ff3600;
+  border-color: #ff3600;
+  outline: 0;
+}
+
+.linq-review-fullscreen-button svg {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+body.linq-review-map-fullscreen {
+  overflow: hidden !important;
+}
+
+body.linq-review-map-fullscreen .linq-review-guide,
+body.linq-review-map-fullscreen .linq-review-marker {
+  display: none !important;
+}
+
+body.linq-review-map-fullscreen .linq-review-map-card.linq-review-map-widget-fullscreen {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 9998 !important;
+  width: 100vw !important;
+  max-width: none !important;
+  height: 100vh !important;
+  min-height: 100vh !important;
+  margin: 0 !important;
+  transform: none !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: #fff !important;
+}
+
+body.linq-review-map-fullscreen .linq-review-map-card.linq-review-map-widget-fullscreen .map-container,
+body.linq-review-map-fullscreen .linq-review-map-card.linq-review-map-widget-fullscreen #map {
+  top: 0 !important;
+  width: 100% !important;
+  max-width: none !important;
+  height: 100% !important;
+  min-height: 100% !important;
+}
+
+body.linq-review-map-fullscreen .linq-review-map-card.linq-review-map-widget-fullscreen .offline-map-fallback {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover;
+}
+
+/* 31-day operating efficiency: dates continue downward as fixed-width rows.
+* All values remain visible without horizontal scrolling; hover is supplementary only. */
+
+.requirements-horizontal-chart {
+  margin: 0 0 24px;
+  padding: 24px 28px 28px;
+  border: 1px solid #ddd;
+  border-radius: 16px;
+  background: #fff;
+}
+
+.requirements-horizontal-chart__head,
+.requirements-horizontal-chart__axis,
+.requirements-horizontal-chart__row {
+  display: grid;
+  grid-template-columns: 64px minmax(0, 1fr) 44px;
+  align-items: center;
+}
+
+.requirements-horizontal-chart__head {
+  grid-template-columns: 1fr auto;
+  margin-bottom: 18px;
+}
+
+.requirements-horizontal-chart__head h4,
+.requirements-horizontal-chart__head p {
+  margin: 0;
+}
+
+.requirements-horizontal-chart__head h4 { font-size: 20px; }
+.requirements-horizontal-chart__head p { margin-top: 5px; color: #777; font-size: 13px; }
+
+.requirements-horizontal-chart__legend {
+  display: flex;
+  gap: 14px;
+  font-size: 13px;
+}
+
+.requirements-horizontal-chart__legend span::before {
+  content: '';
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  margin-right: 5px;
+  border-radius: 50%;
+  background: #8ab0c5;
+}
+
+.requirements-horizontal-chart__legend .is-caution::before { background:#f5a623; }
+.requirements-horizontal-chart__legend .is-warning::before { background:#ff3b21; }
+
+.requirements-horizontal-chart__axis {
+  padding-bottom: 8px;
+  color: #777;
+  font-size: 12px;
+}
+
+.requirements-horizontal-chart__axis > div {
+  display: flex;
+  justify-content: space-between;
+}
+
+.requirements-horizontal-chart__row {
+  position: relative;
+  min-height: 29px;
+}
+
+.requirements-horizontal-chart__row > strong,
+.requirements-horizontal-chart__row > em {
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 500;
+}
+
+.requirements-horizontal-chart__row > span {
+  display: flex;
+  height: 12px;
+  overflow: hidden;
+  border-radius: 6px;
+  background: linear-gradient(to right, #eee 1px, transparent 1px) 0 0 / 20% 100%, #f7f7f7;
+}
+
+.requirements-horizontal-chart__row i { display:block; height:100%; }
+.requirements-horizontal-chart__row i.is-sensitive { background:#8ab0c5; }
+.requirements-horizontal-chart__row i.is-caution { background:#f5a623; }
+.requirements-horizontal-chart__row i.is-warning { background:#ff3b21; }
+
+.requirements-horizontal-chart__row:hover::after,
+.requirements-horizontal-chart__row:focus-visible::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  z-index: 4;
+  left: 80px;
+  bottom: calc(100% + 4px);
+  padding: 7px 10px;
+  border-radius: 5px;
+  color: #fff;
+  background: #222;
+  font-size: 12px;
+  white-space: nowrap;
+}
+.linq-review-efficiency-chart {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  padding: 20px 24px 24px;
+  overflow: visible;
+  box-sizing: border-box;
+}
+.linq-review-efficiency-scale,
+.linq-review-efficiency-row {
+  display: grid;
+  grid-template-columns: 46px minmax(220px, 1fr) minmax(260px, 310px) 92px;
+  gap: 14px;
+  align-items: center;
+  min-width: 0;
+}
+.linq-review-efficiency-scale {
+  min-height: 36px;
+  padding: 0 10px 8px;
+  color: #666;
+  border-bottom: 1px solid #d8d8d8;
+  font-size: 11px;
+  box-sizing: border-box;
+}
+.linq-review-efficiency-scale > div {
+  display: flex;
+  justify-content: space-between;
+  min-width: 0;
+}
+.linq-review-efficiency-scale i,
+.linq-review-efficiency-values i { font-style: normal; }
+.linq-review-efficiency-scale > span:last-child { text-align: right; }
+.linq-review-efficiency-scale > span:nth-child(3) { text-align: center; }
+.linq-review-efficiency-list {
+  width: 100%;
+  min-width: 0;
+}
+.linq-review-efficiency-row {
+  min-height: 46px;
+  padding: 7px 10px;
+  border-bottom: 1px solid #ededed;
+  box-sizing: border-box;
+}
+.linq-review-efficiency-row:last-child { border-bottom: 0; }
+.linq-review-efficiency-date { color: #222; font-weight: 700; }
+.linq-review-efficiency-bar {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: stretch;
+  width: 100%;
+  min-width: 0;
+  height: 24px;
+  margin: 0;
+  padding: 0;
+  overflow: visible;
+  border: 0;
+  border-radius: 2px;
+  background: #f2f2f2;
+  box-shadow: inset 0 0 0 1px #e3e3e3;
+  cursor: help;
+}
+.linq-review-efficiency-bar > span {
+  display: block;
+  width: auto;
+  height: 100% !important;
+  min-width: 0;
+}
+.linq-review-efficiency-bar > .work { background: #8faec0; }
+.linq-review-efficiency-bar > .idle { background: #d7e0e5; }
+.linq-review-efficiency-bar > .off { background: #c7c7c7; }
+.linq-review-efficiency-values {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  min-width: 0;
+  padding: 0 12px;
+  font-size: 11px;
+  text-align: center;
+  box-sizing: border-box;
+}
+.linq-review-efficiency-values i {
+  min-width: 0;
+  color: #777;
+  text-align: center;
+  white-space: nowrap;
+}
+.linq-review-efficiency-values b { color: #222; font-weight: 700; }
+.linq-review-efficiency-time {
+  color: #222;
+  font-size: 12px;
+  text-align: right;
+  white-space: nowrap;
+}
+.linq-review-efficiency-bar::after {
+  bottom: calc(100% + 6px);
+  left: 50%;
+}
+
+@media (max-width: 1050px) {
+  .linq-review-efficiency-scale,
+  .linq-review-efficiency-row {
+    grid-template-columns: 42px minmax(180px, 1fr) minmax(230px, 270px) 78px;
+    gap: 9px;
+  }
+  .linq-review-efficiency-values { gap: 5px; font-size: 10px; }
+  .linq-review-efficiency-time { font-size: 11px; }
+}
+
+/* Engine fuel chart fallback: shown only in the requirements-review copy when
+ * the original chart has no non-zero values. The original section header,
+ * legend, spacing and 31-day layout remain unchanged. */
+.linq-review-fuel-summary-fallback {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: 118px;
+  padding: 22px 24px;
+  box-sizing: border-box;
+}
+.linq-review-fuel-summary-fallback__plot {
+  position: relative;
+  width: 100%;
+  height: 70px;
+  border: 1px solid #cdd1d4;
+  background: #f4f4f4;
+}
+.linq-review-fuel-summary-fallback__bar {
+  position: absolute;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 26px;
+  min-width: 12px;
+}
+.linq-review-fuel-summary-fallback__bar.is-current { top: 8px; background: #86aabc; }
+.linq-review-fuel-summary-fallback__bar.is-previous { bottom: 8px; background: #d2dce1; }
+.linq-review-fuel-summary-fallback__bar b { color:#fff; font-size:12px; }
+.linq-review-fuel-summary-fallback__marker {
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  bottom: 0;
+  border-left: 1px dashed #ff2f2f;
+}
+.linq-review-fuel-summary-fallback__marker::before {
+  position:absolute;
+  top:-1px;
+  left:-5px;
+  border-top:7px solid #ff2f2f;
+  border-right:5px solid transparent;
+  border-left:5px solid transparent;
+  content:'';
+}
+.linq-review-fuel-fallback {
+  position: relative;
+  display: grid;
+  grid-template-columns: 36px minmax(0, 1fr);
+  grid-template-rows: 410px 34px;
+  width: 100%;
+  height: 500px;
+  padding: 18px 24px 18px 12px;
+  box-sizing: border-box;
+}
+.linq-review-fuel-fallback__unit {
+  position: absolute;
+  top: 2px;
+  left: 9px;
+  color: #777;
+  font-size: 10px;
+}
+.linq-review-fuel-fallback__y {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 410px;
+  padding: 0 8px 0 0;
+  color: #555;
+  font-size: 11px;
+  text-align: right;
+  box-sizing: border-box;
+}
+.linq-review-fuel-fallback__plot {
+  position: relative;
+  height: 410px;
+  border-bottom: 1px solid #aeb4b8;
+  background-image:
+    linear-gradient(to bottom, rgba(120,128,134,.28) 1px, transparent 1px),
+    linear-gradient(to right, rgba(120,128,134,.22) 1px, transparent 1px);
+  background-size: 100% 25%, calc(100% / 30) 100%;
+}
+.linq-review-fuel-fallback__plot svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.linq-review-fuel-fallback__plot polyline {
+  fill: none;
+  stroke: #d3e0e7;
+  stroke-width: 2;
+  vector-effect: non-scaling-stroke;
+}
+.linq-review-fuel-fallback__point {
+  position: absolute;
+  z-index: 2;
+  width: 9px;
+  height: 9px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: #cbd9e0;
+  transform: translate(-50%, 50%);
+  cursor: help;
+}
+.linq-review-fuel-fallback__point:hover,
+.linq-review-fuel-fallback__point:focus-visible {
+  background: #89aec1;
+  outline: 2px solid rgba(137,174,193,.28);
+}
+.linq-review-fuel-fallback__point::after {
+  position: absolute;
+  z-index: 10;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  display: none;
+  min-width: 112px;
+  padding: 7px 9px;
+  color: #fff;
+  border-radius: 4px;
+  background: rgba(28,30,34,.94);
+  box-shadow: 0 3px 10px rgba(0,0,0,.2);
+  content: attr(data-tooltip);
+  font-size: 11px;
+  line-height: 16px;
+  white-space: nowrap;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+.linq-review-fuel-fallback__point:hover::after,
+.linq-review-fuel-fallback__point:focus-visible::after { display: block; }
+.linq-review-fuel-fallback__dates {
+  grid-column: 2;
+  display: grid;
+  grid-template-columns: repeat(31, minmax(0, 1fr));
+  align-items: start;
+  padding-top: 8px;
+  color: #555;
+  font-size: 9px;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.linq-review-battery-compare {
+  width: 100%;
+  max-width: none;
+  margin: 28px auto 10px;
+  color: #222;
+}
+.linq-review-battery-compare__head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 16px;
+}
+.linq-review-battery-compare__head h3,
+.linq-review-battery-chart-card h4 { margin: 0; color: #111; }
+.linq-review-battery-compare__head h3 { font-size: 22px; }
+.linq-review-battery-compare__head p,
+.linq-review-battery-chart-card header p,
+.linq-review-battery-source { margin: 5px 0 0; color: #777; font-size: 12px; }
+.linq-review-battery-period { display: flex; align-items: center; flex: none; }
+.linq-review-battery-period button,
+.linq-review-battery-period span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 38px;
+  padding: 0 14px;
+  border: 1px solid #ddd;
+  background: #fff;
+  box-sizing: border-box;
+  font-size: 13px;
+}
+.linq-review-battery-period button + button { border-left: 0; }
+.linq-review-battery-period button.is-active { color: #fff; border-color: #111; background: #111; }
+.linq-review-battery-period span { min-width: 120px; margin-left: 8px; color: #777; background: #f7f7f7; }
+.linq-review-battery-period em { margin: 0 6px; color: #777; font-style: normal; }
+.linq-review-battery-period .is-search { margin-left: 8px; color: #fff; border-color: #ff3600; background: #ff3600; }
+.linq-review-battery-live {
+  display: grid;
+  grid-template-columns: 1.25fr repeat(6, minmax(110px, 1fr));
+  align-items: center;
+  gap: 0;
+  margin-bottom: 14px;
+  padding: 13px 16px;
+  border: 1px solid #e1e1e1;
+  border-radius: 8px;
+  background: #fff;
+}
+.linq-review-battery-live > * { min-width: 0; padding: 0 14px; border-left: 1px solid #eee; }
+.linq-review-battery-live > strong { padding-left: 0; border-left: 0; font-size: 17px; white-space: nowrap; }
+.linq-review-battery-live span { display: block; margin-bottom: 5px; color: #777; font-size: 11px; }
+.linq-review-battery-live b { display: block; color: #111; font-size: 13px; white-space: nowrap; }
+.linq-review-battery-compare__charts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+.linq-review-battery-chart-card { min-width: 0; padding: 20px; border: 1px solid #ddd; border-radius: 12px; background: #fff; }
+.linq-review-battery-chart-card header { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; min-height: 44px; }
+.linq-review-battery-chart-card h4 { font-size: 17px; }
+.linq-review-battery-legend { display: flex; gap: 12px; color: #666; font-size: 11px; }
+.linq-review-battery-legend span { display: flex; align-items: center; gap: 5px; }
+.linq-review-battery-legend i { width: 8px; height: 8px; border-radius: 50%; }
+.linq-review-battery-legend .is-charge { background: #009b67; }
+.linq-review-battery-legend .is-discharge { background: #ff6b3b; }
+.linq-review-battery-normal { padding: 5px 8px; color: #198754; border-radius: 12px; background: #eaf7ef; font-size: 11px; white-space: nowrap; }
+.linq-review-battery-bar-chart,
+.linq-review-battery-temp-chart { display: grid; grid-template-columns: 26px minmax(0, 1fr); margin-top: 18px; }
+.linq-review-battery-axis { display: flex; flex-direction: column; justify-content: space-between; height: 230px; padding: 0 6px 25px 0; color: #888; font-size: 9px; text-align: right; box-sizing: border-box; }
+.linq-review-battery-bar-chart__plot {
+  display: grid;
+  grid-template-columns: repeat(22, minmax(0, 1fr));
+  align-items: end;
+  height: 230px;
+  border-bottom: 1px solid #aaa;
+  background-image: linear-gradient(to bottom, rgba(100,100,100,.15) 1px, transparent 1px);
+  background-size: 100% 25%;
+}
+.linq-review-battery-day { position: relative; display: flex; flex-direction: column; justify-content: flex-end; height: 100%; padding: 0; border: 0; background: transparent; cursor: crosshair; }
+.linq-review-battery-day__bars { display: flex; align-items: flex-end; justify-content: center; gap: 1px; height: 200px; padding: 0 1px; }
+.linq-review-battery-day__bars i { width: 42%; min-height: 2px; transition: filter .15s, opacity .15s; }
+.linq-review-battery-day__bars .is-charge { background: #009b67; }
+.linq-review-battery-day__bars .is-discharge { background: #ff6b3b; }
+.linq-review-battery-day small { height: 24px; padding-top: 7px; color: #777; font-size: 8px; box-sizing: border-box; }
+.linq-review-battery-day.is-active { background: rgba(255,54,0,.06); }
+.linq-review-battery-day.is-active i { filter: saturate(1.3); }
+.linq-review-battery-day::after,
+.linq-review-battery-temp-point::after {
+  position: absolute;
+  z-index: 5;
+  bottom: calc(100% + 7px);
+  left: 50%;
+  display: none;
+  padding: 7px 9px;
+  color: #fff;
+  border-radius: 4px;
+  background: rgba(24,24,24,.94);
+  content: attr(data-tooltip);
+  font-size: 10px;
+  white-space: nowrap;
+  transform: translateX(-50%);
+}
+.linq-review-battery-day:hover::after,
+.linq-review-battery-day:focus-visible::after,
+.linq-review-battery-temp-point:hover::after,
+.linq-review-battery-temp-point:focus-visible::after { display: block; }
+.linq-review-battery-temp-chart__plot {
+  position: relative;
+  height: 230px;
+  border-bottom: 1px solid #aaa;
+  background-image:
+    linear-gradient(to bottom, rgba(100,100,100,.15) 1px, transparent 1px),
+    linear-gradient(to right, rgba(100,100,100,.08) 1px, transparent 1px);
+  background-size: 100% 25%, calc(100% / 21) 100%;
+}
+.linq-review-battery-normal-band { position: absolute; inset: 40px 0 55px; background: rgba(0,155,103,.04); pointer-events: none; }
+.linq-review-battery-temp-chart svg { position: absolute; inset: 0; width: 100%; height: 230px; overflow: visible; }
+.linq-review-battery-temp-chart polyline { fill: none; stroke: #009b67; stroke-width: 2.5; vector-effect: non-scaling-stroke; }
+.linq-review-battery-temp-point { position: absolute; width: 8px; height: 8px; padding: 0; border: 2px solid #fff; border-radius: 50%; background: #009b67; box-shadow: 0 0 0 1px #009b67; transform: translate(-50%, 50%); cursor: crosshair; }
+.linq-review-battery-temp-point span { position: absolute; top: 206px; left: 50%; color: #777; font-size: 8px; transform: translateX(-50%); }
+.linq-review-battery-temp-point.is-active { width: 12px; height: 12px; background: #ff3600; box-shadow: 0 0 0 2px rgba(255,54,0,.2); }
+.linq-review-battery-source { padding: 10px 2px 0; text-align: right; }
+
+.linq-review-battery-production-chart {
+  display: grid;
+  grid-template-columns: 46px minmax(0, 1fr);
+  width: 100%;
+  height: 330px;
+  margin-top: 12px;
+  color: #333;
+}
+.linq-review-battery-production-chart__axis {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 280px;
+  padding: 0 9px 0 0;
+  box-sizing: border-box;
+  color: #444;
+  font-size: 11px;
+  text-align: right;
+}
+.linq-review-battery-production-chart__body {
+  min-width: 0;
+}
+.linq-review-battery-production-chart__plot {
+  display: grid;
+  grid-template-columns: repeat(31, minmax(0, 1fr));
+  height: 280px;
+  border-bottom: 1px solid #aaa;
+  background-image: linear-gradient(to bottom, rgba(80,80,80,.18) 1px, transparent 1px);
+  background-size: 100% 20%;
+}
+.linq-review-battery-production-chart__dates {
+  display: grid;
+  grid-template-columns: repeat(31, minmax(0, 1fr));
+  height: 24px;
+  padding-top: 8px;
+  box-sizing: border-box;
+}
+.linq-review-battery-production-chart__dates small {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  min-width: 0;
+  color: #444;
+  font-size: 9px;
+  line-height: 1;
+  white-space: nowrap;
+}
+.linq-review-battery-range-day {
+  position: relative;
+  display: block;
+  min-width: 0;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: crosshair;
+}
+.linq-review-battery-range-day > i {
+  position: absolute;
+  right: 22%;
+  left: 22%;
+  min-height: 2px;
+  border-radius: 1px;
+  background: #148c39;
+}
+.linq-review-battery-range-day.is-charge > i,
+.linq-review-battery-range-day.is-hot > i { background: #ff3600; }
+.linq-review-battery-range-day > b {
+  position: absolute;
+  left: 50%;
+  color: #222;
+  font-size: 9px;
+  font-weight: 500;
+  white-space: nowrap;
+  transform: translate(-50%, -3px);
+}
+.linq-review-battery-range-day::after {
+  position: absolute;
+  z-index: 8;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  display: none;
+  padding: 7px 9px;
+  color: #fff;
+  border-radius: 4px;
+  background: rgba(24,24,24,.94);
+  content: attr(data-tooltip);
+  font-size: 10px;
+  white-space: nowrap;
+  transform: translateX(-50%);
+}
+.linq-review-battery-range-day:hover,
+.linq-review-battery-range-day:focus-visible { background: rgba(255,54,0,.055); outline: none; }
+.linq-review-battery-range-day:hover::after,
+.linq-review-battery-range-day:focus-visible::after { display: block; }
+.linq-review-battery-production-chart.is-compact {
+  grid-template-columns: 36px minmax(0, 1fr);
+  height: 252px;
+}
+.linq-review-battery-production-chart.is-compact .linq-review-battery-production-chart__axis,
+.linq-review-battery-production-chart.is-compact .linq-review-battery-production-chart__plot { height: 210px; }
+.linq-review-battery-production-chart.is-compact .linq-review-battery-production-chart__dates small,
+.linq-review-battery-production-chart.is-compact .linq-review-battery-range-day > b { font-size: 7px; }
+
+@media (max-width: 1280px) {
+  .linq-review-battery-compare__head { align-items: flex-start; flex-direction: column; }
+  .linq-review-battery-live { grid-template-columns: repeat(4, 1fr); row-gap: 14px; }
+  .linq-review-battery-live > *:nth-child(5) { border-left: 0; }
+}

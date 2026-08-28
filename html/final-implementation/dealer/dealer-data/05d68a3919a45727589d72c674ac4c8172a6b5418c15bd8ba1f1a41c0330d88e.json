@@ -1,0 +1,8 @@
+{
+  "method": "GET",
+  "path": "/fleet/analysis/summary/equipment/FBA32-002415?startDate=20260801&endDate=20260813",
+  "status": 200,
+  "contentType": "application/json",
+  "bodyEncoding": "base64",
+  "body": "eyJjb2RlIjoiMDIiLCJtc2ciOiJudWxsIENhdXNlOm9yZy5hcGFjaGUuaWJhdGlzLmJ1aWxkZXIuQnVpbGRlckV4Y2VwdGlvbjogRXJyb3IgZXZhbHVhdGluZyBleHByZXNzaW9uICYjMzk7dXNlci5jb21wYW55SWQgIT0gMCBhbmQgcmVxLmNvbXBhbnlJZCAhPSBudWxsIGFuZCByZXEuY29tcGFueUlkICE9IHVzZXIuY29tcGFueUlkJiMzOTsuIENhdXNlOiBvcmcuYXBhY2hlLmliYXRpcy5vZ25sLk5vU3VjaFByb3BlcnR5RXhjZXB0aW9uOiBjb20uZG9vc2FuLmxpbnEuYXBwLmZsZWV0LmFuYWx5c2lzLm1vZGVsLnN1bW1hcnkuU3VtbWFyeUVxdWlwbWVudFJlcS5jb21wYW55SWQiLCJzdGF0dXMiOjIwMCwicmVzdWx0IjpudWxsfQ=="
+}

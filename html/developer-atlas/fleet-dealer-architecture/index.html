@@ -1,0 +1,519 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MACHINE IQ 플릿·딜러 프론트/API/DB 구조 제안</title>
+  <link rel="stylesheet" href="assets/deck.css">
+</head>
+<body>
+  <main class="deck" aria-label="MACHINE IQ 플릿·딜러 프론트 API DB 구조 제안서">
+    <section class="slide cover is-active" data-title="표지">
+      <div class="cover-band">
+        <img src="../../dealer/mobile-home/bobcat-machine-iq.svg" alt="Bobcat MACHINE IQ">
+        <span>구조 검토안 · 2026.08.27</span>
+      </div>
+      <div class="cover-copy">
+        <p class="eyebrow">FLEET · DEALER ARCHITECTURE</p>
+        <h1>플릿·딜러를<br>어디까지 나눌 것인가</h1>
+        <p class="lead">화면과 권한은 구분하고, 차량 원장·업무 데이터·공통 API는 공유하는 구조 제안</p>
+        <div class="cover-summary">
+          <p><b>분리</b><span>진입 주소 · 메뉴 · 화면 노출 · 처리 권한</span></p>
+          <p><b>공유</b><span>차량 원장 · 업무 로직 · API · 공통 컴포넌트</span></p>
+          <p><b>보완</b><span>조직 관계 · 권한 범위 · 상태 이력 · 다국어</span></p>
+        </div>
+      </div>
+      <footer>근거: 현재 로컬 HTML, 요구사항 검토 결과, 일반비_[MHMIQ]테이블명세서_20260803-1.xlsx</footer>
+    </section>
+
+    <section class="slide" data-title="결론">
+      <header>
+        <p class="eyebrow">01 · CONCLUSION</p>
+        <h2>두 서비스를 복제하지 않고, 하나의 업무 기반 위에서 구분</h2>
+      </header>
+      <div class="split-answer">
+        <article class="avoid">
+          <span>피해야 할 방식</span>
+          <h3>플릿 DB와 딜러 DB를 완전히 분리</h3>
+          <ul>
+            <li>같은 차량과 에러가 양쪽에 중복 저장</li>
+            <li>소유·정비 관계 변경 시 동기화 필요</li>
+            <li>상태와 집계 값이 서로 달라질 위험</li>
+          </ul>
+        </article>
+        <div class="decision-arrow" aria-hidden="true">→</div>
+        <article class="recommend">
+          <span>권장 방식</span>
+          <h3>공통 데이터 + 서비스별 정책</h3>
+          <ul>
+            <li>차량·에러·정비 데이터는 한 곳에서 관리</li>
+            <li>플릿·딜러별 조회 범위와 처리 권한 분리</li>
+            <li>공통 화면은 재사용하고 차이만 설정</li>
+          </ul>
+        </article>
+      </div>
+      <p class="takeaway"><b>핵심 판단</b><span>사용 경험은 분리하되, 동일 차량의 사실 데이터는 분리하지 않음</span></p>
+    </section>
+
+    <section class="slide" data-title="현재 구조의 문제">
+      <header>
+        <p class="eyebrow">02 · CURRENT STATE</p>
+        <h2>현재 테이블은 기능별 데이터는 있으나 관계와 상태 기준이 흩어져 있음</h2>
+      </header>
+      <div class="problem-columns">
+        <article>
+          <b>사용자·권한</b>
+          <p><code>TB_USER</code>와 <code>TB_MEMBER</code>에 로그인·언어·알림 정보가 중복</p>
+          <small>사용자 원장과 서비스별 역할을 분리할 기준 필요</small>
+        </article>
+        <article>
+          <b>차량·조직 관계</b>
+          <p>차량에 회사·그룹·렌탈·딜러 관련 값이 함께 존재</p>
+          <small>소유·운영·판매·정비 관계를 이력으로 관리할 구조 필요</small>
+        </article>
+        <article>
+          <b>에러</b>
+          <p>엔진·리튬·납축 에러가 서로 다른 테이블과 코드 체계로 분산</p>
+          <small>화면 통합을 위한 공통 에러 형식과 상태 기준 필요</small>
+        </article>
+        <article>
+          <b>정비·Claim</b>
+          <p>수리 테이블에 AUFNR·QMNUM·LINQ_NO는 있으나 Claim 의미가 확정되지 않음</p>
+          <small>원천 식별자를 유지하고 업무 명칭을 별도로 매핑해야 함</small>
+        </article>
+        <article>
+          <b>다국어·시간</b>
+          <p>일부 일정 데이터는 언어별 컬럼 방식, 언어 코드는 2자리 중심</p>
+          <small>로케일·시간대·단위 변환을 공통 정책으로 확장 필요</small>
+        </article>
+        <article>
+          <b>알림</b>
+          <p>푸시·메시지·템플릿은 있으나 사용자별 구독과 처리 상태 연결이 약함</p>
+          <small>에러·소모품·정비 상태와 알림 전송 이력 연결 필요</small>
+        </article>
+      </div>
+    </section>
+
+    <section class="slide" data-title="분리와 공유 기준">
+      <header>
+        <p class="eyebrow">03 · BOUNDARY</p>
+        <h2>무엇을 나누고 무엇을 공유할지 먼저 고정</h2>
+      </header>
+      <div class="boundary-table" role="table" aria-label="플릿 딜러 분리와 공유 기준">
+        <div class="thead" role="row"><b>영역</b><b>처리 기준</b><b>이유</b></div>
+        <div role="row"><span>접속 주소·로그인 진입점</span><strong class="separate">분리</strong><p>사용 목적과 초기 메뉴가 다름</p></div>
+        <div role="row"><span>GNB·LNB·메뉴 구성</span><strong class="separate">분리</strong><p>플릿은 운영, 딜러는 판매·정비 업무 중심</p></div>
+        <div role="row"><span>필드 노출·수정 권한</span><strong class="separate">분리</strong><p>고객 정보와 조치 기능의 허용 범위가 다름</p></div>
+        <div role="row"><span>차량 원장·기체 식별자</span><strong class="share">공유</strong><p>동일 차량을 하나의 기준 정보로 유지</p></div>
+        <div role="row"><span>에러·정비·소모품 원천 데이터</span><strong class="share">공유</strong><p>발생 사실과 조치 결과의 불일치 방지</p></div>
+        <div role="row"><span>공통 API·UI 컴포넌트</span><strong class="share">공유</strong><p>중복 개발과 서비스 간 화면 편차 감소</p></div>
+        <div role="row"><span>권한·조회 범위 정책</span><strong class="policy">정책화</strong><p>같은 API라도 사용자 관계에 따라 결과 제한</p></div>
+      </div>
+    </section>
+
+    <section class="slide" data-title="목표 전체 구조">
+      <header>
+        <p class="eyebrow">04 · TARGET ARCHITECTURE</p>
+        <h2>플릿과 딜러는 같은 업무 기반을 서로 다른 정책으로 사용</h2>
+      </header>
+      <div class="architecture-diagram">
+        <div class="arch-entry fleet"><small>ENTRY</small><b>플릿 프론트</b><span>보유·운영 차량 중심</span></div>
+        <div class="arch-entry dealer"><small>ENTRY</small><b>딜러 프론트</b><span>판매·정비 차량 중심</span></div>
+        <div class="arch-join" aria-hidden="true"><i></i><i></i></div>
+        <div class="arch-api"><small>COMMON API</small><b>인증 · 조회 대상 · 화면 데이터 · 처리 요청</b></div>
+        <div class="arch-policy"><small>POLICY</small><b>서비스 · 역할 · 업체 · 그룹 · 차량 범위 검증</b></div>
+        <div class="arch-services">
+          <span>차량</span><span>운행</span><span>에러</span><span>정비</span><span>소모품</span><span>배터리</span><span>알림</span>
+        </div>
+        <div class="arch-db"><small>COMMON DATA</small><b>차량 원장 + 조직 관계 + 업무 이력 + 상태 이력</b></div>
+      </div>
+      <p class="diagram-note">프론트에서 숨기는 것만으로는 부족함. API가 조회 범위와 반환 필드를 다시 검증해야 함</p>
+    </section>
+
+    <section class="slide" data-title="프론트 구조">
+      <header>
+        <p class="eyebrow">05 · FRONTEND</p>
+        <h2>앱 진입점은 분리하고 기능 모듈과 디자인 자산은 공유</h2>
+      </header>
+      <div class="frontend-layout">
+        <div class="folder-tree" aria-label="권장 프론트 폴더 구조">
+          <p><b>frontend/</b></p>
+          <p class="depth-1"><b>apps/</b></p>
+          <p class="depth-2 fleet-text">fleet/ <span>경로·메뉴·권한 설정</span></p>
+          <p class="depth-2 dealer-text">dealer/ <span>경로·메뉴·권한 설정</span></p>
+          <p class="depth-1"><b>features/</b></p>
+          <p class="depth-2">equipment · operation · errors</p>
+          <p class="depth-2">maintenance · supplies · battery</p>
+          <p class="depth-1"><b>shared/</b></p>
+          <p class="depth-2">layout · components · api · auth</p>
+          <p class="depth-2">i18n · design-tokens</p>
+          <p class="depth-1"><b>policies/</b></p>
+          <p class="depth-2">fleet-policy · dealer-policy</p>
+        </div>
+        <div class="frontend-rules">
+          <article><b>한 번만 개발</b><p>표, 기간 조회, 차량 선택, 상태 표시, 모달 같은 공통 UI</p></article>
+          <article><b>설정으로 구분</b><p>메뉴 목록, 기본 경로, 노출 필드, 버튼 사용 가능 여부</p></article>
+          <article><b>화면 분리가 필요한 경우</b><p>업무 목적과 정보 구조가 실제로 다른 플릿·딜러 전용 화면</p></article>
+          <article><b>현재 HTML 활용</b><p>검토용 폴더는 구분하되 개발 전환 시 공통 모듈로 정리</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-title="페이지와 API 흐름">
+      <header>
+        <p class="eyebrow">06 · PAGE CONTEXT</p>
+        <h2>페이지 이동 때 차량값만 넘기지 말고 조회 맥락을 명시적으로 유지</h2>
+      </header>
+      <div class="context-strip">
+        <span><b>serviceType</b>FLEET / DEALER</span>
+        <span><b>companyId</b>현재 업체</span>
+        <span><b>groupId</b>선택 그룹</span>
+        <span><b>equipmentId</b>선택 차량</span>
+        <span><b>period</b>일·주·월·사용자설정</span>
+        <span><b>locale</b>ko-KR / en-US</span>
+      </div>
+      <div class="request-flow">
+        <div><b>1</b><span>사용자 로그인</span><small>서비스·역할·업체 범위 확인</small></div>
+        <i>→</i>
+        <div><b>2</b><span>조회 대상 선택</span><small>업체·그룹·차량·기간</small></div>
+        <i>→</i>
+        <div><b>3</b><span>공통 API 요청</span><small>URL 값과 권한 토큰 전달</small></div>
+        <i>→</i>
+        <div><b>4</b><span>서버 범위 검증</span><small>조회·필드·처리 권한 판정</small></div>
+        <i>→</i>
+        <div><b>5</b><span>서비스별 화면 표시</span><small>동일 데이터, 다른 노출·행동</small></div>
+      </div>
+      <p class="warning-note"><b>주의</b><span>URL의 companyId나 equipmentId는 권한 증명이 아님. 서버에서 사용자 관계를 기준으로 다시 검증</span></p>
+    </section>
+
+    <section class="slide" data-title="권한별 화면 차이">
+      <header>
+        <p class="eyebrow">07 · SCREEN POLICY</p>
+        <h2>같은 차량 에러라도 플릿과 딜러의 정보와 행동은 다름</h2>
+      </header>
+      <div class="policy-compare">
+        <div class="policy-head"><b>항목</b><b class="fleet-text">플릿</b><b class="dealer-text">딜러</b><b>적용 위치</b></div>
+        <div><span>조회 기준</span><p>보유·운영 업체와 그룹</p><p>판매·정비 담당 업체</p><em>API 조회 범위</em></div>
+        <div><span>차량 에러</span><p>발생 현상과 조치 안내 확인</p><p>고객·기체·상세 코드와 처리 정보 확인</p><em>응답 필드 정책</em></div>
+        <div><span>정비 이력</span><p>접수일시·현상·완료일시 중심</p><p>상세내용·조치·업무 식별자 확인</p><em>화면 컬럼 설정</em></div>
+        <div><span>소모품</span><p>도래 현황 조회</p><p>교환 완료·교환일자·조치사항 입력</p><em>처리 권한</em></div>
+        <div><span>고객 정보</span><p>자기 조직 정보</p><p>담당 고객 정보</p><em>개인정보 필드 정책</em></div>
+      </div>
+      <p class="takeaway"><b>구현 원칙</b><span>프론트 표시 설정과 서버 권한 판정을 같은 정책 ID로 연결</span></p>
+    </section>
+
+    <section class="slide" data-title="DB 변경 구조">
+      <header>
+        <p class="eyebrow">08 · DATA MODEL</p>
+        <h2>원천 테이블은 유지하고 공통 관계·상태 계층을 추가</h2>
+      </header>
+      <div class="data-model">
+        <article class="source-layer">
+          <small>기존 원천</small>
+          <b>차량·에러·정비·소모품·운행 테이블</b>
+          <p>수집 형식과 외부 연동 키를 변경하지 않고 보존</p>
+        </article>
+        <div class="model-arrow">↓</div>
+        <div class="model-items">
+          <p><b>ORGANIZATION_RELATION</b><span>소유·운영·판매·정비 관계와 유효기간</span></p>
+          <p><b>EQUIPMENT_IDENTIFIER</b><span>기체·단말기·SAP 등 식별자 유형화</span></p>
+          <p><b>FAULT_EVENT</b><span>엔진·배터리 에러 공통 형식과 상태</span></p>
+          <p><b>MAINTENANCE_IDENTIFIER</b><span>AUFNR·QMNUM·Claim 후보값 구분</span></p>
+          <p><b>SUPPLY_ACTION_HISTORY</b><span>교환 완료·일자·조치사항 이력</span></p>
+          <p><b>NOTIFICATION_PREFERENCE</b><span>에러·소모품·정비 알림 구독 설정</span></p>
+          <p><b>METRIC_DEFINITION</b><span>운영률·효율·기간 집계 공식과 단위</span></p>
+          <p><b>DOCUMENT_LINK</b><span>에러코드·언어·버전별 PDF 연결</span></p>
+        </div>
+        <div class="model-arrow">↓</div>
+        <article class="api-layer">
+          <small>공통 조회 계층</small>
+          <b>VIEW / API DTO</b>
+          <p>플릿·딜러 화면이 동일한 이름과 상태값으로 사용</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="slide" data-title="리튬과 수소">
+      <header>
+        <p class="eyebrow">09 · POWER TYPE</p>
+        <h2>리튬과 수소는 목록에서 통합하고 상세 원천 데이터는 분리</h2>
+      </header>
+      <div class="battery-boundary">
+        <div class="unified-list">
+          <span>공통 목록·요약</span>
+          <h3>동력 유형으로 한 화면에서 구분</h3>
+          <div><b>E</b>엔진</div><div><b>Li</b>리튬</div><div><b>Pb</b>납축</div><div><b>H₂</b>수소</div>
+          <p>차량번호·상태·에러 수·연결 상태 같은 공통 항목 제공</p>
+        </div>
+        <div class="boundary-divider">상세 진입 시 유형 분기</div>
+        <div class="detail-types">
+          <article><b>리튬 상세</b><span>잔량 · 충전/방전 · 온도 · 수명 · 스마트충전</span></article>
+          <article><b>수소 상세</b><span>잔량 · 압력 · 온도 · 누설 · 스택 상태 등 별도 측정값</span></article>
+          <p>측정 항목과 단위가 달라 원천 테이블을 하나로 합치면 빈 컬럼과 예외가 증가</p>
+        </div>
+      </div>
+      <p class="takeaway"><b>결론</b><span>공통 차량 API에는 powerType을 제공하고, 유형별 상세 API와 원천 테이블은 유지</span></p>
+    </section>
+
+    <section class="slide" data-title="적용 순서">
+      <header>
+        <p class="eyebrow">10 · MIGRATION</p>
+        <h2>기존 운영 연동을 유지하며 단계적으로 전환</h2>
+      </header>
+      <div class="migration-steps">
+        <article><b>1</b><h3>업무 기준 확정</h3><p>에러 상태, 완료 의미, Claim 매핑, 조회 기간 기준 확정</p></article>
+        <article><b>2</b><h3>공통 API 계약</h3><p>필드명·단위·null·다국어·권한별 DTO 정의</p></article>
+        <article><b>3</b><h3>조회 어댑터 추가</h3><p>기존 테이블을 공통 형식으로 반환하는 View/API 구현</p></article>
+        <article><b>4</b><h3>관계·상태 테이블 추가</h3><p>조직 관계, 에러 상태, 문서, 알림 설정부터 신규 저장</p></article>
+        <article><b>5</b><h3>프론트 공통화</h3><p>기존 화면을 유지하며 공통 컴포넌트와 서비스 설정으로 전환</p></article>
+        <article><b>6</b><h3>검증 후 정리</h3><p>플릿·딜러 결과 비교, 이중 기록 검증 후 중복 구조 폐기</p></article>
+      </div>
+      <p class="warning-note"><b>원칙</b><span>운영 테이블을 먼저 삭제하거나 물리 구조를 한 번에 교체하지 않음</span></p>
+    </section>
+
+    <section class="slide" data-title="마이그레이션 필요성과 범위"><header><p class="eyebrow">11 · DATA MIGRATION SCOPE</p><h2>원천 이력 전체가 아니라 관계·상태·식별자 변환 데이터만 이관</h2></header><div class="migration-scope"><article class="required"><b>이관 필요</b><h3>신규 공통 계층의 초기값</h3><ul><li>업체–차량 소유·운영·판매·정비 관계</li><li>엔진·배터리 에러의 공통 상태값</li><li>정비 외부 식별자와 Claim 후보값</li><li>소모품 교환 완료·일자·조치 이력</li></ul></article><article><b>원천 유지</b><h3>대용량 계측·운행 원본</h3><ul><li>일·월 운행 집계와 시간대별 계측값</li><li>리튬 배터리 시간·상태 데이터</li><li>GPS·연료·충격 원천 이벤트</li><li>SAP·OCS 연동 원문과 파일</li></ul></article><article><b>확정 후 이관</b><h3>업무 기준이 필요한 값</h3><ul><li>Claim 번호: AUFNR/QMNUM/LINQ_NO 매핑</li><li>에러 완료: 미수신·수동·정비완료 기준</li><li>지표 공식: 운영률·운영효율 분모/분자</li><li>문서 연결: 코드·언어·버전별 PDF</li></ul></article></div><div class="migration-rule"><b>전환 방식</b><span>① 백업 → ② 신규 테이블 생성 → ③ 과거값 1회 적재 → ④ 이중 기록 → ⑤ 건수·합계 검증 → ⑥ 조회 전환 → ⑦ 원복 기간 유지</span></div><p class="warning-note"><b>범위 원칙</b><span>기존 테이블을 삭제·덮어쓰기하지 않고, 신규 표준 테이블과 View/API 어댑터를 추가</span></p></section>
+
+    <section class="slide query-slide" data-title="공통 SQL · 조회 범위"><header><p class="eyebrow">12 · COMMON SQL 01</p><h2>모든 페이지가 먼저 호출하는 업체·그룹·차량 조회 범위</h2></header><div class="query-layout"><article class="sql-card"><span class="page-tag">신규 표준계층 초기 이관</span><h3>ORGANIZATION_RELATION</h3><pre><code>INSERT INTO ORGANIZATION_RELATION
+(organization_id, equipment_id, relation_type,
+ valid_from, valid_to, source_table, source_key)
+SELECT ce.COMPANY_ID, ce.EQUIPMENT_ID, 'OPERATE',
+       '2000-01-01', NULL, 'TB_COMPANY_EQUIPMENT',
+       CONCAT(ce.COMPANY_ID, ':', ce.EQUIPMENT_ID)
+  FROM TB_COMPANY_EQUIPMENT ce
+ WHERE ce.PERMIT_YN = 'Y';</code></pre></article><article class="contract-card"><span class="page-tag">공통 범위 조회</span><h3>백엔드 처리 기준</h3><pre><code>SELECT e.EQUIPMENT_ID, e.EQUIPMENT_NAME,
+       e.GROUP_ID, e.FUEL_TYPE_CODE,
+       e.TERMINAL_ID, e.LAST_WORKING_DATETIME
+  FROM TB_EQUIPMENT e
+  JOIN ORGANIZATION_RELATION r
+    ON r.equipment_id = e.EQUIPMENT_ID
+ WHERE r.organization_id = :companyId
+   AND r.relation_type = :relationType
+   AND :asOf &gt;= r.valid_from
+   AND (r.valid_to IS NULL OR :asOf &lt; r.valid_to);</code></pre></article></div><div class="field-map compact"><b>입력</b><span>serviceType, userId, companyId, groupId?, equipmentId?, asOf</span><b>서버 검증</b><span>사용자 역할 → 업체 관계 → 차량 관계 순서</span><b>출력</b><span>scopeId, allowedCompanyIds, allowedEquipmentIds, permissions[]</span></div><p class="warning-note"><b>전환기</b><span>신규 관계 테이블 적재 전에는 TB_COMPANY_EQUIPMENT와 TB_EQUIPMENT의 DEALER_COMPANY_ID를 어댑터에서 병행 조회</span></p></section>
+
+    <section class="slide query-slide" data-title="공통 SQL · 에러 표준화"><header><p class="eyebrow">13 · COMMON SQL 02</p><h2>차량·배터리 에러를 한 목록으로 만들되 원천 유형은 보존</h2></header><div class="query-layout wide-code"><article class="sql-card"><span class="page-tag">초기 적재 초안</span><h3>FAULT_EVENT</h3><pre><code>INSERT INTO FAULT_EVENT
+(source_type, source_seq, equipment_id, occurred_at,
+ fault_type, error_code, spn, fmi, resolved_at)
+SELECT 'EVENT_ERROR', SEQ, EQUIPMENT_ID, EVENT_DATETIME,
+       'VEHICLE', BM_ERROR_CODE, LM_SPN, LM_FMI, RESOLVE_DATETIME
+  FROM TB_EVENT_ERROR
+UNION ALL
+SELECT 'EVENT_LI_ERROR', SEQ, EQUIPMENT_ID, EVENT_DATETIME,
+       'BATTERY', BM_ERROR_CODE, NULL, NULL, RESOLVE_DATETIME
+  FROM TB_EVENT_LI_ERROR
+UNION ALL
+SELECT 'EVENT_BM_ERROR', SEQ, EQUIPMENT_ID, EVENT_DATETIME,
+       'BATTERY', BM_ERROR_CODE, LM_SPN, LM_FMI, RESOLVE_DATETIME
+  FROM TB_EVENT_BM_ERROR;</code></pre></article><article class="contract-card"><span class="page-tag">중복 방지·상태 변환</span><h3>필수 규칙</h3><ul><li><code>UNIQUE(source_type, source_seq)</code>로 재이관 중복 방지</li><li>원천 <code>RESOLVE_DATETIME</code>은 완료 후보값일 뿐 업무 완료와 동일시하지 않음</li><li>에러 구분은 <code>faultType=VEHICLE|BATTERY</code>로 응답</li><li>SPN/FMI가 없으면 null로 전달하고 문구를 임의 생성하지 않음</li><li>코드 설명·조치·PDF는 코드 사전과 DOCUMENT_LINK에서 결합</li></ul></article></div><div class="field-map compact"><b>출력 공통값</b><span>faultId, faultType, errorCode, spn, fmi, occurredAt, resolvedAt, status, severity?, description?, document?</span></div></section>
+
+    <section class="slide query-slide" data-title="공통 SQL · 정비와 소모품"><header><p class="eyebrow">14 · COMMON SQL 03</p><h2>정비 식별자와 소모품 조치 이력은 원본값을 보존해 별도 적재</h2></header><div class="query-layout"><article class="sql-card"><span class="page-tag">정비 식별자</span><h3>MAINTENANCE_IDENTIFIER</h3><pre><code>INSERT INTO MAINTENANCE_IDENTIFIER
+(maintenance_id, identifier_type, identifier_value)
+SELECT AUFNR, 'AUFNR', AUFNR
+  FROM TB_SERVICE_REPAIR_RESULT
+UNION ALL
+SELECT AUFNR, 'QMNUM', QMNUM
+  FROM TB_SERVICE_REPAIR_RESULT WHERE QMNUM IS NOT NULL
+UNION ALL
+SELECT AUFNR, 'LINQ_NO', LINQ_NO
+  FROM TB_SERVICE_REPAIR_RESULT WHERE LINQ_NO IS NOT NULL;</code></pre></article><article class="sql-card"><span class="page-tag">소모품 조치</span><h3>SUPPLY_ACTION_HISTORY</h3><pre><code>INSERT INTO SUPPLY_ACTION_HISTORY
+(service_id, equipment_id, completed_at,
+ action_comment, source_table)
+SELECT ss.SERVICE_ID, ss.EQUIPMENT_ID,
+       ss.EXCHANGE_DATETIME, ss.SERVICE_COMMENT,
+       'TB_SERVICE_SCHEDULE'
+  FROM TB_SERVICE_SCHEDULE ss
+ WHERE ss.EXCHANGE_DATETIME IS NOT NULL;</code></pre></article></div><p class="warning-note"><b>Claim 주의</b><span>테이블 명세에 Claim 전용 컬럼이 없으므로 위 식별자 중 하나를 Claim으로 표시하지 않음. 외부 시스템·업무 정의 확인 후 identifier_type=CLAIM을 추가</span></p></section>
+
+    <section class="slide" data-title="공통 API 계약"><header><p class="eyebrow">15 · BACKEND → FRONTEND</p><h2>페이지마다 값 이름을 바꾸지 않고 공통 요청 맥락과 응답 봉투 사용</h2></header><div class="api-envelope"><article><span>REQUEST</span><pre><code>{
+  "serviceType": "FLEET",
+  "companyId": "1933", "groupId": "1948",
+  "equipmentId": "FBA32_224250271",
+  "period": {"type":"MONTH","from":"2026-08-01","to":"2026-08-31"},
+  "locale": "ko-KR", "timezone": "Asia/Seoul"
+}</code></pre></article><article><span>RESPONSE</span><pre><code>{
+  "meta": {"requestId":"...","generatedAt":"...","timezone":"Asia/Seoul"},
+  "scope": {"serviceType":"FLEET","companyId":"1933","groupId":"1948"},
+  "data": {}, "permissions": ["READ"], "warnings": [],
+  "page": {"number":1,"size":50,"totalElements":102}
+}</code></pre></article></div><div class="contract-rules"><p><b>날짜</b><span>ISO 8601 + timezone</span></p><p><b>단위</b><span>값과 unit 동시 전달</span></p><p><b>null</b><span>0과 미수집 구분</span></p><p><b>다국어</b><span>code + label</span></p><p><b>권한</b><span>permissions로 버튼 결정</span></p><p><b>빈 데이터</b><span>빈 배열 + warnings</span></p></div></section>
+
+    <section class="slide page-contract" data-title="페이지 계약 · 대시보드"><header><p class="eyebrow">16 · PAGE CONTRACT</p><h2>대시보드 · 그룹별/위젯 대시보드</h2></header><div class="page-query"><article><span class="endpoint">GET /api/v1/dashboard</span><h3>페이지 SQL</h3><pre><code>SELECT o.COMPANY_ID, o.GROUP_ID,
+       SUM(o.WORKING_TIME) workingTime,
+       SUM(o.IDLE_TIME) idleTime,
+       SUM(o.SHOCK_CNT) shockCount,
+       SUM(o.ERROR_CNT) faultCount,
+       SUM(o.SERVICE_CNT) serviceCount
+  FROM TB_EQUIPMENT_DAILY_OPERATION o
+ WHERE o.COMPANY_ID = :companyId
+   AND (:groupId IS NULL OR o.GROUP_ID = :groupId)
+   AND o.WORKING_DATE BETWEEN :fromDate AND :toDate
+ GROUP BY o.COMPANY_ID, o.GROUP_ID;</code></pre></article><article><h3>백엔드 → 프론트</h3><div class="flow-list"><p><b>요청</b><span>companyId, groupId?, period, serviceType</span></p><p><b>가공</b><span>보유현황·가동시간 Top5·에러/정비 KPI 집계</span></p><p><b>응답</b><span>summary{}, powerTypeCounts[], topWorking[], groupCards[]</span></p><p><b>표시</b><span>KPI 카드, 보유현황 그래프, 그룹 카드, 지도 요약</span></p><p><b>권한 차이</b><span>FLEET=운영 그룹 / DEALER=담당 고객 집계</span></p></div></article></div></section>
+
+    <section class="slide page-contract" data-title="페이지 계약 · 차량"><header><p class="eyebrow">17 · PAGE CONTRACT</p><h2>차량관리 · 차량 목록과 상세</h2></header><div class="page-query"><article><span class="endpoint">GET /api/v1/equipment</span><h3>페이지 SQL</h3><pre><code>SELECT e.EQUIPMENT_ID, e.EQUIPMENT_NAME,
+       e.EQUIPMENT_NUMBER, e.MODEL_YEAR,
+       e.CODE_NAME modelName, e.FUEL_TYPE_CODE,
+       e.GROUP_ID, e.LAST_WORKING_DATETIME,
+       s.LONGITUDE, s.LATITUDE, s.GPS_DATETIME
+  FROM TB_EQUIPMENT e
+  LEFT JOIN TB_SAMPLE_LAST s
+    ON s.EQUIPMENT_ID = e.EQUIPMENT_ID
+ WHERE e.EQUIPMENT_ID IN (:allowedEquipmentIds)
+   AND (:equipmentId IS NULL OR e.EQUIPMENT_ID = :equipmentId);</code></pre></article><article><h3>백엔드 → 프론트</h3><div class="flow-list"><p><b>요청</b><span>companyId, groupId?, equipmentId?, keyword?, page</span></p><p><b>가공</b><span>연결상태·동력유형·현재 문제 건수 결합</span></p><p><b>응답</b><span>equipmentId, modelName, powerType, group, connected, lastSeenAt, location?, issueCounts</span></p><p><b>표시</b><span>목록에서는 전체 차량, 상세 진입 후 선택 차량만 표시</span></p><p><b>이동</b><span>차량 선택 시 equipmentId를 조회 맥락에 저장</span></p></div></article></div></section>
+
+    <section class="slide page-contract" data-title="페이지 계약 · 요약정보"><header><p class="eyebrow">18 · PAGE CONTRACT</p><h2>운행이력 · 요약정보</h2></header><div class="page-query"><article><span class="endpoint">GET /api/v1/operations/summary</span><h3>페이지 SQL</h3><pre><code>SELECT o.EQUIPMENT_ID,
+       SUM(o.WORKING_TIME) workingTime,
+       SUM(o.DISTANCE) distance,
+       SUM(o.SHOCK_CNT) shockCount,
+       SUM(o.USED_FUEL) usedFuel,
+       SUM(o.BATTERY_USE_AMT) batteryUsed,
+       SUM(o.BATTERY_CHARGE_CNT) chargeCount
+  FROM TB_EQUIPMENT_DAILY_OPERATION o
+ WHERE o.EQUIPMENT_ID IN (:equipmentIds)
+   AND o.WORKING_DATE BETWEEN :fromDate AND :toDate
+ GROUP BY o.EQUIPMENT_ID;</code></pre></article><article><h3>백엔드 → 프론트</h3><div class="flow-list"><p><b>요청</b><span>companyId, groupId?, equipmentId?, period</span></p><p><b>가공</b><span>운영률·운영효율은 확정된 METRIC_DEFINITION 공식으로 계산</span></p><p><b>응답</b><span>equipment{}, utilization, efficiency, shockCount, distance, workingTime, fuelConsumption?, batteryConsumption?</span></p><p><b>단위</b><span>percent, km, second, L/H, kWh를 필드별 명시</span></p><p><b>표시</b><span>업체 전체면 차량 카드 목록, 차량 선택이면 한 대 요약</span></p></div></article></div></section>
+
+    <section class="slide page-contract" data-title="페이지 계약 · 사용시간/효율"><header><p class="eyebrow">19 · PAGE CONTRACT</p><h2>운행이력 · 사용시간과 운영효율</h2></header><div class="page-query"><article><span class="endpoint">GET /api/v1/operations/time-efficiency</span><h3>페이지 SQL</h3><pre><code>SELECT h.WORKING_DATE,
+       SUM(h.WORKING_TIME) workingSec,
+       SUM(h.IDLE_TIME) idleSec,
+       SUM(h.OPERATING_TIME) operatingSec,
+       SUM(h.ACTUATOR_TIME) actuatorSec,
+       SUM(h.TRAVEL_TIME) travelSec
+  FROM TB_WORKING_HOUR h
+ WHERE h.EQUIPMENT_ID IN (:equipmentIds)
+   AND h.WORKING_DATE BETWEEN :fromDate AND :toDate
+ GROUP BY h.WORKING_DATE
+ ORDER BY h.WORKING_DATE;</code></pre></article><article><h3>백엔드 → 프론트</h3><div class="flow-list"><p><b>요청</b><span>equipmentIds, period.type, from, to, timezone</span></p><p><b>가공</b><span>일/주/월에 따라 bucket 변경, 효율은 최대 100%로 정규화</span></p><p><b>응답</b><span>series[{date,workingSec,idleSec,unusedSec,efficiencyPct}], topWorking[]</span></p><p><b>표시</b><span>실제 작업시간 숫자 + 31일 세로 목록/그래프, 가로 스크롤 없음</span></p><p><b>주의</b><span>미수집값을 0으로 치환하지 않고 dataStatus 표시</span></p></div></article></div></section>
+
+    <section class="slide page-contract" data-title="페이지 계약 · 충격"><header><p class="eyebrow">20 · PAGE CONTRACT</p><h2>운행이력 · 충격</h2></header><div class="page-query"><article><span class="endpoint">GET /api/v1/operations/shocks</span><h3>페이지 SQL</h3><pre><code>SELECT s.EQUIPMENT_ID, s.SHOCK_DATETIME,
+       s.SHOCK_LEVEL_VAL, s.SHOCK,
+       s.EVENT_DATE, s.EVENT_TIME
+  FROM TB_EVENT_SHOCK s
+ WHERE s.EQUIPMENT_ID IN (:equipmentIds)
+   AND s.SHOCK_DATETIME &gt;= :fromAt
+   AND s.SHOCK_DATETIME &lt; :toAt
+ ORDER BY s.SHOCK_DATETIME;</code></pre><small class="sql-caution">※ 위치는 TB_EVENT_SHOCK에 없으므로 TB_SAMPLE 계열의 시간 근접 위치를 별도 결합</small></article><article><h3>백엔드 → 프론트</h3><div class="flow-list"><p><b>요청</b><span>equipmentIds, period, level?</span></p><p><b>가공</b><span>시간대·일자별 충격 횟수와 강도 구간 집계</span></p><p><b>응답</b><span>events[{occurredAt,level,value,location?}], series[{date,count,maxValue}]</span></p><p><b>표시</b><span>가로축 일자, 세로축 충격값/횟수, 롤오버 상세</span></p><p><b>확인 필요</b><span>SHOCK_LEVEL_VAL의 등급 경계와 단위</span></p></div></article></div></section>
+
+    <section class="slide page-contract" data-title="페이지 계약 · 엔진 연비"><header><p class="eyebrow">21 · PAGE CONTRACT</p><h2>운행이력 · 엔진 연비</h2></header><div class="page-query"><article><span class="endpoint">GET /api/v1/operations/fuel</span><h3>페이지 SQL</h3><pre><code>SELECT o.WORKING_DATE,
+       SUM(o.USED_FUEL) usedFuel,
+       SUM(o.WORKING_TIME) workingSec,
+       CASE WHEN SUM(o.WORKING_TIME) = 0 THEN NULL
+            ELSE SUM(o.USED_FUEL) /
+                 (SUM(o.WORKING_TIME) / 3600) END fuelPerHour
+  FROM TB_EQUIPMENT_DAILY_OPERATION o
+ WHERE o.EQUIPMENT_ID IN (:equipmentIds)
+   AND o.WORKING_DATE BETWEEN :fromDate AND :toDate
+ GROUP BY o.WORKING_DATE;</code></pre></article><article><h3>백엔드 → 프론트</h3><div class="flow-list"><p><b>요청</b><span>equipmentIds, period=MONTH, comparison=PREVIOUS</span></p><p><b>가공</b><span>금월/전월 평균 연비·누적 연료·일별 시계열 계산</span></p><p><b>응답</b><span>averageFuelRate{current,previous,unit}, cumulativeFuel{}, dailySeries[]</span></p><p><b>표시</b><span>상단 비교 막대 2개 + 1~31일 연비 그래프</span></p><p><b>질의</b><span>연비 현황 숫자 축과 집계 단위 기준 확정 필요</span></p></div></article></div></section>
+
+    <section class="slide page-contract" data-title="페이지 계약 · 리튬배터리"><header><p class="eyebrow">22 · PAGE CONTRACT</p><h2>운행이력 · 리튬배터리 목록과 상세</h2></header><div class="page-query"><article><span class="endpoint">GET /api/v1/batteries/lithium/{equipmentId}</span><h3>페이지 SQL</h3><pre><code>SELECT h.DATA_DATETIME, h.SOC, h.CHARGE_VAL,
+       h.WORK_VAL, h.MIN_TEMP, h.MAX_TEMP,
+       h.AVG_TEMPS, h.PACK_VOL, h.PACK_CUR,
+       h.CHARGE_STAT, h.BAT_STAT, h.SMART
+  FROM TB_EQUIPMENT_LI_HOUR h
+ WHERE h.EQUIPMENT_ID = :equipmentId
+   AND h.DATA_DATETIME &gt;= :fromAt
+   AND h.DATA_DATETIME &lt; :toAt
+ ORDER BY h.DATA_DATETIME;</code></pre></article><article><h3>백엔드 → 프론트</h3><div class="flow-list"><p><b>요청</b><span>equipmentId 필수, period, timezone</span></p><p><b>가공</b><span>잔량·충전/방전·온도 시계열과 최신 상태 분리</span></p><p><b>응답</b><span>latest{soc,chargeStatus,batteryStatus,temp}, chargeSeries[], temperatureSeries[]</span></p><p><b>표시</b><span>에러정보 영역 제거, 충전/방전과 온도 그래프는 좌우 비교</span></p><p><b>수소</b><span>공통 목록만 결합하고 상세 API/측정항목은 별도</span></p></div></article></div></section>
+
+    <section class="slide page-contract" data-title="페이지 계약 · 차량에러"><header><p class="eyebrow">23 · PAGE CONTRACT</p><h2>서비스 · 차량에러 (플릿/딜러)</h2></header><div class="page-query"><article><span class="endpoint">GET /api/v1/faults</span><h3>페이지 SQL</h3><pre><code>SELECT f.fault_id, f.equipment_id, f.fault_type,
+       f.error_code, f.spn, f.fmi,
+       f.occurred_at, f.resolved_at, f.status,
+       d.file_id, d.file_name
+  FROM FAULT_EVENT f
+  LEFT JOIN DOCUMENT_LINK d
+    ON d.error_code = f.error_code AND d.locale = :locale
+ WHERE f.equipment_id IN (:equipmentIds)
+   AND f.occurred_at &gt;= :fromAt AND f.occurred_at &lt; :toAt
+ ORDER BY f.occurred_at DESC;</code></pre></article><article><h3>백엔드 → 프론트</h3><div class="flow-list"><p><b>요청</b><span>companyId, groupId?, equipmentId?, faultType?, status?, period</span></p><p><b>응답 공통</b><span>현재/과거, 차량, 코드, 내용, 구분(차량/배터리), 발생/완료일시, document</span></p><p><b>플릿</b><span>그룹·차량·현상·조치방법 중심</span></p><p><b>딜러</b><span>딜러·고객명·기종/호기·SPN/FMI·상세 설명 추가</span></p><p><b>PDF</b><span>document가 있을 때만 PDF 아이콘, 없으면 상세 아이콘</span></p></div></article></div></section>
+
+    <section class="slide page-contract" data-title="페이지 계약 · 정비이력"><header><p class="eyebrow">24 · PAGE CONTRACT</p><h2>서비스 · 정비이력 (플릿/딜러)</h2></header><div class="page-query"><article><span class="endpoint">GET /api/v1/maintenance</span><h3>페이지 SQL</h3><pre><code>SELECT r.AUFNR repairOrderId, r.QMNUM serviceNoticeId,
+       r.LINQ_NO externalNo, r.EQUNR equipmentId,
+       r.TYPBZ modelName, r.SERNR serialNo,
+       r.FETXT symptom, r.URTXT cause,
+       r.MATXT detail, r.ERDAT receivedDate,
+       r.GSTRI startedDate, r.GETRI completedDate
+  FROM TB_SERVICE_REPAIR_RESULT r
+ WHERE r.EQUNR IN (:equipmentIds)
+   AND r.ERDAT BETWEEN :fromDate AND :toDate;</code></pre></article><article><h3>백엔드 → 프론트</h3><div class="flow-list"><p><b>요청</b><span>equipmentIds, period, completed?, page</span></p><p><b>공통 응답</b><span>maintenanceId, receivedAt, completedAt, symptom, completed</span></p><p><b>플릿</b><span>접수일시·현상·완료일시 표시, 수정/삭제/등록 없음</span></p><p><b>딜러</b><span>딜러·고객·기종/호기·고장부위·상세내용·완료여부</span></p><p><b>Claim</b><span>claimNo는 매핑 확정 전 null + identifierCandidates 제공</span></p></div></article></div></section>
+
+    <section class="slide page-contract" data-title="페이지 계약 · 소모품"><header><p class="eyebrow">25 · PAGE CONTRACT</p><h2>서비스 · 소모품 관리</h2></header><div class="page-query"><article><span class="endpoint">GET /api/v1/supplies · POST /actions</span><h3>페이지 SQL</h3><pre><code>SELECT ss.SERVICE_ID, ss.EQUIPMENT_ID,
+       sc.SCHEDULE_NAME, sc.EXCHANGE_CYCLE,
+       ss.EXCHANGE_USE_SEC, ss.EXCHANGE_REMAIN_SEC,
+       ss.EXCHANGE_DATETIME, ss.SERVICE_COMMENT
+  FROM TB_SERVICE_SCHEDULE ss
+  JOIN TB_SCHEDULE sc ON sc.SCHEDULE_ID = ss.SCHEDULE_ID
+ WHERE ss.EQUIPMENT_ID IN (:equipmentIds)
+   AND ss.USE_YN = 'Y'
+ ORDER BY ss.EXCHANGE_REMAIN_SEC;</code></pre></article><article><h3>백엔드 → 프론트</h3><div class="flow-list"><p><b>조회 응답</b><span>serviceId, equipmentId, itemCode, itemLabel, cycleSec, usedSec, remainingSec, registeredDate</span></p><p><b>교환 완료 요청</b><span>{completed:true, exchangeDate, actionComment}</span></p><p><b>저장</b><span>기존 TB_SERVICE_SCHEDULE 갱신 + SUPPLY_ACTION_HISTORY 추가</span></p><p><b>권한</b><span>FLEET=조회, DEALER=수정·교환 완료 가능 여부를 permissions로 전달</span></p><p><b>다국어</b><span>고정 언어 컬럼 대신 itemCode 기반 번역 리소스 사용</span></p></div></article></div></section>
+
+    <section class="slide page-contract triple" data-title="페이지 계약 · 리포트/지도/관리"><header><p class="eyebrow">26 · PAGE CONTRACT</p><h2>리포트·지도·관리기능도 동일한 조회 범위 계약을 사용</h2></header><div class="page-triplet"><article><span class="endpoint">REPORT</span><h3>그룹 현황·비교·히트맵</h3><pre><code>SELECT WORKING_MONTH, GROUP_ID,
+ SUM(WORKING_TIME), SUM(DISTANCE),
+ SUM(ERROR_CNT), SUM(REPAIR_CNT)
+FROM TB_EQUIPMENT_MONTH_OPERATION
+WHERE COMPANY_ID=:companyId
+GROUP BY WORKING_MONTH,GROUP_ID;</code></pre><p><b>응답</b> groupSeries[], comparison[], heatmap[]</p></article><article><span class="endpoint">MAP</span><h3>차량 위치</h3><pre><code>SELECT s.EQUIPMENT_ID, s.LONGITUDE,
+ s.LATITUDE, s.GPS_DATETIME,
+ e.EQUIPMENT_NAME
+FROM TB_SAMPLE_LAST s JOIN TB_EQUIPMENT e
+ ON e.EQUIPMENT_ID=s.EQUIPMENT_ID
+WHERE s.EQUIPMENT_ID IN (:ids);</code></pre><p><b>응답</b> markers[{equipmentId,lat,lng,lastSeenAt,status}]</p></article><article><span class="endpoint">ADMIN</span><h3>사용자·업체·그룹·차량</h3><pre><code>SELECT u.USER_ID, u.USER_NAME,
+ u.COMPANY_ID, u.GROUP_ID,
+ u.ROLE_ID, u.LOCALE_CODE,
+ u.TIMEZONE_ID, u.USE_YN
+FROM TB_USER u
+WHERE u.COMPANY_ID=:companyId;</code></pre><p><b>응답</b> rows[], permissions[] · 저장 시 감사 로그 필수</p></article></div><p class="warning-note"><b>공통</b><span>프론트가 companyId·equipmentId를 바꿔도 서버에서 allowed scope와 교차 검증</span></p></section>
+
+    <section class="slide page-contract" data-title="페이지 계약 · 서비스 전체"><header><p class="eyebrow">27 · PAGE CONTRACT</p><h2>서비스 · 전체 현황 (플릿/딜러)</h2></header><div class="page-query"><article><span class="endpoint">GET /api/v1/service/summary</span><h3>페이지 SQL</h3><pre><code>SELECT
+ (SELECT COUNT(*) FROM TB_SERVICE_REPAIR_RESULT r
+   WHERE r.EQUNR IN (:equipmentIds)) maintenanceCount,
+ (SELECT COUNT(*) FROM TB_SERVICE_SCHEDULE s
+   WHERE s.EQUIPMENT_ID IN (:equipmentIds)
+     AND s.USE_YN='Y' AND s.EXCHANGE_REMAIN_SEC &lt;= 0) supplyDueCount,
+ (SELECT COUNT(*) FROM FAULT_EVENT f
+   WHERE f.equipment_id IN (:equipmentIds)
+     AND f.status='OPEN') faultCount;</code></pre></article><article><h3>백엔드 → 프론트</h3><div class="flow-list"><p><b>요청</b><span>companyId, groupId?, equipmentId?, period, serviceType</span></p><p><b>가공</b><span>현재 조회 범위의 정비·소모품·차량/배터리 에러 건수 집계</span></p><p><b>응답</b><span>maintenanceCount, supplyDueCount, faultCount, updatedAt</span></p><p><b>플릿</b><span>운영 차량 기준 집계와 목록 진입</span></p><p><b>딜러</b><span>담당 고객·차량 기준 집계와 정비 업무 진입</span></p></div></article></div></section>
+
+    <section class="slide" data-title="결정 필요 사항">
+      <header>
+        <p class="eyebrow">28 · OPEN DECISIONS</p>
+        <h2>개발 착수 전에 업무 기준 네 가지를 결정</h2>
+      </header>
+      <div class="decision-list">
+        <p><b>01</b><span>Claim 번호는 무엇인가</span><em>AUFNR·QMNUM·LINQ_NO 중 매핑 대상 또는 별도 외부 값 확인</em></p>
+        <p><b>02</b><span>에러 완료의 의미는 무엇인가</span><em>마지막 수신 이후 미발생, 수동 완료, 정비 완료 중 기준 선택</em></p>
+        <p><b>03</b><span>사용자설정 조회 기간은 어디까지 허용하는가</span><em>프론트에는 현재 최대 기간 검증이 없으므로 서버 기준과 성능 한계 확인</em></p>
+        <p><b>04</b><span>플릿과 딜러가 각각 볼 수 있는 정보와 행동은 무엇인가</span><em>필드·버튼·업체·차량 범위를 역할표로 확정</em></p>
+      </div>
+      <div class="decision-result">
+        <b>결정 완료 후 산출물</b>
+        <span>화면 권한표</span><span>API 계약서</span><span>DB 변경 명세</span><span>데이터 이관 기준</span><span>통합 테스트 항목</span>
+      </div>
+    </section>
+
+    <section class="slide closing" data-title="최종 제안">
+      <div class="closing-mark">FINAL</div>
+      <h2>플릿과 딜러는<br>서로 다른 화면이 아니라<br><em>서로 다른 업무 권한</em>으로 구분</h2>
+      <p>차량의 사실 데이터는 하나로 유지하고, 서비스별 조회 범위·노출 정보·처리 기능을 정책으로 분리</p>
+      <div class="closing-actions">
+        <span>① 업무 기준 확정</span>
+        <span>② 공통 API 계약</span>
+        <span>③ 관계·상태 구조 보완</span>
+        <span>④ 프론트 공통화</span>
+      </div>
+      <footer>문서 기준일 2026.08.27 · 브라우저의 ‘PDF 저장’ 버튼으로 페이지별 PDF 출력 가능</footer>
+    </section>
+  </main>
+
+  <nav class="deck-controls" aria-label="슬라이드 이동">
+    <button type="button" data-action="prev" aria-label="이전 슬라이드">‹</button>
+    <button type="button" class="page-indicator" data-action="overview" aria-label="슬라이드 목록"><b>1</b><span>/ 30</span></button>
+    <button type="button" data-action="next" aria-label="다음 슬라이드">›</button>
+    <button type="button" class="pdf-button" data-action="print" aria-label="PDF로 저장">PDF 저장</button>
+  </nav>
+  <div class="progress" aria-hidden="true"><i></i></div>
+  <dialog class="overview">
+    <header><b>슬라이드 목록</b><button type="button" data-action="close" aria-label="닫기">×</button></header>
+    <div class="overview-list"></div>
+  </dialog>
+  <script src="assets/deck.js"></script>
+</body>
+</html>

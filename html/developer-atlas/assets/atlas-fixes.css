@@ -1,0 +1,8 @@
+.sequence li:nth-child(1){width:32%;margin-left:2%}
+.sequence li:nth-child(2){width:32%;margin-left:22%}
+.sequence li:nth-child(3){width:32%;margin-left:42%}
+.sequence li:nth-child(4){width:32%;margin-left:62%}
+.sequence li:nth-child(5){width:72%;margin-left:22%;border-left-color:#2e7d61}
+.sequence li:nth-child(6){width:32%;margin-left:2%;border-left-color:#2e7d61}
+.sequence li:nth-child(7){width:32%;margin-left:2%}
+.sequence li:nth-child(8){width:72%;margin-left:22%}

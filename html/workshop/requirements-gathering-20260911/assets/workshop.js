@@ -1,0 +1,43 @@
+(() => {
+  const slides = [...document.querySelectorAll('.slide')];
+  const current = document.querySelector('.page-indicator b');
+  const total = document.querySelector('.page-indicator span');
+  const progress = document.querySelector('.progress i');
+  const dialog = document.querySelector('.overview');
+  const list = document.querySelector('.overview-list');
+  let index = Math.max(0, slides.findIndex((slide) => slide.classList.contains('is-active')));
+
+  total.textContent = `/ ${slides.length}`;
+  slides.forEach((slide, i) => {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.textContent = `${String(i + 1).padStart(2, '0')} · ${slide.dataset.title || '슬라이드'}`;
+    button.addEventListener('click', () => { show(i); dialog.close(); });
+    list.append(button);
+  });
+
+  function show(next) {
+    index = (next + slides.length) % slides.length;
+    slides.forEach((slide, i) => slide.classList.toggle('is-active', i === index));
+    current.textContent = index + 1;
+    progress.style.width = `${((index + 1) / slides.length) * 100}%`;
+    history.replaceState(null, '', `#${index + 1}`);
+  }
+
+  document.addEventListener('click', (event) => {
+    const action = event.target.closest('[data-action]')?.dataset.action;
+    if (action === 'next') show(index + 1);
+    if (action === 'prev') show(index - 1);
+    if (action === 'overview') dialog.showModal();
+    if (action === 'close') dialog.close();
+  });
+  document.addEventListener('keydown', (event) => {
+    if (['ArrowRight', 'PageDown', ' '].includes(event.key)) { event.preventDefault(); show(index + 1); }
+    if (['ArrowLeft', 'PageUp'].includes(event.key)) { event.preventDefault(); show(index - 1); }
+    if (event.key === 'Home') show(0);
+    if (event.key === 'End') show(slides.length - 1);
+    if (event.key.toLowerCase() === 'o') dialog.showModal();
+  });
+  const hashIndex = Number(location.hash.slice(1)) - 1;
+  show(Number.isInteger(hashIndex) && hashIndex >= 0 ? hashIndex : index);
+})();

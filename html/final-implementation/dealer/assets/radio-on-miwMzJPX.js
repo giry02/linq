@@ -1,0 +1,1 @@
+import{o as e,c as o,a as t}from"./index-dGkWfo-f.js";const s={xmlns:"http://www.w3.org/2000/svg",viewBox:"0 0 24 24"},c=t("path",{d:"M12 4c-4.4 0-8 3.6-8 8s3.6 8 8 8 8-3.6 8-8-3.6-8-8-8m0 11.6c-2 0-3.6-1.6-3.6-3.6S10 8.4 12 8.4s3.6 1.6 3.6 3.6-1.6 3.6-3.6 3.6"},null,-1),n=[c];function r(a,d){return e(),o("svg",s,[...n])}const i={render:r};export{i as default,r as render};

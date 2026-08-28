@@ -264,3 +264,16 @@ body[data-layout="top"] .page-body { min-height:760px; }
 body[data-layout="current"] .page-body { min-height:760px; }
 
 @media(max-width:1780px){ .page-head__nav{margin-left:20px}.page-head__nav button{width:115px}.local-body{padding-right:60px;padding-left:100px}.top-selection__inner{width:1600px} }
+
+/* LNB 본문 시작선과 조회 대상 정렬 */
+body[data-layout="top"] .top-selection__inner,
+body[data-layout="top"] .top-selection__detail {
+  width:auto;
+  max-width:none;
+  margin-right:100px;
+  margin-left:255px;
+}
+body[data-layout="top"].side-collapsed .top-selection__inner,
+body[data-layout="top"].side-collapsed .top-selection__detail {
+  margin-left:40px;
+}

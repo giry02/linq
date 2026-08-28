@@ -1,0 +1,178 @@
+/*
+ * Common shell copied from the live prototype:
+ * /prototypes/analysis-summary-option-3.html
+ * Only GNB, target selector and LNB are scoped here. The original page body is untouched.
+ */
+body.requirements-prototype-shell .page-head {
+  display: block !important;
+  position: relative !important;
+  z-index: 20 !important;
+  min-width: 0 !important;
+  height: 64rem !important;
+  box-shadow: 0 4rem 12rem rgba(0,0,0,.08);
+}
+body.requirements-prototype-shell .page-head__inner {
+  display: flex !important;
+  align-items: center !important;
+  min-width: 0 !important;
+  height: 64rem !important;
+  padding: 0 30rem !important;
+}
+body.requirements-prototype-shell .page-head__logo { flex: 0 0 250rem !important; height: 64rem !important; }
+body.requirements-prototype-shell .page-head__logo svg { width: 240rem !important; max-height: 32rem !important; }
+body.requirements-prototype-shell .page-head__nav { margin-left: 28rem !important; }
+body.requirements-prototype-shell .page-head__menu,
+body.requirements-prototype-shell .gnb-list,
+body.requirements-prototype-shell .page-head__nav { height: 64rem !important; }
+body.requirements-prototype-shell .gnb-list { gap: 34rem !important; min-width: 0 !important; }
+body.requirements-prototype-shell .gnb-list.opened { height: 64rem !important; }
+body.requirements-prototype-shell .gnb-list::before { display: none !important; height: 0 !important; }
+body.requirements-prototype-shell .gnb-item > .lnb-list { display: none !important; }
+body.requirements-prototype-shell .gnb-item { height: 64rem !important; }
+body.requirements-prototype-shell .gnb-text { font-size: 17rem !important; line-height: 24rem !important; text-align: center !important; white-space: nowrap; }
+body.requirements-prototype-shell .gnb-text.current::after,
+body.requirements-prototype-shell .gnb-text:focus::after,
+body.requirements-prototype-shell .gnb-text:hover::after { right: auto !important; left: 50% !important; width: 78rem !important; height: 3rem !important; transform: translateX(-50%); top: calc(100% + 8rem) !important; }
+body.requirements-prototype-shell .account-info { height: 64rem !important; }
+body.requirements-prototype-shell .account-info p,
+body.requirements-prototype-shell .account-info button { font-size: 13rem !important; }
+
+.requirements-prototype-selector.top-selection {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  border-bottom: 1rem solid #ddd;
+  background: #fff;
+}
+.requirements-prototype-selector .top-selection__inner {
+  display: flex;
+  align-items: center;
+  gap: 12rem;
+  width: calc(100% - 80rem);
+  max-width: 1600rem;
+  height: 58rem;
+  margin: 0 auto;
+}
+.requirements-prototype-selector .top-selection__inner > strong { margin-right: 8rem; font-size: 18rem; }
+.requirements-prototype-selector label { display: flex; align-items: center; gap: 8rem; color: #666; font-size: 14rem; font-weight: 700; }
+.requirements-prototype-selector select,
+.requirements-prototype-selector input { height: 36rem; padding: 0 38rem 0 14rem; color: #222; border: 1rem solid #ddd; border-radius: 4rem; outline: 0; background: #fff; }
+.requirements-prototype-selector select:focus,
+.requirements-prototype-selector input:focus { border-color: #999; }
+.requirements-prototype-selector select { width: 250rem; }
+.requirements-prototype-selector label:nth-of-type(2) select { width: 230rem; }
+.requirements-prototype-selector .selection-context { display: inline-flex; align-items: center; height: 36rem; padding: 0 12rem; color: #b82400; border: 1rem solid #ffc7b8; border-radius: 4rem; background: #fff5f3; font-size: 13rem; line-height: 1; font-weight: 700; white-space: nowrap; }
+.requirements-prototype-selector .line-button { display: inline-flex; align-items: center; justify-content: center; gap: 7rem; margin-left: auto; height: 36rem; padding: 0 20rem; color: #333; border: 1rem solid #aaa; border-radius: 4rem; background: #fff; font-weight: 700; }
+.requirements-prototype-selector .line-button__icon { width: 17rem; height: 17rem; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.requirements-prototype-selector .top-selection__detail { display: grid; grid-template-columns: 300rem minmax(0,1fr); gap: 24rem; width: calc(100% - 80rem); max-width: 1600rem; max-height: 154rem; margin: 0 auto; padding: 16rem 0 20rem; overflow: hidden; border-top: 1rem solid #eee; transition: max-height .18s ease,padding .18s ease,opacity .18s ease; }
+.requirements-prototype-selector.collapsed .top-selection__detail { max-height: 0; padding-top: 0; padding-bottom: 0; border-top-color: transparent; opacity: 0; pointer-events: none; }
+.requirements-prototype-selector .detail-search-field { display: block !important; color: #333 !important; font-size: 14rem !important; }
+.requirements-prototype-selector .detail-search-field > span { display: block; margin-bottom: 8rem; font-weight: 700; }
+.requirements-prototype-selector .detail-search-control { display: flex; gap: 8rem; }
+.requirements-prototype-selector .detail-search-control input { min-width: 0; flex: 1; width: auto; padding-right: 14rem; }
+.requirements-prototype-selector .detail-search-control button { flex: 0 0 68rem; height: 36rem; color: #fff; border-radius: 4rem; background: #ff3600; font-weight: 700; }
+.requirements-prototype-selector .detail-search-field small { display: block; margin-top: 7rem; color: #777; font-size: 11rem; line-height: 17rem; }
+.requirements-prototype-selector .detail-result-head { display: flex; align-items: center; justify-content: space-between; gap: 12rem; margin-bottom: 8rem; }
+.requirements-prototype-selector .detail-result-head strong { font-size: 14rem; }
+.requirements-prototype-selector .detail-result-head span { color: #888; font-size: 11rem; }
+.requirements-prototype-selector .vehicle-result { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 8rem; max-height: 94rem; overflow: auto; }
+.requirements-prototype-selector .vehicle-result button { min-width: 0; height: 40rem; padding: 0 12rem; overflow: hidden; text-align: left; white-space: nowrap; text-overflow: ellipsis; border: 1rem solid #ddd; border-radius: 4rem; background: #fff; }
+.requirements-prototype-selector .vehicle-result button:hover { border-color: #ff3600; background: #fff6f3; }
+.requirements-prototype-selector .vehicle-result button strong,
+.requirements-prototype-selector .vehicle-result button span { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.requirements-prototype-selector .vehicle-result button strong { font-size: 13rem; }
+.requirements-prototype-selector .vehicle-result button span,
+.requirements-prototype-selector .detail-result-guide { color: #777; font-size: 11rem; }
+.requirements-prototype-selector .detail-result-guide { grid-column: 1 / -1; margin: 12rem 0 0; }
+
+.requirements-prototype-dashboard-layout { display: flex; align-items: stretch; min-width: 0; }
+.requirements-prototype-dashboard-layout > .page-management { flex: 1 1 auto; min-width: 0; }
+.requirements-prototype-dashboard-layout.is-full-width { display: block; width: 100%; }
+.requirements-prototype-dashboard-layout.is-full-width > .page-management { width: 100%; max-width: none; }
+
+.requirements-prototype-dashboard-tabs {
+  display: flex;
+  align-items: stretch;
+  min-height: 50rem;
+  padding: 0 40rem;
+  border-bottom: 1rem solid #ddd;
+  background: #fff;
+}
+.requirements-prototype-dashboard-tabs > strong {
+  display: flex;
+  align-items: center;
+  flex: 0 0 auto;
+  margin-right: 30rem;
+  color: #111;
+  font-size: 18rem;
+  font-weight: 700;
+}
+.requirements-prototype-dashboard-tabs > div { display: flex; align-items: stretch; }
+.requirements-prototype-dashboard-tabs button {
+  position: relative;
+  min-width: 152rem;
+  padding: 0 22rem;
+  color: #666;
+  border: 0;
+  background: transparent;
+  font-size: 14rem;
+  font-weight: 600;
+}
+.requirements-prototype-dashboard-tabs button.active { color: #ff3600; font-weight: 700; }
+.requirements-prototype-dashboard-tabs button.active::after {
+  position: absolute;
+  right: 22rem;
+  bottom: 0;
+  left: 22rem;
+  height: 3rem;
+  background: #ff3600;
+  content: '';
+}
+body.requirements-prototype-dashboard-topnav .requirements-prototype-dashboard-layout > .requirements-prototype-side { display: none !important; }
+body.requirements-prototype-dashboard-topnav .requirements-prototype-dashboard-layout > .page-management { width: 100% !important; max-width: none !important; }
+
+body.requirements-prototype-shell .local-side.requirements-prototype-source-side { display: none !important; }
+body.requirements-prototype-shell .page-body .local { padding-left: 0 !important; }
+body.requirements-prototype-shell .requirements-prototype-side.local-side { display: block !important; flex: 0 0 240rem !important; width: 240rem !important; min-width: 240rem !important; background: #f8f8f8; }
+.requirements-prototype-side .local-side__inner { padding: 28rem 24rem !important; }
+.requirements-prototype-side .page-side { width: 192rem !important; }
+.requirements-prototype-side .page-side__title { min-height: 28rem; margin-bottom: 20rem; padding: 0; color: #111; background: transparent; font-size: 22.4rem; line-height: 28rem; font-weight: 700; }
+.requirements-prototype-side .analysis-menu-list { overflow: hidden; border: 1rem solid #ddd; border-radius: 12rem; background: #fff; }
+.requirements-prototype-side .side-item { display: block; width: 100%; min-height: 45rem; padding: 11rem 20rem !important; color: #000; border-bottom: 1rem dashed #ddd; background: #fff; text-align: left; }
+.requirements-prototype-side .side-item:last-child { border-bottom: 0; }
+.requirements-prototype-side .side-item em { color: inherit; font-style: normal; font-size: 15rem; font-weight: 700; }
+.requirements-prototype-side .side-item.active { color: #fff; background: #ff3600; }
+body.requirements-prototype-shell .page-body .local > .local-side-func { display: block !important; position: absolute !important; top: 12rem !important; left: 240rem !important; }
+body.requirements-prototype-shell.requirements-prototype-side-collapsed .requirements-prototype-side { display: none !important; }
+body.requirements-prototype-shell.requirements-prototype-side-collapsed .page-body .local > .local-side-func { left: 0 !important; }
+
+/*
+ * The original scroll-table reserves 1396rem before the review LNB is added.
+ * In the copied review shell this makes the unchanged fleet table extend past
+ * the viewport. Keep the original columns, but let the table use the available
+ * body width instead of forcing a second horizontal canvas.
+ */
+body.requirements-prototype-shell .local-body { min-width: 0 !important; }
+body.requirements-prototype-shell .display-table { max-width: 100% !important; overflow-x: hidden !important; }
+body.requirements-prototype-shell .display-table > table { width: 100% !important; min-width: 100% !important; table-layout: fixed !important; }
+
+@media (max-width: 1320px) {
+  .requirements-prototype-selector .top-selection__inner,
+  .requirements-prototype-selector .top-selection__detail { width: calc(100% - 40rem); }
+  .requirements-prototype-selector select { width: 180rem; }
+  .requirements-prototype-selector label:nth-of-type(2) select { width: 210rem; }
+  .requirements-prototype-selector .vehicle-result { grid-template-columns: repeat(2,minmax(180rem,250rem)); }
+}
+
+body.requirements-prototype-shell:not(.requirements-prototype-dashboard-topnav) .requirements-prototype-selector .top-selection__inner,
+body.requirements-prototype-shell:not(.requirements-prototype-dashboard-topnav) .requirements-prototype-selector .top-selection__detail {
+  width: auto !important;
+  max-width: none !important;
+  margin-right: 100rem !important;
+  margin-left: 255rem !important;
+}
+
+body.requirements-prototype-shell.requirements-prototype-side-collapsed .requirements-prototype-selector .top-selection__inner,
+body.requirements-prototype-shell.requirements-prototype-side-collapsed .requirements-prototype-selector .top-selection__detail {
+  margin-left: 40rem !important;
+}

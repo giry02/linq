@@ -170,7 +170,7 @@
     screen('admin','dl-admin-vehicle-request',B('차량신청관리','Vehicle Requests'),'dealer-admin-vehicle-request.png',B('업체의 차량 등록 또는 연결 신청을 확인하고 처리합니다.','Review and process vehicle registration or connection requests from companies.'),'admin',['company','vehicleId','tms'],'http://localhost:3001/dealer/ko/page/mgmt/request/equip')
   ];
 
-  window.LINQ_MANUAL = {
+  window.MACHINEIQ_MANUAL = {
     glossary,
     menuGroups,
     screens: { fleet: fleetScreens, dealer: dealerScreens },

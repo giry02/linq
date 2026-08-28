@@ -1,0 +1,8 @@
+{
+  "method": "GET",
+  "path": "/fleet/service/ocses?companyId=151&equipmentId=&startDate=20260801&endDate=20260813&periodTypeCode=monthly&pageNo=1&pageSize=10&sortCol=companyName+DESC",
+  "status": 200,
+  "contentType": "application/json",
+  "bodyEncoding": "base64",
+  "body": "eyJjb2RlIjoiMDAiLCJtc2ciOiJzdWNjZXNzIiwic3RhdHVzIjoyMDAsInJlc3VsdCI6W10sInBhZ2VObyI6MSwicGFnZVNpemUiOjEwLCJ0b3RhbCI6MH0="
+}

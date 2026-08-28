@@ -1,0 +1,159 @@
+@import url('../../manual/assets/manual.css');
+
+:root {
+  --brand: #ff3600;
+  --brand-dark: #d92e00;
+  --ink: #171717;
+  --muted: #6b7280;
+  --line: #d9d9d9;
+  --line-soft: #ececec;
+  --paper: #ffffff;
+  --canvas: #f4f5f7;
+  --dark: #2f2f2f;
+  --shadow: 0 12px 32px rgba(17, 24, 39, .08);
+  --sidebar: 300px;
+}
+
+body { font-size: 16px; }
+
+.side-brand {
+  min-height: 104px;
+  padding: 24px 22px 16px;
+  background: var(--brand);
+}
+.side-brand strong {
+  display: block;
+  width: 230px;
+  height: 33px;
+  overflow: hidden;
+  text-indent: -9999px;
+  background: url('../../html/dealer/mobile-home/bobcat-machine-iq.svg') left center / contain no-repeat;
+  filter: brightness(0) invert(1);
+}
+.side-brand span {
+  margin-top: 9px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.7px;
+}
+
+.manual-main { padding-bottom: 80px; }
+.cover {
+  border-top: 5px solid var(--brand);
+  border-radius: 0 0 14px 14px;
+  background: #fff;
+}
+.screen-section {
+  margin: 28px 34px;
+  padding: 32px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--paper);
+  box-shadow: 0 8px 26px rgba(17,24,39,.05);
+}
+.screen-head { margin-bottom: 22px; }
+.screen-head h2 { font-size: 28px; letter-spacing: -.7px; }
+.screen-purpose { max-width: 960px; font-size: 16px; color: #4b5563; }
+
+.annotated-shot {
+  margin: 0;
+  overflow: hidden;
+  border: 1px solid #cfcfcf;
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 8px 22px rgba(0,0,0,.06);
+}
+.annotated-shot img {
+  display: block;
+  width: 100%;
+  height: auto;
+  background: #fff;
+}
+.callout-pin {
+  width: 29px;
+  height: 29px;
+  border: 2px solid #fff;
+  box-shadow: 0 3px 10px rgba(0,0,0,.35);
+  font-size: 13px;
+}
+
+.numbered-title {
+  margin: 28px 0 12px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line-soft);
+  font-size: 22px;
+}
+.numbered-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+.numbered-item {
+  min-height: 118px;
+  padding: 18px;
+  border: 1px solid #d6d6d6;
+  border-radius: 9px;
+  background: #fff;
+}
+.numbered-item .number-badge {
+  width: 28px;
+  height: 28px;
+  background: var(--brand);
+}
+.numbered-item h3 { font-size: 17px; }
+.numbered-item p { margin-top: 9px; font-size: 15px; line-height: 1.65; color: #4b5563; }
+
+.term-rail {
+  margin-top: 20px;
+  padding: 18px 20px;
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--brand);
+  border-radius: 8px;
+  background: #fafafa;
+}
+.term-rail h3 { background: var(--dark); }
+.term-button { min-height: 36px; padding: 7px 12px; background: #fff; }
+
+.entry-page.manual-v2-entry { min-height: 100vh; background: var(--canvas); }
+.entry-brandbar {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  height: 86px;
+  padding: 0 max(28px, calc((100vw - 1160px) / 2));
+  color: #fff;
+  background: var(--brand);
+}
+.entry-brandbar img { width: 246px; filter: brightness(0) invert(1); }
+.entry-brandbar span { padding-left: 22px; border-left: 1px solid rgba(255,255,255,.4); font-size: 12px; font-weight: 800; letter-spacing: 1.8px; }
+.manual-v2-entry .entry-shell { width: min(1160px, calc(100% - 40px)); margin: 0 auto; padding-top: 74px; }
+.manual-v2-entry .entry-shell h1 { font-size: 44px; letter-spacing: -1.7px; }
+.entry-lead { max-width: 760px; color: #59616d; }
+.manual-v2-entry .entry-grid { margin-top: 36px; }
+.manual-v2-entry .entry-card { min-height: 280px; padding: 34px; border-top: 5px solid var(--brand); box-shadow: var(--shadow); }
+.entry-service { color: var(--brand); font-size: 12px; font-weight: 900; letter-spacing: 1.8px; }
+.manual-v2-entry .entry-card h2 { margin: 10px 0 12px; font-size: 28px; }
+.manual-v2-entry .entry-card p { min-height: 82px; color: #59616d; }
+.manual-v2-entry .entry-links a { background: var(--brand); border-color: var(--brand); color: #fff; }
+.manual-v2-entry .entry-links a:hover { background: var(--brand-dark); border-color: var(--brand-dark); }
+
+@media (max-width: 1100px) {
+  .numbered-grid { grid-template-columns: 1fr; }
+  .screen-section { margin: 20px; padding: 24px; }
+}
+
+@media (max-width: 760px) {
+  body { font-size: 15px; }
+  .entry-brandbar { height: 76px; padding: 0 20px; }
+  .entry-brandbar img { width: 210px; }
+  .entry-brandbar span { display: none; }
+  .manual-v2-entry .entry-shell { padding-top: 44px; }
+  .manual-v2-entry .entry-shell h1 { font-size: 34px; }
+  .screen-section { margin: 12px; padding: 18px; }
+  .screen-head h2 { font-size: 23px; }
+}
+
+@media print {
+  .screen-section { margin: 0 0 24px; padding: 20px; box-shadow: none; break-inside: avoid; }
+  .numbered-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}

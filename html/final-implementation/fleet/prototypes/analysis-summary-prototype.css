@@ -1,0 +1,289 @@
+:root { --primary:#ff3600; --text:#000; --sub:#666; --line:#ddd; --soft:#f9f9f9; }
+* { box-sizing:border-box; }
+html,body { margin:0; min-width:1680px; color:var(--text); background:#fff; font-family:"Noto Sans KR","Open Sans","Malgun Gothic",sans-serif; font-size:16px; }
+html[lang="en"] body { font-family:"Open Sans","Noto Sans KR",sans-serif; }
+button,input,select { font:inherit; }
+button { cursor:pointer; }
+button,fieldset { margin:0; padding:0; border:0; background:none; }
+#wrap { min-width:1680px; min-height:100vh; }
+
+/* 실제 운영 화면 GNB 규격 */
+.page-head { position:relative; z-index:20; height:90px; background:var(--primary); box-shadow:0 4px 12px rgba(0,0,0,.08); }
+.page-head__inner { display:flex; align-items:center; height:90px; padding:0 40px; }
+.page-head__logo { display:flex; align-items:center; width:276px; color:#fff; text-decoration:none; white-space:nowrap; }
+.page-head__logo img { width:38px; height:38px; margin-right:8px; }
+.page-head__logo svg { display:block; width:276px; height:37px; fill:#fff; color:#fff; }
+.page-head__logo strong { font-family:"Open Sans",sans-serif; font-size:30px; line-height:1; letter-spacing:-1.6px; }
+.page-head__logo span { margin-left:5px; font-family:"Open Sans",sans-serif; font-size:21px; font-weight:300; letter-spacing:-1px; }
+.page-head__nav { display:flex; align-self:stretch; margin-left:46px; }
+.page-head__nav button { position:relative; width:135px; color:rgba(255,255,255,.6); font-size:22.4px; font-weight:700; }
+.page-head__nav button.active,.page-head__nav button:hover { color:#fff; }
+.page-head__nav button.active::after { content:""; position:absolute; right:22px; bottom:14px; left:22px; height:4px; background:#fff; }
+.page-head__account { display:flex; align-items:center; justify-content:flex-end; gap:20px; flex:1; min-width:260px; color:#fff; white-space:nowrap; }
+.page-head__account span { font-size:16px; }
+.page-head__account button { padding-left:18px; color:#fff; border-left:1px solid rgba(255,255,255,.35); }
+
+/* 1안: 첨부 시안처럼 상단 GNB를 낮게 유지 */
+body[data-layout="top"] .page-head,
+body[data-layout="top"] .page-head__inner { height:64px; }
+body[data-layout="top"] .page-head__inner { padding:0 30px; }
+body[data-layout="top"] .page-head__logo { width:250px; }
+body[data-layout="top"] .page-head__logo svg { width:240px; height:32px; }
+body[data-layout="top"] .page-head__logo img { width:32px; height:32px; }
+body[data-layout="top"] .page-head__logo strong { font-size:25px; }
+body[data-layout="top"] .page-head__logo span { font-size:17px; }
+body[data-layout="top"] .page-head__nav { margin-left:28px; }
+body[data-layout="top"] .page-head__nav button { width:118px; font-size:17px; }
+html[lang="en"] body[data-layout="top"] .page-head__nav button { width:128px; font-size:15px; white-space:nowrap; }
+body[data-layout="top"] .page-head__nav button.active::after { right:20px; bottom:8px; left:20px; height:3px; }
+body[data-layout="top"] .page-head__account span,
+body[data-layout="top"] .page-head__account button { font-size:13px; }
+
+/* 1안에서만 추가되는 상단 조회 대상 영역 */
+.top-selection { position:relative; z-index:10; background:#fff; border-bottom:1px solid var(--line); }
+.top-selection__inner { display:flex; align-items:center; gap:12px; width:1600px; height:74px; margin:0 auto; }
+.top-selection__inner>strong { margin-right:8px; font-size:20px; }
+.top-selection label { display:flex; align-items:center; gap:8px; color:var(--sub); font-size:14px; font-weight:700; }
+.top-selection select,.top-selection input { height:40px; padding:0 38px 0 14px; color:#222; background:#fff; border:1px solid #ddd; border-radius:4px; outline:0; }
+.top-selection select:focus,.top-selection input:focus { border-color:#999; }
+.top-selection select { width:250px; }
+.top-selection label:nth-of-type(2) select { width:230px; }
+.selection-context { display:inline-flex; align-items:center; height:36px; padding:0 12px; color:#b82400; font-size:13px; line-height:1; font-weight:700; white-space:nowrap; background:#fff5f3; border:1px solid #ffc7b8; border-radius:4px; }
+.line-button { margin-left:auto; height:40px; padding:0 20px; border:1px solid #aaa; border-radius:4px; color:#333; background:#fff; font-weight:700; }
+.top-selection__detail { display:grid; grid-template-columns:300px minmax(0,1fr); gap:24px; width:calc(100% - 80px); max-width:1600px; max-height:154px; margin:0 auto; padding:16px 0 20px; overflow:hidden; border-top:1px solid #eee; transition:max-height .18s ease,padding .18s ease,opacity .18s ease; }
+.top-selection.collapsed .top-selection__detail { max-height:0; padding-top:0; padding-bottom:0; border-top-color:transparent; opacity:0; }
+.detail-search-field { display:block!important; color:#333!important; font-size:14px!important; }
+.detail-search-field span { display:block; margin-bottom:8px; font-weight:700; }
+.detail-search-control { display:flex; gap:8px; }
+.top-selection .detail-search-field input { min-width:0; flex:1; width:auto; padding-right:14px; }
+.detail-search-control button { flex:0 0 68px; height:40px; color:#fff; font-weight:700; border-radius:4px; background:var(--primary); }
+.detail-result-area>strong { display:block; margin-bottom:8px; font-size:14px; }
+.vehicle-result { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:8px; }
+.vehicle-result button { min-width:0; height:40px; padding:0 12px; overflow:hidden; text-align:left; white-space:nowrap; text-overflow:ellipsis; border:1px solid #ddd; border-radius:4px; background:#fff; }
+.vehicle-result button strong { margin-right:8px; }
+.vehicle-result button span { color:#777; font-size:12px; }
+
+body[data-layout="top"] .top-selection__inner { height:58px; }
+body[data-layout="top"] .top-selection__inner>strong { font-size:18px; }
+body[data-layout="top"] .top-selection select,
+body[data-layout="top"] .top-selection input,
+body[data-layout="top"] .line-button { height:36px; }
+body[data-layout="top"] .detail-search-control button { height:36px; }
+body[data-layout="top"] .top-selection__detail { grid-template-columns:320px minmax(0,1fr); max-height:230px; padding:14px 0 16px; }
+body[data-layout="top"] .top-selection.collapsed .top-selection__detail { max-height:0; padding-top:0; padding-bottom:0; }
+body[data-layout="top"] .top-selection__inner,
+body[data-layout="top"] .top-selection__detail {
+  width:auto;
+  max-width:none;
+  margin-right:100px;
+  margin-left:255px;
+}
+.detail-search-field small { display:block; margin-top:8px; color:#777; font-size:12px; line-height:18px; font-weight:400; }
+.detail-result-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; }
+.detail-result-head strong { font-size:14px; }
+.detail-result-head span { color:#888; font-size:12px; }
+body[data-layout="top"] .vehicle-result { grid-template-columns:repeat(4,minmax(0,1fr)); max-height:152px; padding-right:4px; overflow-y:auto; }
+body[data-layout="top"] .vehicle-result button { display:flex; flex-direction:column; justify-content:center; height:52px; padding:6px 12px; }
+body[data-layout="top"] .vehicle-result button strong { display:block; margin:0 0 2px; overflow:hidden; text-overflow:ellipsis; }
+body[data-layout="top"] .vehicle-result button span { display:block; overflow:hidden; text-overflow:ellipsis; }
+body[data-layout="top"] .vehicle-result button.selected { border-color:#ff3600; background:#fff5f3; }
+.vehicle-result-empty { grid-column:1/-1; min-height:52px; margin:0; padding:15px 12px; color:#777; border:1px solid #ddd; border-radius:4px; background:#fff; }
+.vehicle-result-guide { grid-column:1/-1; min-height:52px; margin:0; padding:15px 12px; color:#777; border:1px solid #eee; border-radius:4px; background:#fafafa; }
+
+/* 실제 운영 화면 LNB 규격 */
+.page-body { position:relative; display:flex; min-height:760px; background:#fff; }
+.local-side { flex:0 0 324px; width:324px; background:var(--soft); }
+.local-side__inner { padding:40px; }
+.page-side { width:244px; }
+.page-side__title { min-height:28px; margin-bottom:20px; font-size:22.4px; line-height:28px; font-weight:700; }
+.page-side__content { display:grid; gap:8px; }
+.page-side__search { height:82px; padding:20px; background:#fff; border:1px solid #ddd; border-radius:12px; }
+.search-input { position:relative; height:40px; }
+.search-input input { width:202px; height:40px; padding:0 44px 0 16px; border:1px solid #ddd; border-radius:4px; outline:0; }
+.search-input button { position:absolute; top:0; right:0; width:40px; height:40px; font-size:25px; }
+.page-side__list { display:grid; gap:8px; }
+.side-wrap { overflow:hidden; background:#fff; border:1px solid #ddd; border-radius:12px; }
+.side-wrap__header { display:flex; align-items:center; justify-content:space-between; height:58px; padding:0 16px 0 20px; }
+.side-wrap__header.active { background:#f9f9f9; }
+.side-wrap__title { font-weight:700; }
+.side-wrap__button { width:36px; height:26px; font-size:19px; }
+.side-wrap__body { display:none; border-top:1px solid #ddd; }
+.side-wrap__body.opened { display:block; }
+.side-item { display:block; width:100%; min-height:45px; padding:11px 20px; text-align:left; color:#000; border-bottom:1px dashed #ddd; background:#fff; }
+.side-item:last-child { border-bottom:0; }
+.side-item em { font-style:normal; font-weight:700; }
+.side-item.active { color:#b82400; }
+.analysis-side .side-wrap__body { max-height:none; }
+.analysis-side .side-item { min-height:45px; }
+body[data-layout="top"] .analysis-side { flex:0 0 240px; width:240px; }
+body[data-layout="top"] .analysis-side .local-side__inner { padding:28px 24px; }
+body[data-layout="top"] .analysis-side .page-side { width:192px; }
+body[data-layout="top"] .local-side-func { left:240px; }
+body[data-layout="top"] .local-body { padding-left:70px; }
+body[data-layout="top"] .analysis-menu-list { overflow:hidden; background:#fff; border:1px solid #ddd; border-radius:12px; }
+body[data-layout="top"] .analysis-menu-list .side-item { min-height:45px; }
+body[data-layout="top"] .analysis-menu-list .side-item.active { color:#fff; background:var(--primary); }
+.vehicle-wrap .side-wrap__body { max-height:430px; overflow:auto; }
+.vehicle-wrap .side-item em { display:block; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.local-side-func { position:absolute; z-index:3; top:12px; left:324px; width:32px; height:86px; font-size:34px; color:#222; background:#e5e5e5; clip-path:polygon(0 0,100% 25%,100% 75%,0 100%); }
+
+/* 실제 운영 화면 본문 규격 */
+.local-body { flex:1; min-width:0; padding:24px 100px 96px; }
+.content-path { display:flex; justify-content:flex-end; gap:12px; height:20px; color:#111; font-size:13px; }
+.content-path span+span::before { content:"›"; margin-right:12px; color:#bbb; }
+.content-head { display:flex; align-items:center; justify-content:space-between; height:68px; }
+.content-head__main { display:flex; align-items:center; }
+.content-head h3 { margin:0; font-size:32px; line-height:40px; letter-spacing:-1.4px; }
+.content-head__dataset { margin-left:12px; color:#666; font-size:32px; font-weight:500; }
+.content-head__dataset span { margin-left:8px; }
+.filter-form { display:flex; align-items:center; gap:8px; height:40px; }
+.content-head__filter { display:flex; flex-direction:column; align-items:flex-end; justify-content:center; }
+.period-help { margin:0 0 5px; color:#777; font-size:11px; line-height:15px; text-align:right; }
+.content-head__filter .filter-form input { color:#555; background:#fff; }
+.period-tabs { display:flex; }
+.period-tabs button { width:60px; height:40px; border:1px solid #ddd; border-right:0; background:#fff; }
+.period-tabs button:last-child { width:104px; border-right:1px solid #ddd; }
+.period-tabs button.active { color:#fff; background:#000; border-color:#000; }
+.filter-form input { width:138px; height:40px; padding:0 14px; color:#bbb; border:1px solid #ddd; border-radius:4px; background:#f4f4f4; }
+.primary-button { height:40px; padding:0 20px; color:#fff; background:var(--primary); border-radius:2px; font-weight:700; }
+.content-body { display:block; }
+.display-table { width:100%; border-top:1px solid #111; }
+.display-table table { width:100%; table-layout:fixed; border-collapse:collapse; }
+.display-table th { height:57px; padding:0 8px; background:#f9f9f9; border-right:1px solid #e6e6e6; font-weight:700; }
+.display-table td { height:105px; padding:12px 8px; text-align:center; color:#666; border-right:1px solid #e6e6e6; border-bottom:1px solid #ddd; }
+.display-table th:last-child,.display-table td:last-child { border-right:0; }
+.vehicle-cards { margin-top:20px; }
+.content-section { margin-bottom:20px; }
+.content-section__container { min-height:260px; padding:28px 40px; border:1px solid #bbb; border-radius:16px; background:#fff; }
+.goods-summary { display:flex; min-height:202px; }
+.goods-summary__image { position:relative; flex:0 0 360px; height:202px; }
+.goods-summary__image>img { width:100%; height:100%; object-fit:contain; }
+.goods-summary__location { position:absolute; top:0; left:0; display:grid; width:48px; height:48px; place-items:center; color:#fff; background:#777; border-radius:14px; font-size:23px; }
+.goods-summary__data { flex:1; padding:0 0 0 40px; }
+.goods-summary__simple em { display:block; margin-bottom:26px; font-style:normal; font-size:34px; line-height:44px; font-weight:700; }
+.goods-summary__detail { display:grid; grid-template-columns:repeat(5,minmax(110px,1fr)); gap:22px 24px; }
+.goods-summary__detail-item span,.goods-summary__detail-item em { display:block; }
+.goods-summary__detail-item span { margin-bottom:6px; color:#667085; font-size:13px; font-weight:700; }
+.goods-summary__detail-item em { font-style:normal; font-size:18px; }
+.data-note { display:inline-block; margin-left:6px; color:#a96700; font-size:11px; }
+
+/* 3안: 1안 구조를 유지한 한 줄 요약 및 차량 목록형 카드 */
+body[data-view="compact-list"] .display-table table { table-layout:auto; }
+body[data-view="compact-list"] .display-table .summary-one-line th,
+body[data-view="compact-list"] .display-table .summary-one-line td { padding-right:14px; padding-left:14px; white-space:nowrap; }
+body[data-view="compact-list"] .display-table .summary-one-line th { height:48px; font-size:14px; }
+body[data-view="compact-list"] .display-table .summary-one-line td { height:58px; font-size:14px; }
+body[data-view="compact-list"] .display-table .summary-one-line th:first-child,
+body[data-view="compact-list"] .display-table .summary-one-line td:first-child { min-width:290px; }
+body[data-view="compact-list"] .vehicle-cards { margin-top:18px; }
+.compact-list-head { display:flex; align-items:center; justify-content:space-between; min-height:38px; margin-bottom:8px; }
+.compact-list-head>strong { font-size:14px; }
+.compact-list-head>strong small { margin-left:8px; color:#777; font-size:11px; font-weight:400; }
+.fuel-legend { display:flex; align-items:center; gap:14px; color:#666; font-size:12px; }
+.fuel-legend::before { content:"동력 유형"; color:#222; font-weight:700; }
+html[lang="en"] .fuel-legend::before { content:"Power Type"; }
+.fuel-legend>span { display:inline-flex; align-items:center; gap:5px; white-space:nowrap; }
+.fuel-icon { display:inline-grid; width:40px; height:40px; place-items:center; font-style:normal; font-size:12px; line-height:1; font-weight:800; border-radius:9px; }
+.fuel-icon svg { display:block; width:22px; height:22px; }
+.fuel-legend .fuel-icon { width:24px; height:24px; font-size:9px; border-radius:6px; }
+.fuel-legend .fuel-icon svg { width:15px; height:15px; }
+.fuel-icon.engine { color:#315bd5; background:#edf1ff; }
+.fuel-icon.lithium { color:#00a875; background:#e7fbf4; }
+.fuel-icon.lead { color:#ed6400; background:#fff2e7; }
+.fuel-icon.hydrogen { color:#0089a8; background:#e6f8fc; }
+.compact-card-list { display:grid; gap:10px; }
+.compact-vehicle-card { display:grid; grid-template-columns:86px minmax(0,1fr); gap:0; min-height:150px; padding:14px 18px 14px 0; border:1px solid #ddd; border-left-width:5px; border-radius:7px; background:#fff; }
+.compact-vehicle-card.engine { border-left-color:#315bd5; }
+.compact-vehicle-card.lithium { border-left-color:#00a875; }
+.compact-vehicle-card.lead { border-left-color:#ed6400; }
+.compact-vehicle-card.hydrogen { border-left-color:#0089a8; }
+.compact-card__icon { display:flex; align-items:flex-start; justify-content:center; padding-top:42px; }
+.compact-card__icon .fuel-icon { color:#fff; font-size:13px; box-shadow:0 3px 10px rgba(0,0,0,.12); }
+.compact-card__icon .fuel-icon.engine { background:#315bd5; }
+.compact-card__icon .fuel-icon.lithium { background:#00a875; }
+.compact-card__icon .fuel-icon.lead { background:#ed6400; }
+.compact-card__icon .fuel-icon.hydrogen { background:#0089a8; }
+.compact-card__body { min-width:0; }
+.compact-card__head { display:flex; align-items:center; justify-content:space-between; min-height:34px; padding-bottom:8px; border-bottom:1px solid #eee; }
+.compact-card__identity { display:flex; align-items:center; min-width:0; }
+.compact-card__identity>strong { flex:0 0 auto; margin-right:12px; font-size:16px; }
+.compact-card__identity>span { overflow:hidden; color:#7a8190; font-size:13px; text-overflow:ellipsis; white-space:nowrap; }
+.compact-card__identity>em { flex:0 0 auto; margin-left:8px; padding:2px 6px; color:#a96700; font-style:normal; font-size:10px; border:1px solid #e1bd79; border-radius:3px; background:#fff8e8; }
+.fuel-type-badge { display:inline-flex; align-items:center; gap:4px; flex:0 0 auto; margin-left:10px; padding:3px 8px; font-size:11px; line-height:16px; border-radius:10px; }
+.fuel-type-badge svg { display:block; width:13px; height:13px; fill:none; }
+.fuel-type-badge.engine { color:#315bd5; background:#edf1ff; }
+.fuel-type-badge.lithium { color:#00875e; background:#e7fbf4; }
+.fuel-type-badge.lead { color:#c84f00; background:#fff2e7; }
+.fuel-type-badge.hydrogen { color:#00728c; background:#e6f8fc; }
+.compact-card__status { display:flex; align-items:center; gap:8px; min-width:0; font-size:12px; white-space:nowrap; }
+.compact-card__status small { color:#888; }
+.health-badge,.connection-badge { display:inline-flex; align-items:center; height:24px; padding:0 9px; border-radius:12px; font-weight:700; }
+.health-badge small,.connection-badge small { margin-left:5px; padding-left:5px; font-size:9px; font-weight:500; border-left:1px solid currentColor; opacity:.72; }
+.health-badge.normal { color:#08784f; background:#e5f7ef; }
+.health-badge.warning { color:#b82400; background:#fff0ec; }
+.health-badge.unknown,.connection-badge.unknown { color:#667085; background:#eef1f4; }
+.connection-badge.connected { color:#188759; background:#e9f8f0; }
+.connection-badge.disconnected { color:#7d8794; background:#eef1f4; }
+.energy-label { margin-left:4px; color:#7d8794; }
+.energy-gauge { position:relative; display:inline-block; width:45px; height:20px; padding:3px; border:2px solid #444; border-radius:2px; }
+.energy-gauge::after { content:""; position:absolute; top:5px; right:-6px; width:4px; height:8px; background:#444; border-radius:0 2px 2px 0; }
+.energy-gauge b { display:block; height:100%; background:#777; }
+.energy-gauge.engine b { background:#315bd5; }
+.energy-gauge.lithium b { background:#00a875; }
+.energy-gauge.lead b { background:#ed6400; }
+.energy-gauge.hydrogen b { background:#0089a8; }
+.energy-value { min-width:34px; color:#333; font-size:13px; }
+.energy-value.unavailable { color:#888; }
+.energy-source-badge { margin-left:-5px; color:#a96700!important; font-size:9px!important; }
+.compact-card__info,.compact-card__metrics { display:grid; grid-template-columns:repeat(6,minmax(0,1fr)); align-items:flex-start; column-gap:20px; min-width:0; }
+.compact-card__info { padding-top:9px; }
+.compact-card__metrics { padding-top:8px; }
+.compact-card__info>div,.compact-card__metrics>div { min-width:0; }
+.compact-card__info span,.compact-card__metrics span { display:block; margin-bottom:2px; color:#8a909c; font-size:11px; line-height:16px; }
+.compact-card__info strong,.compact-card__metrics strong { display:block; max-width:220px; overflow:hidden; color:#111; font-size:13px; line-height:18px; text-overflow:ellipsis; white-space:nowrap; }
+.compact-card__metrics .period-basis { display:inline-flex; align-items:center; margin-left:5px; padding:0 4px; color:#777d87; font-size:9px; font-weight:600; line-height:14px; white-space:nowrap; vertical-align:1px; border:1px solid #d9dce1; border-radius:3px; background:#f7f8f9; }
+
+
+.page-foot { display:grid; grid-template-columns:300px 1fr 320px; align-items:center; min-height:130px; padding:30px 40px; color:#fff; background:#333; }
+.page-foot strong { font-size:22px; }.page-foot strong span { font-size:15px; font-weight:300; }
+.page-foot p { margin:0; font-size:13px; }.page-foot p:last-child { text-align:right; }
+
+/* 2안 모달: 기존 테이블/버튼 시각 언어만 사용 */
+.modal-backdrop { position:fixed; inset:0; z-index:50; display:flex; align-items:center; justify-content:center; padding:40px; background:rgba(0,0,0,.58); }
+.modal-backdrop[hidden] { display:none; }
+.vehicle-modal { width:1180px; max-height:calc(100vh - 80px); overflow:auto; border-radius:16px; background:#fff; }
+.modal-head { display:grid; grid-template-columns:260px 1fr 44px; gap:28px; align-items:center; padding:28px 40px; border-bottom:1px solid #ddd; }
+.modal-head img { width:260px; height:160px; object-fit:contain; }
+.modal-head h2 { margin:0 0 8px; font-size:32px; }.modal-head p { margin:0 0 12px; color:#666; }
+.modal-head>button { width:40px; height:40px; border:1px solid #ddd; border-radius:50%; font-size:25px; }
+#modal-overall { color:#b82400; font-size:18px; }
+.modal-body { padding:28px 40px 34px; }
+.health-table { width:100%; table-layout:fixed; border-collapse:collapse; border-top:1px solid #111; }
+.health-table th { height:52px; background:#f9f9f9; border-right:1px solid #e6e6e6; }
+.health-table td { height:58px; padding:9px 14px; color:#555; border-right:1px solid #e6e6e6; border-bottom:1px solid #ddd; }
+.health-table th:nth-child(1){width:17%}.health-table th:nth-child(2){width:18%}.health-table th:nth-child(4){width:18%}
+.health-table th:last-child,.health-table td:last-child { border-right:0; }
+.health-table .warning,.health-table .danger { color:#b82400; font-weight:700; }
+.health-table .normal { color:#333; font-weight:700; }
+.health-table button { width:100%; height:36px; color:#fff; background:var(--primary); border-radius:2px; font-weight:700; }
+.modal-note { margin:18px 0 0; color:#666; font-size:13px; }
+.toast { position:fixed; right:28px; bottom:28px; z-index:80; padding:14px 20px; color:#fff; background:#333; box-shadow:0 6px 24px rgba(0,0,0,.24); }
+.toast[hidden] { display:none; }
+
+body[data-layout="top"] .page-body { min-height:760px; }
+body[data-layout="current"] .page-body { min-height:760px; }
+
+@media(max-width:1780px){ .page-head__nav{margin-left:20px}.page-head__nav button{width:115px}.local-body{padding-right:60px;padding-left:100px}.top-selection__inner{width:1600px} }
+
+/* LNB 본문 시작선과 조회 대상 정렬 */
+body[data-layout="top"] .top-selection__inner,
+body[data-layout="top"] .top-selection__detail {
+  width:auto;
+  max-width:none;
+  margin-right:100px;
+  margin-left:255px;
+}
+body[data-layout="top"].side-collapsed .top-selection__inner,
+body[data-layout="top"].side-collapsed .top-selection__detail {
+  margin-left:40px;
+}

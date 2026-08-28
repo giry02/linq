@@ -13,7 +13,7 @@
 
   const reviewGuide = {
     'service-errors': [
-      {ppt:'PPT 2p',id:'R-SVC-001~004',request:'서비스 상단 활성 표시를 맞추고, 최초 조회를 일 단위로 변경한다. 사용자설정 버튼을 먼저 누르지 않아도 날짜를 직접 입력하며 허용 기간을 안내한다.',implementation:'기존 GNB 구조는 유지하고 활성 밑줄 기준을 통일했다. 일 버튼을 기본 활성화하고 날짜 입력 즉시 사용자설정으로 전환되며 최대 31일 안내를 표시했다.',location:'상단 GNB와 우측 기간 필터',status:'UI 적용'},
+      {ppt:'PPT 2p',id:'R-SVC-001~004',request:'서비스 상단 활성 표시를 맞추고, 최초 조회를 일 단위로 변경한다. 사용자설정 버튼을 먼저 누르지 않아도 날짜를 직접 입력하며 허용 기간을 안내한다.',implementation:'기존 GNB 구조는 유지하고 활성 밑줄 기준을 통일했다. 일 버튼을 기본 활성화하고 날짜 입력 즉시 사용자설정으로 전환되도록 하며, 사용자설정의 안내는 별도 문장 대신 툴팁으로 제공한다.',location:'상단 GNB와 우측 기간 필터',status:'UI 적용 / 최대 조회 범위 확인 필요'},
       {ppt:'PPT 2p',id:'R-SVC-005~007',request:'서비스 상단 현황의 전체 집계와 배터리 에러 항목을 빼고, 배터리·엔진 오류를 기존 차량 에러에 합친 뒤 배터리에러 별도 메뉴를 제거한다.',implementation:'서비스 LNB와 업체 전체 조회는 유지했다. 상단의 배터리 에러 건수는 차량 에러에 합산하고 별도 항목을 제거했으며, 차량 에러 표에서 배터리·엔진 오류를 함께 표시했다.',location:'서비스 상단 차량 에러 현황, 좌측 메뉴, 기존 차량 에러 표',status:'UI 적용 / API 필요'},
       {ppt:'PPT 2p',id:'R-SVC-008~009',request:'첨부 PDF가 있는 행에만 PDF 아이콘을 표시하고, 기존 중요도 열은 차량·배터리 오류를 구별하는 구분 열로 변경한다.',implementation:'PDF가 있는 표본 행만 PDF 문서 아이콘으로 바꾸고 나머지는 기존 상세보기 아이콘을 유지했다. 중요도 열은 구분으로 변경했으며 BMS·배터리 오류는 배터리, 그 외 오류는 차량으로 표시했다.',location:'플릿 차량 에러 표의 구분·조치방법 열',status:'UI 적용 / 오류 원천 매핑 API 확인 필요'},
     ],
@@ -106,7 +106,7 @@
     'service-errors': [
       callout(1,'R-SVC-001','PPT 2p','서비스 활성 밑줄 정렬','서비스를 포함한 GNB 활성 밑줄의 위치와 폭을 동일하게 맞춘다.','기존 GNB의 색상·높이는 유지하고 서비스 활성 밑줄을 다른 메뉴와 같은 하단 기준선에 배치했다.','.page-head__nav [data-href="service-errors.html"]','상단 서비스 메뉴','UI 적용'),
       callout(2,'R-SVC-002','PPT 2p','기본 조회 기간을 일로 변경','서비스 화면 최초 진입 시 일 단위 조회가 선택되어야 한다.','페이지 진입 시 일 버튼이 기본 활성 상태가 되도록 변경했다.','.req-period-filter [data-period="day"]','우측 기간 필터의 일 버튼','UI 적용 / API periodType 연결 필요'),
-      callout(3,'R-SVC-003','PPT 2p','사용자설정 조회기간 안내','직접 날짜를 정할 때 허용되는 최대 조회기간을 안내한다.','기간 필터 아래에 최대 조회기간 31일 안내를 추가했다.','.period-help','기간 필터 하단 안내문','UI 적용 / 정책값 확정 필요'),
+      callout(3,'R-SVC-003','PPT 2p','사용자설정 가능 기간 안내','사용자설정 시 조회 가능한 기간 안내가 필요하다.','별도 안내 문장으로 공간을 늘리지 않고 사용자설정 항목의 정보 안내로 제공한다. 최대 조회 범위는 서버 기준 확인 후 문구에 반영한다.','.req-period-filter','사용자설정 항목 정보 안내','UI 적용 / 서버 허용 범위 확인 필요'),
       callout(4,'R-SVC-004','PPT 2p','날짜 직접 입력','사용자설정 버튼을 먼저 누르지 않고 시작일·종료일을 바로 입력한다.','두 날짜 입력칸을 활성화하고 입력이 발생하면 사용자설정 버튼이 자동 활성화되도록 변경했다.','.req-period-filter','우측 날짜 입력 영역','UI 적용'),
       callout(5,'R-SVC-005','PPT 2p','상단 전체 집계 제거','서비스 상단 현황에서 전체 건수 집계 항목만 제거한다.','서비스 LNB와 업체 전체 조회는 유지하고 상단 현황의 전체 집계 카드만 제거했다.','.srvc-tab','서비스 상단 현황 영역','UI 적용'),
       callout(6,'R-SVC-006','PPT 2p','배터리·엔진 오류 통합','배터리 에러를 별도로 배치하지 않고 엔진 오류와 함께 기존 차량 에러에서 조회한다.','상단의 배터리 에러 건수를 차량 에러에 합산하고 별도 항목을 제거했다. 차량 에러 표에 배터리·엔진 오류 표본을 함께 표시했다.','.srvc-tab__item[data-icon="error"]','상단 차량 에러 현황과 기존 차량 에러 표','UI 적용 / 통합 API 필요'),
@@ -205,7 +205,7 @@
     return `<div><div class="filter-form req-period-filter">
       <div class="period-tabs">${labels.map(([key,label])=>`<button type="button" data-period="${key}" class="${key===defaultPeriod?'active':''}">${label}</button>`).join('')}</div>
       <input class="req-date" ${service?'':'disabled'} value="2026. 08. 17."><span>~</span><input class="req-date" ${service?'':'disabled'} value="2026. 08. 17."><button class="primary-button" type="button">조회</button>
-    </div>${service?'<div class="period-help">날짜를 직접 입력하면 사용자설정으로 전환됩니다. 최대 조회기간 31일</div>':''}</div>`;
+    </div></div>`;
   }
 
   function shell({global,title,dataset='',sideType,activeSide,filter='',content}) {

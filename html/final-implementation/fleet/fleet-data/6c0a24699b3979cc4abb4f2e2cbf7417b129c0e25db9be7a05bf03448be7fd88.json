@@ -1,0 +1,8 @@
+{
+  "method": "GET",
+  "path": "/fleet/analysis/operating/summary/group/34304?groupId=34304&equipmentId=&periodTypeCode=monthly&startDate=20260801",
+  "status": 200,
+  "contentType": "application/json",
+  "bodyEncoding": "base64",
+  "body": "eyJjb2RlIjoiMDAiLCJtc2ciOiJzdWNjZXNzIiwic3RhdHVzIjoyMDAsInJlc3VsdCI6eyJjb21wYW55SWQiOjE5MzMsImNvbXBhbnlOYW1lIjoiKOyjvCnshLjsooXrrLzrpZjspJHrtoDsp4DsoJAiLCJncm91cElkIjozNDMwNCwiZ3JvdXBOYW1lIjoi7YWM7Iqk7Yq46re466O5Iiwid29ya2luZ1RpbWUiOjEuMCwiaWRsZVRpbWUiOjEuNCwib2ZmVGltZSI6NC4yLCJ3b3JraW5nVGltZVJhdGUiOjE0LjYsImlkbGVUaW1lUmF0ZSI6MjAuOSwib2ZmVGltZVJhdGUiOjY0LjR9fQ=="
+}

@@ -1,0 +1,201 @@
+/* Final implementation-only refinements. Existing requirement-adjusted screens stay untouched. */
+body.linq-final-implementation .linq-review-guide,
+body.linq-final-implementation .linq-review-drawer,
+body.linq-final-implementation .linq-review-marker,
+body.linq-final-implementation [class*="review-callout"],
+body.linq-final-implementation [class*="review-overlay"] {
+  display: none !important;
+}
+
+/* Shared state treatment: preserve the source component and only normalize its message area. */
+body.linq-final-implementation .linq-final-state {
+  display: grid;
+  place-items: center;
+  min-height: 210rem;
+  padding: 32rem;
+  color: #666;
+  text-align: center;
+}
+
+body.linq-final-implementation .linq-final-state__icon {
+  display: grid;
+  place-items: center;
+  width: 48rem;
+  height: 48rem;
+  margin: 0 auto 14rem;
+  border: 1rem solid #ddd;
+  border-radius: 50%;
+  color: #777;
+  background: #fff;
+}
+
+body.linq-final-implementation .linq-final-state strong {
+  display: block;
+  margin-bottom: 6rem;
+  color: #222;
+  font-size: 16rem;
+}
+
+body.linq-final-implementation .linq-final-state p {
+  margin: 0;
+  font-size: 13rem;
+  line-height: 20rem;
+}
+
+/* Vehicle detail: compact only the detail summary. List cards retain their source layout. */
+body.linq-final-implementation.linq-final-vehicle-detail-page .goods-summary {
+  display: grid !important;
+  grid-template-columns: 156rem minmax(0, 1fr) !important;
+  align-items: center !important;
+  min-height: 142rem !important;
+  padding: 12rem 20rem !important;
+  border-color: #ddd !important;
+}
+
+body.linq-final-implementation.linq-final-vehicle-detail-page .goods-summary__image {
+  display: block !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  margin-right: 0 !important;
+}
+
+body.linq-final-implementation.linq-final-vehicle-detail-page .goods-summary__image > img {
+  display: block;
+  width: min(100%, 142rem) !important;
+  height: 92rem !important;
+  margin: 0 auto;
+  object-fit: contain;
+}
+
+body.linq-final-implementation.linq-final-vehicle-detail-page .goods-summary__data {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 8rem !important;
+  min-width: 0 !important;
+  width: 100% !important;
+  padding: 0 0 0 18rem !important;
+}
+
+body.linq-final-implementation.linq-final-vehicle-detail-page .goods-summary__simple {
+  display: flex !important;
+  flex-wrap: nowrap !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 12rem !important;
+  margin-bottom: 2rem !important;
+}
+
+body.linq-final-implementation.linq-final-vehicle-detail-page .goods-summary__simple em {
+  display: block;
+  overflow-wrap: anywhere;
+  color: #111;
+  white-space: normal !important;
+  font-size: clamp(20rem, 1.55vw, 26rem) !important;
+  line-height: 32rem !important;
+  font-weight: 700;
+}
+
+body.linq-final-implementation.linq-final-vehicle-detail-page .goods-summary__util {
+  flex: 0 0 auto;
+  margin-left: auto !important;
+}
+
+body.linq-final-implementation.linq-final-vehicle-detail-page .goods-summary__detail {
+  display: grid !important;
+  grid-template-columns: repeat(6, minmax(84rem, 1fr)) !important;
+  gap: 7rem 14rem !important;
+  width: 100% !important;
+}
+
+body.linq-final-implementation.linq-final-vehicle-detail-page .goods-summary__detail-item {
+  min-width: 0 !important;
+  width: auto !important;
+}
+
+body.linq-final-implementation.linq-final-vehicle-detail-page .goods-summary__detail-item span,
+body.linq-final-implementation.linq-final-vehicle-detail-page .goods-summary__detail-item em {
+  display: block;
+}
+
+body.linq-final-implementation.linq-final-vehicle-detail-page .goods-summary__detail-item span {
+  margin-bottom: 2rem;
+  color: #777;
+  font-size: 12rem !important;
+  line-height: 16rem;
+}
+
+body.linq-final-implementation.linq-final-vehicle-detail-page .goods-summary__detail-item em {
+  overflow-wrap: anywhere;
+  color: #111;
+  font-size: 14rem !important;
+  line-height: 18rem;
+  font-weight: 700;
+}
+
+/* Dashboard keeps its existing card design and gains a stable content grid at wide sizes. */
+body.linq-final-implementation.linq-final-dashboard-page .page-management,
+body.linq-final-implementation.linq-final-dashboard-page .dashboard-content,
+body.linq-final-implementation.linq-final-dashboard-page .dashboard-wrap {
+  min-width: 0;
+}
+
+body.linq-final-implementation.linq-final-dashboard-page .dashboard-grid,
+body.linq-final-implementation.linq-final-dashboard-page .widget-list {
+  align-items: stretch;
+}
+
+/* Maps and reports must never force a horizontal page scrollbar. */
+body.linq-final-implementation.linq-final-map-page .local-body,
+body.linq-final-implementation.linq-final-report-page .local-body,
+body.linq-final-implementation.linq-final-management-page .local-body,
+body.linq-final-implementation.linq-final-management-page .page-management {
+  min-width: 0 !important;
+  max-width: 100%;
+}
+
+body.linq-final-implementation.linq-final-map-page .map,
+body.linq-final-implementation.linq-final-map-page [class*="map-wrap"],
+body.linq-final-implementation.linq-final-map-page [class*="map-area"] {
+  min-height: 560rem;
+}
+
+body.linq-final-implementation.linq-final-report-page .display-table,
+body.linq-final-implementation.linq-final-management-page .display-table {
+  max-width: 100%;
+}
+
+/* Login/account pages retain the production styling and gain reliable viewport sizing. */
+body.linq-final-implementation.linq-final-auth-page #app,
+body.linq-final-implementation.linq-final-auth-page .login,
+body.linq-final-implementation.linq-final-auth-page [class*="login-wrap"] {
+  min-height: 100vh;
+}
+
+@media (max-width: 1440px) {
+  body.linq-final-implementation .requirements-prototype-side.local-side {
+    flex-basis: 210rem !important;
+    width: 210rem !important;
+    min-width: 210rem !important;
+  }
+
+  body.linq-final-implementation .requirements-prototype-side .page-side {
+    width: 162rem !important;
+  }
+
+  body.linq-final-implementation .page-body .local > .local-side-func {
+    left: 210rem !important;
+  }
+
+  body.linq-final-implementation.linq-final-vehicle-detail-page .goods-summary {
+    grid-template-columns: 142rem minmax(0, 1fr) !important;
+    padding: 11rem 18rem !important;
+  }
+
+  body.linq-final-implementation.linq-final-vehicle-detail-page .goods-summary__data {
+    padding-left: 16rem !important;
+  }
+
+  body.linq-final-implementation.linq-final-vehicle-detail-page .goods-summary__detail {
+    grid-template-columns: repeat(5, minmax(88rem, 1fr)) !important;
+  }
+}

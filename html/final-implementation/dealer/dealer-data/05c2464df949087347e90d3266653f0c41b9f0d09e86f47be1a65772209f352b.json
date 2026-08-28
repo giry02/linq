@@ -1,0 +1,8 @@
+{
+  "method": "GET",
+  "path": "/fleet/analysis/hi/stat/group/1948?pageNo=1&pageSize=20",
+  "status": 200,
+  "contentType": "application/json",
+  "bodyEncoding": "base64",
+  "body": "eyJjb2RlIjoiMDAiLCJtc2ciOiJzdWNjZXNzIiwic3RhdHVzIjoyMDAsInJlc3VsdCI6W10sInBhZ2VObyI6MSwicGFnZVNpemUiOjIwLCJ0b3RhbCI6MH0="
+}

@@ -1,0 +1,853 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MACHINE IQ 플릿·딜러 글로벌 데이터 구조 및 구현안</title>
+  <link rel="stylesheet" href="assets/decision.css">
+</head>
+<body>
+  <main class="deck" aria-label="MACHINE IQ 플릿·딜러 글로벌 데이터 구조 및 구현안">
+    <section class="slide cover is-active" data-title="표지">
+      <div class="cover-band">
+        <img src="../../dealer/mobile-home/bobcat-machine-iq.svg" alt="Bobcat MACHINE IQ">
+        <span>데이터 구조·SQL·API 통합 구현안 · 2026.08.28</span>
+      </div>
+      <div class="cover-copy">
+        <p class="eyebrow">FLEET · DEALER · GLOBAL DATA MODEL</p>
+        <h1>플릿·딜러 차량·조직 관계<br><em>현황 및 변경 방안</em></h1>
+        <p class="lead">플릿·딜러·업체·차량 관계의 현행 구조, 발생 문제, 변경 구조, 데이터 이관, 공통 권한 SQL과 페이지별 SQL·API 정의</p>
+        <div class="cover-grid">
+          <article><b>현황</b><span>관계 정보가 여러 위치에 중복</span></article>
+          <article><b>문제</b><span>소유·운영·판매·정비 의미 미분리</span></article>
+          <article><b>적용</b><span>관계 원장 추가 + 공통 조회 범위 + 단계 전환</span></article>
+        </div>
+      </div>
+      <footer>근거: 일반비_[MHMIQ]테이블명세서_20260803-1.xlsx · 260624_Service workshop #1_MVP.pptx · fleet-dealer-architecture/index.html · 현재 로컬 HTML/API 호출 구조</footer>
+    </section>
+
+    <section class="slide" data-title="적용 개요">
+      <header><p class="eyebrow">01 · EXECUTIVE DECISION</p><h2>플릿·딜러 화면은 분리 유지, 차량·조직 관계 기준은 통합</h2></header>
+      <div class="decision-hero">
+        <article class="keep"><span>유지</span><h3>플릿·딜러 화면과 권한</h3><p>업무 목적, 메뉴, 표시 항목, 처리 권한은 서비스별로 다르게 유지</p></article>
+        <div class="decision-arrow">→</div>
+        <article class="change"><span>변경</span><h3>차량·조직 관계의 기준</h3><p>소유·운영·판매·정비 관계를 기간이 있는 단일 관계 원장으로 관리</p></article>
+      </div>
+      <div class="decision-line">
+        <b>적용안</b><span>기존 텔레메트리·운행·배터리 원천 테이블 유지</span><span>관계·권한·이력 계층 추가</span><span>호환 뷰를 통한 기존 API 단계 전환</span>
+      </div>
+      <p class="takeaway"><b>확인 범위</b><span>사용자·조직별 차량 조회 자격, 관계 유형, 유효기간과 전환 기준 확정</span></p>
+    </section>
+
+    <section class="slide" data-title="현행 물리 구조">
+      <header><p class="eyebrow">02 · CURRENT PHYSICAL MODEL</p><h2>같은 차량–업체 관계가 장비 원장과 매핑 테이블에 동시에 존재</h2></header>
+      <div class="source-compare">
+        <article>
+          <p class="table-name">TB_EQUIPMENT</p>
+          <h3>장비 원장 안의 직접 관계</h3>
+          <ul><li><code>COMPANY_ID</code></li><li><code>GROUP_ID</code></li><li><code>DEALER_COMPANY_ID</code></li><li><code>DEALER_GROUP_ID</code></li></ul>
+          <small>장비 자체 속성과 현재 관계가 한 행에 결합</small>
+        </article>
+        <div class="source-question"><span>관계 기준<br>중복</span></div>
+        <article>
+          <p class="table-name">TB_COMPANY_EQUIPMENT</p>
+          <h3>별도 업체–장비 매핑</h3>
+          <ul><li><code>COMPANY_ID</code></li><li><code>EQUIPMENT_ID</code></li><li><code>GROUP_ID</code></li><li><code>PERMIT_YN</code></li></ul>
+          <small>조회 허용과 소속 관계의 의미가 함께 사용될 가능성</small>
+        </article>
+      </div>
+      <div class="conflict-flow">
+        <span>업체 변경</span><i>→</i><span>한쪽만 갱신</span><i>→</i><span>화면·API별 차량 수 불일치</span><i>→</i><strong>권한 누락 또는 과다 노출</strong>
+      </div>
+      <p class="source-note">필드 존재는 테이블 명세서 기준. 각 필드의 업무 의미는 명세만으로 확정 불가하며 담당자 확인 필요.</p>
+    </section>
+
+    <section class="slide" data-title="의미 충돌">
+      <header><p class="eyebrow">03 · SEMANTIC CONFLICT</p><h2>COMPANY_ID 하나로는 소유·운영·판매·정비를 구분할 수 없음</h2></header>
+      <div class="relation-cards">
+        <article><b>소유자 OWNER</b><p>법적·계약상 차량 보유 주체</p><small>자산 귀속, 계약 종료 처리</small></article>
+        <article><b>운영자 OPERATOR</b><p>현재 차량을 실제 사용하는 업체</p><small>운행·위치·효율 조회 범위</small></article>
+        <article><b>판매자 SELLER</b><p>차량을 판매한 딜러</p><small>판매 이력과 고객 관계</small></article>
+        <article><b>정비자 SERVICE</b><p>점검·수리 권한을 가진 딜러</p><small>에러·정비·소모품 조치 범위</small></article>
+      </div>
+      <div class="meaning-table">
+        <div><b>현재 필드</b><b>가능한 의미</b><b>미확정 시 문제</b></div>
+        <div><code>TB_EQUIPMENT.COMPANY_ID</code><span>OWNER 또는 OPERATOR</span><p>업체 변경 시 소유권 이전인지 운용자 변경인지 구분 불가</p></div>
+        <div><code>DEALER_COMPANY_ID</code><span>SELLER 또는 SERVICE</span><p>판매 딜러와 실제 정비 담당이 다르면 권한 오류</p></div>
+        <div><code>TB_COMPANY_EQUIPMENT.COMPANY_ID</code><span>OPERATOR 또는 VIEWER</span><p><code>PERMIT_YN</code>만으로 관계 목적과 기간을 설명하기 어려움</p></div>
+      </div>
+    </section>
+
+    <section class="slide" data-title="적용 1 · 관계 원장 DDL">
+      <header><p class="eyebrow">04 · SOLUTION / CORE DDL</p><h2>차량 원장과 조직 관계 분리, 관계 유형·유효기간 필드 추가</h2></header>
+      <span class="solution-stamp">적용 방안</span>
+      <div class="ddl-grid">
+        <article><h3>조직 경계와 조직 원장</h3><pre><code>CREATE TABLE TENANT (
+  tenant_id VARCHAR(40) PRIMARY KEY,
+  tenant_code VARCHAR(40) NOT NULL UNIQUE,
+  country_code CHAR(2) NOT NULL,
+  default_locale VARCHAR(10) NOT NULL,
+  timezone_id VARCHAR(50) NOT NULL,
+  unit_system VARCHAR(12) NOT NULL,
+  data_region VARCHAR(30) NOT NULL,
+  status VARCHAR(20) NOT NULL
+);
+
+CREATE TABLE ORGANIZATION (
+  organization_id VARCHAR(40) PRIMARY KEY,
+  tenant_id VARCHAR(40) NOT NULL,
+  parent_organization_id VARCHAR(40),
+  organization_type VARCHAR(20) NOT NULL,
+  organization_name VARCHAR(200) NOT NULL,
+  status VARCHAR(20) NOT NULL,
+  FOREIGN KEY (tenant_id) REFERENCES TENANT(tenant_id)
+);</code></pre></article>
+        <article><h3>차량–조직 관계와 사용자 권한</h3><pre><code>CREATE TABLE EQUIPMENT_ORGANIZATION_RELATION (
+  relation_id BIGINT PRIMARY KEY,
+  tenant_id VARCHAR(40) NOT NULL,
+  equipment_id VARCHAR(40) NOT NULL,
+  organization_id VARCHAR(40) NOT NULL,
+  relation_type VARCHAR(20) NOT NULL,
+  valid_from TIMESTAMP NOT NULL,
+  valid_to TIMESTAMP,
+  status VARCHAR(20) NOT NULL,
+  source_table VARCHAR(50), source_key VARCHAR(100),
+  created_at TIMESTAMP NOT NULL, created_by VARCHAR(40)
+);
+
+CREATE TABLE USER_ORGANIZATION_ROLE (
+  user_id VARCHAR(40) NOT NULL,
+  organization_id VARCHAR(40) NOT NULL,
+  role_code VARCHAR(40) NOT NULL,
+  valid_from TIMESTAMP NOT NULL, valid_to TIMESTAMP,
+  PRIMARY KEY(user_id, organization_id, role_code, valid_from)
+);</code></pre></article>
+      </div>
+      <p class="final-rule"><b>구현 기준</b> 텔레메트리·운행·배터리·정비 원천 테이블 유지. 신규 구조는 관계·권한·이력 관리에 사용. ID 생성·TIMESTAMP 문법은 적용 DBMS 기준으로 조정.</p>
+    </section>
+
+    <section class="slide" data-title="국내 운영 문제">
+      <header><p class="eyebrow">05 · DOMESTIC IMPACT</p><h2>업체 이동·딜러 변경·권한 회수 시 발생하는 현행 구조 문제</h2></header>
+      <div class="scenario-grid">
+        <article><span>01</span><h3>차량 양도</h3><p>장비 원장만 수정하면 이전 업체 매핑이 남아 양쪽에서 조회될 가능성</p><b>과다 노출</b></article>
+        <article><span>02</span><h3>운영 업체 변경</h3><p>소유권은 그대로인데 COMPANY_ID를 바꾸면 자산 귀속 정보가 손실</p><b>업무 의미 손실</b></article>
+        <article><span>03</span><h3>정비 딜러 교체</h3><p>판매 딜러와 정비 딜러를 분리하지 못하면 에러·정비 권한이 잘못 부여</p><b>처리 권한 오류</b></article>
+        <article><span>04</span><h3>이력 확인</h3><p>현재 값만 남으면 과거 시점의 업체·딜러 관계와 당시 권한을 재현 불가</p><b>감사 추적 불가</b></article>
+        <article><span>05</span><h3>대시보드 집계</h3><p>API가 서로 다른 관계 원천을 사용하면 화면마다 차량 수가 달라짐</p><b>신뢰도 저하</b></article>
+        <article><span>06</span><h3>계약 종료</h3><p>종료일이 없으면 PERMIT_YN 갱신 누락 시 조회 권한이 계속 유지</p><b>권한 회수 누락</b></article>
+      </div>
+    </section>
+
+    <section class="slide" data-title="글로벌 확장 문제">
+      <header><p class="eyebrow">06 · GLOBAL AMPLIFICATION</p><h2>국가 확장 시 추가되는 권한·시간·단위·데이터 저장 기준</h2></header>
+      <div class="global-grid">
+        <article><b>Tenant / Region</b><p>국가·법인별 데이터 경계가 없으면 동일 ID 충돌과 다른 지역 데이터 조회 가능성</p></article>
+        <article><b>조직 유형</b><p>본사·딜러·지점·서비스센터·고객사의 계층과 역할을 한 필드로 표현 불가</p></article>
+        <article><b>시간 기준</b><p>UTC 저장, 사용자 시간대, 주 시작일, 일·월 집계 기준 결정 필요</p></article>
+        <article><b>다국어</b><p>코드와 표시 문구를 분리하지 않으면 국가별 설명·에러 안내 관리 불가</p></article>
+        <article><b>단위</b><p>km/mile, L/gallon, ℃/℉의 원천값과 표시값 분리 필요</p></article>
+        <article><b>데이터 거주</b><p>개인·위치 데이터의 저장 지역과 보존 기간을 tenant 정책으로 관리 필요</p></article>
+      </div>
+      <p class="warning-note"><b>발생 가능 문제</b><span>관계 기준이 분리되지 않으면 다른 국가·법인 고객 차량이 조회 범위에 포함될 가능성</span></p>
+    </section>
+
+    <section class="slide" data-title="현행 유지 조건">
+      <header><p class="eyebrow">07 · KEEP CONDITIONS</p><h2>현행 구조 유지 가능 여부 확인 조건</h2></header>
+      <div class="condition-list">
+        <p><b>01</b><span>차량은 평생 한 업체에만 속함</span><em>현실성 낮음</em></p>
+        <p><b>02</b><span>판매 딜러와 정비 딜러가 항상 동일함</span><em>확인 필요</em></p>
+        <p><b>03</b><span>과거 소속·권한 이력을 재현할 필요가 없음</span><em>감사 요구와 충돌</em></p>
+        <p><b>04</b><span>모든 API가 동일한 관계 테이블만 사용함</span><em>현재 보장 근거 없음</em></p>
+        <p><b>05</b><span>국가·법인 간 데이터 경계와 현지 규제가 없음</span><em>글로벌 목표와 충돌</em></p>
+      </div>
+      <div class="condition-result"><b>판단 기준</b><span>조건과 다른 운영 사례가 존재하면 관계 모델 보완 필요</span></div>
+    </section>
+
+    <section class="slide" data-title="적용 2 · 글로벌 공통 기준">
+      <header><p class="eyebrow">08 · SOLUTION / GLOBAL CONTEXT</p><h2>공통 요청에 tenant·시간대·언어·단위 정보 포함</h2></header>
+      <div class="problem-solution">
+        <article><h3>현행 문제</h3><ul><li>업체 ID만으로 국가·법인 경계 식별 불가</li><li>일·주·월 집계가 사용자 시간대와 분리되지 않음</li><li>코드·표시 문구·단위가 화면마다 해석될 가능성</li><li>데이터 거주 지역과 접근 범위 연결 없음</li></ul></article>
+        <i>→</i>
+        <article><h3>확정 해결안</h3><ul><li><code>tenantId</code>로 데이터 경계 선확정</li><li>원천 시간 UTC 저장, 집계 경계는 <code>timezone</code> 적용</li><li>원천 단위 유지, API 응답에서 표시 단위 변환</li><li>코드는 고정하고 문구는 locale 리소스로 분리</li></ul></article>
+      </div>
+      <div class="api-line"><b>공통 요청</b><code>tenantId · serviceType · organizationId · equipmentId? · period · locale · timezone · unitSystem</code></div>
+      <div class="api-line"><b>공통 응답</b><code>context · permissions · data · meta{generatedAt, timezone, unitSystem, locale} · warnings · page</code></div>
+      <p class="final-rule"><b>프론트 규칙</b> 화면에서 권한과 단위를 재해석하지 않음. 백엔드가 확정한 context와 변환된 표시값을 렌더링.</p>
+    </section>
+
+    <section class="slide" data-title="대안 비교">
+      <header><p class="eyebrow">09 · OPTIONS</p><h2>원천 테이블 유지와 관계 원장 추가 방식 적용</h2></header>
+      <div class="option-table">
+        <div><b>대안</b><b>변경 범위</b><b>장점</b><b>한계</b><b>판정</b></div>
+        <div><strong>A. 현행 유지</strong><span>없음</span><p>초기 변경 없음</p><p>중복·이력·글로벌 문제 유지</p><em class="bad">적용 제외</em></div>
+        <div><strong>B. 규칙·뷰만 보완</strong><span>API/뷰</span><p>빠른 불일치 완화</p><p>관계 의미와 기간 이력은 해결 못함</p><em class="mid">단기</em></div>
+        <div class="recommended"><strong>C. 관계 원장 추가</strong><span>관계·권한 계층</span><p>원천 데이터 유지, 의미·이력 통합</p><p>매핑 결정과 단계 이관 필요</p><em class="good">적용안</em></div>
+        <div><strong>D. 전체 재구축</strong><span>전 테이블/API</span><p>장기 최적화 가능</p><p>변경 범위와 회귀 검증량 큼</p><em class="bad">검토 제외</em></div>
+      </div>
+      <p class="takeaway"><b>적용 방식</b><span>C의 관계 원장을 추가하고 B의 호환 뷰를 전환 기간에 사용</span></p>
+    </section>
+
+    <section class="slide" data-title="목표 데이터 모델">
+      <header><p class="eyebrow">10 · TARGET MODEL</p><h2>장비 원장과 조직 원장을 분리하고, 관계는 유형·기간을 가진 별도 원장으로 관리</h2></header>
+      <div class="target-model">
+        <article class="model-node tenant"><small>경계</small><b>TENANT</b><span>국가·법인·데이터 지역</span></article>
+        <div class="model-link">↓</div>
+        <div class="model-row">
+          <article class="model-node"><small>주체</small><b>ORGANIZATION</b><span>본사·딜러·지점·고객사</span></article>
+          <article class="model-node"><small>대상</small><b>EQUIPMENT</b><span>차량·기체 기본 원장</span></article>
+        </div>
+        <div class="model-link double">↘ 관계 ↙</div>
+        <article class="model-node relation"><small>관계 원장</small><b>EQUIPMENT_ORGANIZATION_RELATION</b><span>relation_type · valid_from · valid_to · status · source</span></article>
+        <div class="model-row bottom">
+          <article class="model-node"><small>사용자 권한</small><b>USER_ORGANIZATION_ROLE</b><span>사용자·조직·역할·유효기간</span></article>
+          <article class="model-node"><small>호환 계층</small><b>COMPATIBILITY VIEW</b><span>기존 COMPANY_ID API 단계 지원</span></article>
+        </div>
+      </div>
+      <div class="recommend-points"><span>원천 텔레메트리 유지</span><span>관계 의미 명시</span><span>시점 조회 가능</span><span>권한 계산 일원화</span></div>
+    </section>
+
+    <section class="slide" data-title="관계 유형과 규칙">
+      <header><p class="eyebrow">11 · RELATION RULES</p><h2>관계 유형별 중복 허용·유효기간·조회 범위 규칙 정의</h2></header>
+      <div class="relation-rule-table">
+        <div><b>유형</b><b>업무 의미</b><b>동시 관계</b><b>주요 조회</b><b>결정 사항</b></div>
+        <div><strong>OWNER</strong><span>법적·계약상 보유</span><span>원칙 1개</span><p>자산·계약</p><em>공동 소유 허용 여부</em></div>
+        <div><strong>OPERATOR</strong><span>현재 운용 주체</span><span>정책 결정</span><p>운행·위치·효율</p><em>임대·위탁 동시 운영</em></div>
+        <div><strong>SELLER</strong><span>판매 딜러</span><span>이력 다수</span><p>판매·고객 이력</p><em>재판매 처리</em></div>
+        <div><strong>SERVICE</strong><span>정비 담당 딜러</span><span>가능</span><p>에러·정비·소모품</p><em>담당 지역·기간</em></div>
+        <div><strong>VIEWER</strong><span>조회 위임</span><span>가능</span><p>제한 조회</p><em>필드·기간 범위</em></div>
+      </div>
+      <p class="source-note">유효 관계 조건 예: <code>valid_from ≤ 조회시점 AND (valid_to IS NULL OR valid_to &gt; 조회시점)</code></p>
+    </section>
+
+    <section class="slide" data-title="프론트·백엔드 경계">
+      <header><p class="eyebrow">12 · FRONTEND / BACKEND CONTRACT</p><h2>프론트 요청 정보와 백엔드 권한 적용 응답 범위</h2></header>
+      <div class="scope-flow">
+        <article><b>1. 프론트 요청</b><p><code>service</code> fleet/dealer<br><code>organizationId</code><br><code>equipmentId</code> 선택<br><code>locale/timezone/unit</code></p></article>
+        <i>→</i>
+        <article><b>2. 백엔드 해석</b><p>로그인 사용자의 조직 역할 확인<br>서비스별 허용 관계 유형 결정<br>유효기간·tenant 범위 검증</p></article>
+        <i>→</i>
+        <article><b>3. 응답</b><p><code>context</code> 현재 조회 대상<br><code>permissions</code> 허용 동작<br><code>data</code> 화면 데이터<br><code>meta</code> 시간·단위·갱신시점</p></article>
+      </div>
+      <div class="backend-contract">
+        <article><h3>프론트에서 하지 않을 것</h3><ul><li>차량 ID 목록을 권한으로 간주</li><li>화면마다 업체–차량 관계 재해석</li><li>번역 문구를 데이터 코드로 저장</li></ul></article>
+        <article><h3>백엔드가 보장할 것</h3><ul><li>tenant·조직·관계·기간 일괄 검증</li><li>동일 context에서 동일 차량 집합 반환</li><li>권한 없는 ID 직접 호출 차단</li></ul></article>
+      </div>
+    </section>
+
+    <section class="slide" data-title="페이지별 영향">
+      <header><p class="eyebrow">13 · PAGE IMPACT</p><h2>페이지별 조회 기준과 권한 계산 변경 범위</h2></header>
+      <div class="page-impact">
+        <div><b>페이지</b><b>플릿 기준</b><b>딜러 기준</b><b>필요 관계</b></div>
+        <div><strong>대시보드</strong><span>운영 업체 차량 집계</span><span>담당 고객·정비 차량 집계</span><code>OPERATOR / SERVICE</code></div>
+        <div><strong>차량정보</strong><span>보유·운영 차량</span><span>판매·정비 대상 차량</span><code>OWNER / OPERATOR / SELLER / SERVICE</code></div>
+        <div><strong>운행이력</strong><span>운영 권한 차량만</span><span>정비 목적 허용 범위만</span><code>OPERATOR / SERVICE + scope</code></div>
+        <div><strong>서비스</strong><span>고객이 보는 에러·정비 결과</span><span>딜러가 조치 가능한 에러·정비</span><code>OWNER / OPERATOR / SERVICE</code></div>
+        <div><strong>관리기능</strong><span>자사 조직·그룹 관리</span><span>딜러 조직·담당 고객 관리</span><code>USER_ORGANIZATION_ROLE</code></div>
+      </div>
+      <p class="warning-note"><b>적용 기준</b><span>페이지별 COMPANY_ID 조건 조합을 제거하고 공통 접근 가능 차량 범위 모듈 적용</span></p>
+    </section>
+
+    <section class="slide" data-title="성능 설계">
+      <header><p class="eyebrow">14 · PERFORMANCE</p><h2>관계 테이블 조회를 위한 조인 조건과 인덱스 구성</h2></header>
+      <div class="perf-compare">
+        <article class="avoid"><h3>현행 분기 방식</h3><pre><code>WHERE e.company_id = :org
+   OR e.dealer_company_id = :org
+   OR e.equipment_id IN (...대량 목록...)</code></pre><p>OR 조건·대량 IN·화면별 분기 → 실행계획 불안정</p></article>
+        <article class="prefer"><h3>적용 방식</h3><pre><code>JOIN equipment_org_relation r
+  ON r.equipment_id = e.equipment_id
+ AND r.organization_id = :org
+ AND r.relation_type IN (:types)
+ AND r.valid_to IS NULL</code></pre><p>관계 범위를 먼저 좁힌 뒤 원천 데이터와 조인</p></article>
+      </div>
+      <div class="index-list">
+        <code>(organization_id, relation_type, valid_to, equipment_id)</code>
+        <code>(equipment_id, relation_type, valid_to, organization_id)</code>
+        <span>대시보드 집계는 필요 시 일/월 요약 또는 캐시 사용</span>
+      </div>
+    </section>
+
+    <section class="slide" data-title="적용 3 · 공통 조회 범위">
+      <header><p class="eyebrow">15 · SOLUTION / ACCESS SCOPE</p><h2>모든 페이지에 공통 접근 가능 차량 조회 모듈 적용</h2></header>
+      <div class="solution-grid">
+        <article><h3>서비스별 허용 관계</h3><ul><li><b>플릿</b>: OWNER · OPERATOR · VIEWER</li><li><b>딜러</b>: SELLER · SERVICE</li><li>사용자 역할의 유효기간과 조직 범위 선검증</li><li>차량 ID 직접 호출도 같은 범위로 재검증</li></ul><p>화면별 <code>COMPANY_ID</code> 조합과 대량 IN 목록 제거.</p></article>
+        <article><h3>공통 접근 범위 SQL</h3><pre><code>WITH authorized_org AS (
+  SELECT uor.organization_id
+  FROM user_organization_role uor
+  WHERE uor.user_id = :userId
+    AND :asOf &gt;= uor.valid_from
+    AND (uor.valid_to IS NULL OR :asOf &lt; uor.valid_to)
+), accessible_equipment AS (
+  SELECT DISTINCT r.equipment_id
+  FROM equipment_organization_relation r
+  JOIN authorized_org ao ON ao.organization_id = r.organization_id
+  WHERE r.tenant_id = :tenantId
+    AND r.organization_id = COALESCE(:organizationId, r.organization_id)
+    AND r.relation_type IN (:allowedRelationTypes)
+    AND r.status = 'ACTIVE'
+    AND :asOf &gt;= r.valid_from
+    AND (r.valid_to IS NULL OR :asOf &lt; r.valid_to)
+)
+SELECT e.* FROM tb_equipment e
+JOIN accessible_equipment a ON a.equipment_id = e.equipment_id
+WHERE (:equipmentId IS NULL OR e.equipment_id = :equipmentId);</code></pre></article>
+      </div>
+      <div class="api-line"><b>공통 API</b><code>GET /api/v1/context/equipment-scope?serviceType={FLEET|DEALER}&amp;organizationId={id}&amp;asOf={timestamp}</code></div>
+      <div class="verify-line"><span>통과 기준</span><span>같은 context의 모든 페이지 차량 집합 동일</span><span>권한 없는 equipmentId 직접 호출 403</span><span>관계 종료 시 즉시 제외</span></div>
+    </section>
+
+    <section class="slide" data-title="이관 범위">
+      <header><p class="eyebrow">16 · MIGRATION BOUNDARY</p><h2>관계·권한·이력 데이터만 이관 대상으로 지정</h2></header>
+      <div class="migration-boundary">
+        <article class="stay"><span>유지</span><h3>원천·집계 데이터</h3><ul><li>텔레메트리·GPS·샘플</li><li>일/월 운행 집계</li><li>배터리·에러·정비 원천</li><li>SAP/OCS 연계 데이터</li></ul></article>
+        <article class="move"><span>신규/이관</span><h3>관계·권한 계층</h3><ul><li>tenant·organization</li><li>장비–조직 관계 유형</li><li>관계 유효기간·상태</li><li>사용자–조직 역할</li></ul></article>
+        <article class="compat"><span>전환기</span><h3>호환 계층</h3><ul><li>기존 COMPANY_ID 뷰</li><li>기존 API 응답 필드 유지</li><li>dual-write 또는 동기화</li><li>기능 플래그 전환</li></ul></article>
+      </div>
+      <p class="takeaway"><b>이관 기준</b><span>원천 수치 유지 · 관계 데이터 재구성 · 전환 전후 페이지별 차량 집합 비교</span></p>
+    </section>
+
+    <section class="slide" data-title="초기 매핑 결정">
+      <header><p class="eyebrow">17 · SOURCE MAPPING</p><h2>현행 필드의 업무 의미 확인 후 신규 관계 유형으로 매핑</h2></header>
+      <div class="mapping-table">
+        <div><b>현행 값</b><b>후보 관계</b><b>확정 조건</b><b>미확정 시 처리</b></div>
+        <div><code>TB_EQUIPMENT.COMPANY_ID</code><span>OWNER 또는 OPERATOR</span><p>계약·업체 변경 업무에서 실제 사용 의미 확인</p><em>임시 LEGACY_COMPANY로 보존</em></div>
+        <div><code>TB_EQUIPMENT.DEALER_COMPANY_ID</code><span>SELLER 또는 SERVICE</span><p>판매 딜러와 정비 담당의 동일성 확인</p><em>임시 LEGACY_DEALER로 보존</em></div>
+        <div><code>TB_COMPANY_EQUIPMENT.COMPANY_ID</code><span>OPERATOR 또는 VIEWER</span><p>매핑 생성 주체와 PERMIT_YN의 의미 확인</p><em>권한 매핑으로 별도 이관 검토</em></div>
+        <div><code>GROUP_ID</code><span>조직 내부 그룹</span><p>업체 소속인지 사용자 분류인지 확인</p><em>그룹 매핑 구조로 유지</em></div>
+      </div>
+      <p class="warning-note"><b>유의사항</b><span>필드명만으로 OWNER·SERVICE를 지정하면 현행 데이터 오류가 신규 구조에 반영될 수 있음</span></p>
+    </section>
+
+    <section class="slide" data-title="적용 4 · 이관 SQL">
+      <header><p class="eyebrow">18 · SOLUTION / MIGRATION SQL</p><h2>원천 관계와 출처 정보 이관, 의미 미확정 데이터 별도 분리</h2></header>
+      <div class="ddl-grid">
+        <article><h3>확정된 업체–차량 매핑 이관</h3><pre><code>INSERT INTO equipment_organization_relation
+(relation_id, tenant_id, equipment_id, organization_id,
+ relation_type, valid_from, valid_to, status,
+ source_table, source_key, created_at, created_by)
+SELECT :nextRelationId, :tenantId, ce.equipment_id, ce.company_id,
+       'OPERATOR', :migrationAt, NULL, 'ACTIVE',
+       'TB_COMPANY_EQUIPMENT',
+       CONCAT(ce.company_id, ':', ce.equipment_id),
+       :migrationAt, 'MIGRATION'
+FROM tb_company_equipment ce
+WHERE ce.permit_yn = 'Y'
+  AND NOT EXISTS (
+    SELECT 1 FROM equipment_organization_relation r
+    WHERE r.tenant_id=:tenantId
+      AND r.equipment_id=ce.equipment_id
+      AND r.organization_id=ce.company_id
+      AND r.relation_type='OPERATOR'
+      AND r.valid_to IS NULL);</code></pre></article>
+        <article><h3>인덱스와 전환기 호환 뷰</h3><pre><code>CREATE INDEX ix_rel_org_scope
+ON equipment_organization_relation
+(tenant_id, organization_id, relation_type,
+ status, valid_to, equipment_id);
+
+CREATE INDEX ix_rel_equipment_scope
+ON equipment_organization_relation
+(tenant_id, equipment_id, relation_type,
+ status, valid_to, organization_id);
+
+CREATE VIEW v_current_company_equipment AS
+SELECT organization_id AS company_id,
+       equipment_id,
+       CASE WHEN status='ACTIVE' THEN 'Y' ELSE 'N' END permit_yn
+FROM equipment_organization_relation
+WHERE relation_type='OPERATOR'
+  AND status='ACTIVE' AND valid_to IS NULL;</code></pre></article>
+      </div>
+      <p class="final-rule"><b>이관 규칙</b> <code>COMPANY_ID</code>와 <code>DEALER_COMPANY_ID</code> 의미가 확정되지 않은 행은 OWNER/SERVICE로 자동 이관하지 않고 <code>LEGACY_*</code> 대기 영역에서 확인 후 반영.</p>
+    </section>
+
+    <section class="slide" data-title="적용 5 · 이관 검증 SQL">
+      <header><p class="eyebrow">19 · SOLUTION / MIGRATION VALIDATION</p><h2>건수·차량 집합·중복 관계·권한 결과 비교 쿼리 적용</h2></header>
+      <div class="profiling-grid">
+        <article><h3>원천 대비 활성 관계 누락</h3><pre><code>SELECT ce.company_id, ce.equipment_id
+FROM tb_company_equipment ce
+LEFT JOIN equipment_organization_relation r
+  ON r.organization_id=ce.company_id
+ AND r.equipment_id=ce.equipment_id
+ AND r.relation_type='OPERATOR'
+ AND r.status='ACTIVE' AND r.valid_to IS NULL
+WHERE ce.permit_yn='Y' AND r.relation_id IS NULL;</code></pre></article>
+        <article><h3>단일 관계 중복</h3><pre><code>SELECT tenant_id,equipment_id,relation_type,COUNT(*) cnt
+FROM equipment_organization_relation
+WHERE status='ACTIVE' AND valid_to IS NULL
+  AND relation_type IN ('OWNER','OPERATOR')
+GROUP BY tenant_id,equipment_id,relation_type
+HAVING COUNT(*) &gt; 1;</code></pre></article>
+        <article><h3>기존/신규 페이지 차량 집합 차이</h3><pre><code>SELECT equipment_id FROM legacy_page_scope
+MINUS
+SELECT equipment_id FROM new_page_scope
+UNION ALL
+SELECT equipment_id FROM new_page_scope
+MINUS
+SELECT equipment_id FROM legacy_page_scope;</code></pre></article>
+        <article><h3>배치 단위 롤백</h3><pre><code>UPDATE equipment_organization_relation
+SET status='ROLLED_BACK', valid_to=:rollbackAt
+WHERE created_by='MIGRATION'
+  AND created_at=:migrationAt;
+
+-- 읽기 feature flag를 LEGACY로 복구 후 실행</code></pre></article>
+      </div>
+      <div class="verify-line"><span>전환 조건</span><span>누락 0건</span><span>설명 불가 집합 차이 0건</span><span>권한 회귀 0건</span><span>P95 기준 충족</span></div>
+    </section>
+
+    <section class="slide" data-title="데이터 프로파일링">
+      <header><p class="eyebrow">20 · DATA PROFILING</p><h2>이관 전 불일치·중복·미매핑 데이터 현황 확인</h2></header>
+      <div class="profiling-grid">
+        <article><h3>직접 관계와 매핑 불일치</h3><pre><code>SELECT e.equipment_id,
+       e.company_id AS equipment_company,
+       ce.company_id AS mapped_company
+FROM tb_equipment e
+LEFT JOIN tb_company_equipment ce
+  ON ce.equipment_id = e.equipment_id
+WHERE ce.company_id IS NULL
+   OR ce.company_id &lt;&gt; e.company_id;</code></pre></article>
+        <article><h3>차량당 활성 업체 중복</h3><pre><code>SELECT equipment_id, COUNT(*) AS cnt
+FROM tb_company_equipment
+WHERE permit_yn = 'Y'
+GROUP BY equipment_id
+HAVING COUNT(*) &gt; 1;</code></pre></article>
+        <article><h3>딜러 미매핑</h3><pre><code>SELECT COUNT(*) AS no_dealer_count
+FROM tb_equipment
+WHERE dealer_company_id IS NULL;</code></pre></article>
+        <article><h3>결정에 필요한 결과</h3><ul><li>전체 차량 대비 불일치 비율</li><li>다중 업체 차량 목록</li><li>업체·딜러 미존재 참조</li><li>PERMIT_YN 값과 실제 화면 노출 비교</li></ul></article>
+      </div>
+      <div class="profiling-result"><b>산출물</b><span>자동 이관</span><span>규칙 이관</span><span>업무 확인</span><span>보류/격리</span></div>
+    </section>
+
+    <section class="slide" data-title="단계 이관 계획">
+      <header><p class="eyebrow">21 · ROLLOUT</p><h2>기존·신규 읽기 결과를 비교하는 단계 전환 방식</h2></header>
+      <div class="phase-line">
+        <article><b>1</b><h3>기준 확정</h3><p>관계 의미·우선순위·tenant 정책 결정</p></article>
+        <i>→</i><article><b>2</b><h3>신규 구조 생성</h3><p>원장·인덱스·호환 뷰 추가</p></article>
+        <i>→</i><article><b>3</b><h3>초기 이관</h3><p>자동/규칙/수동 구간 분리 적재</p></article>
+        <i>→</i><article><b>4</b><h3>동시 비교</h3><p>기존·신규 차량 집합과 권한 비교</p></article>
+        <i>→</i><article><b>5</b><h3>기능 플래그 전환</h3><p>페이지·조직 단위 단계 적용</p></article>
+      </div>
+      <div class="rollout-detail">
+        <p><b>쓰기</b><span>관계 변경 업무는 신규 원장 우선, 전환기 기존 필드 동기화</span></p>
+        <p><b>읽기</b><span>호환 뷰 → 신규 관계 API → 페이지별 순차 전환</span></p>
+        <p><b>관찰</b><span>차량 수·권한 거부·응답시간·불일치 로그를 전환 지표로 사용</span></p>
+      </div>
+    </section>
+
+    <section class="slide" data-title="검증과 롤백">
+      <header><p class="eyebrow">22 · VALIDATION / ROLLBACK</p><h2>데이터 정합성·화면 결과·권한·성능 검증 항목</h2></header>
+      <div class="validation-table">
+        <div><b>검증 영역</b><b>통과 기준</b><b>실패 시 조치</b></div>
+        <div><strong>관계 정합성</strong><span>활성 차량 100%에 유효 관계 존재</span><p>미매핑 격리 후 기존 경로 유지</p></div>
+        <div><strong>페이지 결과</strong><span>업체·차량·그룹별 기존/신규 목록 차이 설명 가능</span><p>페이지 기능 플래그 복귀</p></div>
+        <div><strong>권한</strong><span>허용·차단 테스트 케이스 100% 통과</span><p>신규 권한 경로 즉시 비활성화</p></div>
+        <div><strong>성능</strong><span>대상 화면 P95가 합의 기준 이내</span><p>인덱스·집계 경로 조정</p></div>
+        <div><strong>감사</strong><span>변경자·변경일·이전/신규 관계 추적 가능</span><p>이력 누락 데이터 재이관</p></div>
+      </div>
+      <p class="warning-note"><b>롤백 가능 조건</b><span>기존 필드를 즉시 삭제하지 않고 호환 계층과 이관 배치 ID를 유지</span></p>
+    </section>
+
+    <section class="slide" data-title="페이지 구현 · 대시보드">
+      <header><p class="eyebrow">23 · PAGE CONTRACT / DASHBOARD</p><h2>대시보드는 서비스별 관계 범위 안에서 동일한 집계 SQL을 사용</h2></header>
+      <div class="contract-grid">
+        <article><h3>현행 문제 / 적용</h3><p>페이지마다 COMPANY_ID를 직접 조건으로 사용하면 플릿·딜러 차량 수가 달라짐.</p><ul><li>공통 scope로 차량 집합 선확정</li><li>플릿 OPERATOR, 딜러 SERVICE 기준</li><li>일·월 집계 테이블은 유지</li></ul></article>
+        <article><h3>페이지 SQL</h3><pre><code>SELECT o.company_id, o.group_id,
+       SUM(o.working_time) workingTime,
+       SUM(o.idle_time) idleTime,
+       SUM(o.shock_cnt) shockCount,
+       SUM(o.error_cnt) faultCount,
+       SUM(o.service_cnt) serviceCount
+FROM tb_equipment_daily_operation o
+JOIN accessible_equipment a
+  ON a.equipment_id=o.equipment_id
+WHERE o.working_date BETWEEN :fromDate AND :toDate
+  AND (:groupId IS NULL OR o.group_id=:groupId)
+GROUP BY o.company_id,o.group_id;</code></pre></article>
+        <article><h3>프론트 응답</h3><pre><code>{
+ "context":{"serviceType":"FLEET",
+   "organizationId":"1933"},
+ "data":{"workingTime":0,
+   "idleTime":0,"shockCount":0,
+   "faultCount":0,"serviceCount":0},
+ "meta":{"period":{},"timezone":"Asia/Seoul"}
+}</code></pre></article>
+      </div>
+      <div class="api-line"><b>API</b><code>GET /api/v1/dashboard?organizationId={id}&amp;groupId={id?}&amp;from={date}&amp;to={date}</code></div>
+      <div class="verify-line"><span>검증</span><span>KPI 합계 = 상세 목록 건수</span><span>플릿/딜러 권한 범위 외 차량 0건</span><span>기간·시간대 일치</span></div>
+    </section>
+
+    <section class="slide" data-title="페이지 구현 · 차량정보">
+      <header><p class="eyebrow">24 · PAGE CONTRACT / EQUIPMENT</p><h2>차량 목록과 상세는 같은 scope를 사용하고, 상세 ID는 다시 권한 검증</h2></header>
+      <div class="contract-grid">
+        <article><h3>현행 문제 / 적용</h3><p>선택 차량이 상단과 본문에서 달라지거나 직접 URL 호출 시 권한이 우회될 수 있음.</p><ul><li>목록과 상세 동일 scope</li><li>equipmentId 재검증</li><li>마지막 위치는 선택 정보</li></ul></article>
+        <article><h3>페이지 SQL</h3><pre><code>SELECT e.equipment_id,e.equipment_name,
+       e.equipment_number,e.model_year,
+       e.code_name modelName,e.fuel_type_code,
+       e.group_id,e.last_working_datetime,
+       s.longitude,s.latitude,s.gps_datetime
+FROM tb_equipment e
+JOIN accessible_equipment a
+  ON a.equipment_id=e.equipment_id
+LEFT JOIN tb_sample_last s
+  ON s.equipment_id=e.equipment_id
+WHERE (:equipmentId IS NULL
+    OR e.equipment_id=:equipmentId)
+ORDER BY e.equipment_id;</code></pre></article>
+        <article><h3>프론트 응답</h3><pre><code>{
+ "data":{"items":[{
+   "equipmentId":"FBA32_224250271",
+   "modelName":"B30S-7",
+   "fuelType":"LITHIUM",
+   "lastLocation":{"lat":0,"lng":0,
+     "measuredAt":"..."}}]},
+ "permissions":["READ","VIEW_LOCATION"]
+}</code></pre></article>
+      </div>
+      <div class="api-line"><b>API</b><code>GET /api/v1/equipment?organizationId={id}&amp;equipmentId={id?}&amp;page={n}&amp;size={n}</code></div>
+      <div class="verify-line"><span>검증</span><span>상단 선택값 = 본문 equipmentId</span><span>직접 URL 권한 없음 403</span><span>목록·상세 공통 명칭</span></div>
+    </section>
+
+    <section class="slide" data-title="페이지 구현 · 요약정보">
+      <header><p class="eyebrow">25 · PAGE CONTRACT / OPERATION SUMMARY</p><h2>요약정보는 기간 기준을 API에서 확정하고 차량별 집계를 한 번에 반환</h2></header>
+      <div class="contract-grid">
+        <article><h3>현행 문제 / 적용</h3><p>일·주·월·사용자설정을 화면별로 해석하면 합계와 ‘기준’ 표시가 달라짐.</p><ul><li>API가 from/to와 periodType 반환</li><li>차량별 지표 동일 단위</li><li>0과 미수집(null) 구분</li></ul></article>
+        <article><h3>페이지 SQL</h3><pre><code>SELECT o.equipment_id,
+       SUM(o.working_time) workingTime,
+       SUM(o.distance) distance,
+       SUM(o.shock_cnt) shockCount,
+       SUM(o.used_fuel) usedFuel,
+       SUM(o.battery_use_amt) batteryUsed,
+       SUM(o.battery_charge_cnt) chargeCount
+FROM tb_equipment_daily_operation o
+JOIN accessible_equipment a
+  ON a.equipment_id=o.equipment_id
+WHERE o.working_date BETWEEN :fromDate AND :toDate
+GROUP BY o.equipment_id;</code></pre></article>
+        <article><h3>프론트 응답</h3><pre><code>{
+ "data":{"items":[{
+   "equipmentId":"...",
+   "workingTimeSec":118860,
+   "distanceKm":74,
+   "shockCount":1,
+   "fuelUsedL":null,
+   "batteryUsedKwh":0}]},
+ "meta":{"periodType":"MONTH"}
+}</code></pre></article>
+      </div>
+      <div class="api-line"><b>API</b><code>GET /api/v1/operations/summary?equipmentId={id?}&amp;periodType={DAY|WEEK|MONTH|CUSTOM}&amp;from={date}&amp;to={date}</code></div>
+      <div class="verify-line"><span>검증</span><span>0 ≠ 미수집 null</span><span>기간 라벨 = API meta</span><span>카드 합계 = 표 합계</span></div>
+    </section>
+
+    <section class="slide" data-title="페이지 구현 · 사용시간·운영효율">
+      <header><p class="eyebrow">26 · PAGE CONTRACT / TIME &amp; EFFICIENCY</p><h2>운영효율은 0~100%로 계산하고 실제 작업시간을 함께 반환</h2></header>
+      <div class="contract-grid">
+        <article><h3>현행 문제 / 적용</h3><p>비율만 표시하면 실제 작업량을 판단할 수 없고 100% 초과 값은 정의 오류.</p><ul><li>초 단위 원천 합계</li><li>비율은 백엔드 계산</li><li>31일 데이터는 세로 목록/차트</li></ul></article>
+        <article><h3>페이지 SQL</h3><pre><code>SELECT h.working_date,
+       SUM(h.working_time) workingSec,
+       SUM(h.idle_time) idleSec,
+       SUM(h.operating_time) operatingSec,
+       SUM(h.actuator_time) actuatorSec,
+       SUM(h.travel_time) travelSec,
+       CASE WHEN SUM(h.operating_time)=0 THEN NULL
+            ELSE LEAST(100,
+              100.0*SUM(h.working_time)/SUM(h.operating_time))
+       END efficiencyPct
+FROM tb_working_hour h
+JOIN accessible_equipment a ON a.equipment_id=h.equipment_id
+WHERE h.working_date BETWEEN :fromDate AND :toDate
+GROUP BY h.working_date ORDER BY h.working_date;</code></pre></article>
+        <article><h3>프론트 응답</h3><pre><code>{"data":{"points":[{
+ "date":"2026-08-01",
+ "workingSec":18240,
+ "idleSec":7200,
+ "unusedSec":3360,
+ "efficiencyPct":63.3}]},
+ "meta":{"maxPercent":100}}
+</code></pre></article>
+      </div>
+      <div class="api-line"><b>API</b><code>GET /api/v1/operations/time-efficiency?equipmentId={id?}&amp;from={date}&amp;to={date}</code></div>
+      <div class="verify-line"><span>검증</span><span>0≤효율≤100</span><span>작업+대기+미사용 기준 합의</span><span>스크롤 없이 31일 확인</span></div>
+    </section>
+
+    <section class="slide" data-title="페이지 구현 · 충격">
+      <header><p class="eyebrow">27 · PAGE CONTRACT / SHOCK</p><h2>충격은 발생시각과 세로값을 모두 반환하고, 화면은 날짜·강도를 동시에 표시</h2></header>
+      <div class="contract-grid">
+        <article><h3>현행 문제 / 적용</h3><p>그래프 축 값이 없거나 롤오버에서만 보이면 회의와 출력물에서 해석 불가.</p><ul><li>발생시각 정렬</li><li>충격 level/value 분리</li><li>PDF에서도 축·단위 표시</li></ul></article>
+        <article><h3>페이지 SQL</h3><pre><code>SELECT s.equipment_id,s.shock_datetime,
+       s.shock_level_val,s.shock,
+       s.event_date,s.event_time
+FROM tb_event_shock s
+JOIN accessible_equipment a
+  ON a.equipment_id=s.equipment_id
+WHERE s.shock_datetime &gt;= :fromAt
+  AND s.shock_datetime &lt; :toAt
+ORDER BY s.shock_datetime;</code></pre></article>
+        <article><h3>프론트 응답</h3><pre><code>{"data":{"events":[{
+ "equipmentId":"...",
+ "occurredAt":"2026-08-13T15:43:00Z",
+ "level":3,
+ "value":2.8,
+ "unit":"G"}]},
+ "meta":{"timezone":"Asia/Seoul"}}
+</code></pre></article>
+      </div>
+      <div class="api-line"><b>API</b><code>GET /api/v1/operations/shocks?equipmentId={id?}&amp;from={datetime}&amp;to={datetime}</code></div>
+      <div class="verify-line"><span>검증</span><span>X축 날짜·시각</span><span>Y축 충격값·단위</span><span>툴팁과 라벨 값 동일</span></div>
+    </section>
+
+    <section class="slide" data-title="페이지 구현 · 엔진 연비">
+      <header><p class="eyebrow">28 · PAGE CONTRACT / FUEL</p><h2>엔진 연비는 월 기간의 실제 수치만 사용하고, 0과 미수집을 분리</h2></header>
+      <div class="contract-grid">
+        <article><h3>현행 문제 / 적용</h3><p>빈 그래프를 임의값으로 채우면 운영 데이터로 오해될 수 있음.</p><ul><li>원천 수치만 그래프화</li><li>데이터 없는 날짜는 null</li><li>평균과 누적 계산식 공개</li></ul></article>
+        <article><h3>페이지 SQL</h3><pre><code>SELECT o.working_date,
+       SUM(o.used_fuel) usedFuel,
+       SUM(o.working_time) workingSec,
+       CASE WHEN SUM(o.working_time)=0 THEN NULL
+            ELSE SUM(o.used_fuel)/
+                 (SUM(o.working_time)/3600.0)
+       END fuelPerHour
+FROM tb_equipment_daily_operation o
+JOIN accessible_equipment a ON a.equipment_id=o.equipment_id
+WHERE o.working_date BETWEEN :fromDate AND :toDate
+GROUP BY o.working_date ORDER BY o.working_date;</code></pre></article>
+        <article><h3>프론트 응답</h3><pre><code>{"data":{"daily":[{
+ "date":"2026-08-16",
+ "usedFuelL":2.0,
+ "workingSec":3600,
+ "fuelPerHour":2.0}],
+ "averageFuelPerHour":2.0,
+ "totalFuelL":2.0},
+ "warnings":[]}
+</code></pre></article>
+      </div>
+      <div class="api-line"><b>API</b><code>GET /api/v1/operations/fuel?equipmentId={id?}&amp;periodType=MONTH&amp;from={date}&amp;to={date}</code></div>
+      <div class="verify-line"><span>검증</span><span>원천 없는 날짜 null</span><span>평균=총 연료/총 작업시간</span><span>단위 L/H 명시</span></div>
+    </section>
+
+    <section class="slide" data-title="페이지 구현 · 리튬배터리">
+      <header><p class="eyebrow">29 · PAGE CONTRACT / LITHIUM BATTERY</p><h2>배터리는 상태 목록과 시계열 상세를 분리하되 같은 차량 권한을 사용</h2></header>
+      <div class="contract-grid">
+        <article><h3>현행 문제 / 적용</h3><p>목록 데이터는 있는데 상세 그래프가 비거나, 배터리 에러가 중복 노출될 수 있음.</p><ul><li>에러 목록은 차량에러로 통합</li><li>배터리 상세는 충·방전/온도에 집중</li><li>두 그래프는 좌우 비교</li></ul></article>
+        <article><h3>페이지 SQL</h3><pre><code>SELECT h.data_datetime,h.soc,h.charge_val,
+       h.work_val,h.min_temp,h.max_temp,
+       h.avg_temps,h.pack_vol,h.pack_cur,
+       h.charge_stat,h.bat_stat,h.smart
+FROM tb_equipment_li_hour h
+JOIN accessible_equipment a
+  ON a.equipment_id=h.equipment_id
+WHERE h.equipment_id=:equipmentId
+  AND h.data_datetime &gt;= :fromAt
+  AND h.data_datetime &lt; :toAt
+ORDER BY h.data_datetime;</code></pre></article>
+        <article><h3>프론트 응답</h3><pre><code>{"data":{"equipmentId":"...",
+ "status":{"soc":83,"battery":"NORMAL"},
+ "series":[{
+  "at":"...","charge":60,"discharge":21,
+  "minTempC":22,"maxTempC":29,"avgTempC":26
+ }]},"permissions":["READ"]}
+</code></pre></article>
+      </div>
+      <div class="api-line"><b>API</b><code>GET /api/v1/batteries/lithium/{equipmentId}?from={datetime}&amp;to={datetime}</code></div>
+      <div class="verify-line"><span>검증</span><span>선택 차량 데이터만 반환</span><span>충·방전과 온도 시간축 동일</span><span>에러정보 중복 제거</span></div>
+    </section>
+
+    <section class="slide" data-title="페이지 구현 · 차량에러">
+      <header><p class="eyebrow">30 · PAGE CONTRACT / FAULT</p><h2>차량·엔진·배터리 에러는 한 목록으로 통합하고 원천 유형은 보존</h2></header>
+      <div class="contract-grid">
+        <article><h3>현행 문제 / 적용</h3><p>배터리 에러를 별도 메뉴로 두면 같은 차량의 조치 대상이 분산됨.</p><ul><li>faultType으로 차량/배터리 구분</li><li>플릿은 현상·완료일시 중심</li><li>딜러는 고객·기종·호기·조치 정보 추가</li><li>PDF 존재 시 다운로드 제공</li></ul></article>
+        <article><h3>통합 적재·조회 SQL</h3><pre><code>INSERT INTO fault_event
+(source_type,source_seq,equipment_id,occurred_at,
+ fault_type,error_code,spn,fmi,resolved_at)
+SELECT 'EVENT_ERROR',seq,equipment_id,event_datetime,
+       'VEHICLE',bm_error_code,lm_spn,lm_fmi,resolve_datetime
+FROM tb_event_error
+UNION ALL
+SELECT 'EVENT_LI_ERROR',seq,equipment_id,event_datetime,
+       'BATTERY',bm_error_code,NULL,NULL,resolve_datetime
+FROM tb_event_li_error;
+
+SELECT f.*,d.file_id,d.file_name
+FROM fault_event f
+JOIN accessible_equipment a ON a.equipment_id=f.equipment_id
+LEFT JOIN document_link d ON d.error_code=f.error_code
+ AND d.locale=:locale
+WHERE f.occurred_at&gt;=:fromAt AND f.occurred_at&lt;:toAt;</code></pre></article>
+        <article><h3>프론트 응답</h3><pre><code>{"data":{"items":[{
+ "faultId":"...","faultType":"BATTERY",
+ "errorCode":"BMS-0193",
+ "spn":null,"fmi":null,
+ "status":"OPEN","occurredAt":"...",
+ "resolvedAt":null,
+ "manual":{"available":true,"fileId":"..."}
+}]},"permissions":["READ","DOWNLOAD_MANUAL"]}
+</code></pre></article>
+      </div>
+      <div class="api-line"><b>API</b><code>GET /api/v1/faults?serviceType={FLEET|DEALER}&amp;faultType={VEHICLE|BATTERY?}&amp;from={datetime}&amp;to={datetime}</code></div>
+    </section>
+
+    <section class="slide" data-title="페이지 구현 · 정비이력">
+      <header><p class="eyebrow">31 · PAGE CONTRACT / MAINTENANCE</p><h2>정비이력은 원본 식별자를 보존하고 플릿·딜러 표시 필드만 권한으로 분리</h2></header>
+      <div class="contract-grid">
+        <article><h3>현행 문제 / 적용</h3><p>Claim 번호로 보이는 값이 실제 수리 ID인지 확정되지 않았고 서비스별 노출 범위가 다름.</p><ul><li>AUFNR/QMNUM/LINQ_NO 원본 보존</li><li>표시 명칭은 업무 확정 후 결정</li><li>플릿: 접수·완료일시, 현상</li><li>딜러: 원인·상세·조치 추가</li></ul></article>
+        <article><h3>페이지 SQL</h3><pre><code>SELECT r.aufnr repairOrderId,
+       r.qmnum serviceNoticeId,
+       r.linq_no externalNo,r.equnr equipmentId,
+       r.typbz modelName,r.sernr serialNo,
+       r.fetxt symptom,r.urtxt cause,r.matxt detail,
+       r.erdat receivedDate,r.gstri startedDate,
+       r.getri completedDate
+FROM tb_service_repair_result r
+JOIN accessible_equipment a ON a.equipment_id=r.equnr
+WHERE r.erdat BETWEEN :fromDate AND :toDate
+ORDER BY r.erdat DESC;</code></pre></article>
+        <article><h3>프론트 응답</h3><pre><code>{"data":{"items":[{
+ "identifiers":{"repairOrderId":"...",
+  "serviceNoticeId":"...","externalNo":"..."},
+ "equipmentId":"...","symptom":"...",
+ "cause":"...","detail":"...",
+ "receivedAt":"...","completedAt":"...",
+ "completed":true}]},
+ "permissions":["READ"]}
+</code></pre></article>
+      </div>
+      <div class="api-line"><b>API</b><code>GET /api/v1/maintenance?serviceType={FLEET|DEALER}&amp;equipmentId={id?}&amp;from={date}&amp;to={date}</code></div>
+    </section>
+
+    <section class="slide" data-title="페이지 구현 · 소모품">
+      <header><p class="eyebrow">32 · PAGE CONTRACT / SUPPLIES</p><h2>소모품은 도래 현황과 교환 완료 이력을 분리하고 딜러 조치를 기록</h2></header>
+      <div class="contract-grid">
+        <article><h3>현행 문제 / 적용</h3><p>현재값 수정만으로는 누가 언제 무엇을 조치했는지 추적하기 어려움.</p><ul><li>도래 계산은 기존 일정 원천 유지</li><li>교환완료·일자·조치사항 별도 이력</li><li>딜러만 수정 권한</li><li>플릿은 조회 전용</li></ul></article>
+        <article><h3>조회·조치 SQL</h3><pre><code>SELECT ss.service_id,ss.equipment_id,
+       sc.schedule_name,sc.exchange_cycle,
+       ss.exchange_use_sec,ss.exchange_remain_sec,
+       ss.exchange_datetime,ss.service_comment
+FROM tb_service_schedule ss
+JOIN tb_schedule sc ON sc.schedule_id=ss.schedule_id
+JOIN accessible_equipment a ON a.equipment_id=ss.equipment_id
+WHERE ss.use_yn='Y'
+ORDER BY ss.exchange_remain_sec;
+
+INSERT INTO supply_action_history
+(service_id,equipment_id,completed_at,action_comment,
+ source_table,created_by)
+VALUES (:serviceId,:equipmentId,:completedAt,:comment,
+ 'TB_SERVICE_SCHEDULE',:userId);</code></pre></article>
+        <article><h3>프론트 응답</h3><pre><code>{"data":{"items":[{
+ "serviceId":"...","equipmentId":"...",
+ "supplyName":"트랜스미션 오일",
+ "cycleHour":100,"usedHour":367,
+ "remainingHour":-267,"status":"DUE",
+ "lastAction":{"completedAt":"2025-08-12",
+  "comment":"교환 완료"}}]},
+ "permissions":["READ","COMPLETE_SUPPLY_ACTION"]}
+</code></pre></article>
+      </div>
+      <div class="api-line"><b>API</b><code>GET /api/v1/supplies · POST /api/v1/supplies/{serviceId}/actions</code></div>
+    </section>
+
+    <section class="slide" data-title="페이지 구현 · 서비스 전체">
+      <header><p class="eyebrow">33 · PAGE CONTRACT / SERVICE SUMMARY</p><h2>서비스 전체 카운트는 같은 필터와 같은 차량 집합에서 한 번에 계산</h2></header>
+      <div class="contract-grid">
+        <article><h3>현행 문제 / 적용</h3><p>KPI와 각 목록이 서로 다른 조건을 쓰면 0건 표시와 실제 목록 건수가 불일치.</p><ul><li>정비·소모품·차량에러만 집계</li><li>배터리 에러는 차량에러 포함</li><li>목록 이동 시 같은 context 유지</li></ul></article>
+        <article><h3>페이지 SQL</h3><pre><code>SELECT
+ (SELECT COUNT(*) FROM tb_service_repair_result r
+   JOIN accessible_equipment a ON a.equipment_id=r.equnr)
+   maintenanceCount,
+ (SELECT COUNT(*) FROM tb_service_schedule s
+   JOIN accessible_equipment a ON a.equipment_id=s.equipment_id
+   WHERE s.use_yn='Y' AND s.exchange_remain_sec&lt;=0)
+   supplyDueCount,
+ (SELECT COUNT(*) FROM fault_event f
+   JOIN accessible_equipment a ON a.equipment_id=f.equipment_id
+   WHERE f.status='OPEN') faultCount;</code></pre></article>
+        <article><h3>프론트 응답</h3><pre><code>{"data":{
+ "maintenanceCount":2,
+ "supplyDueCount":25,
+ "faultCount":9,
+ "faultBreakdown":{"vehicle":7,"battery":2}
+},"context":{"organizationId":"1933"}}
+</code></pre></article>
+      </div>
+      <div class="api-line"><b>API</b><code>GET /api/v1/service/summary?organizationId={id}&amp;equipmentId={id?}&amp;from={date}&amp;to={date}</code></div>
+      <div class="verify-line"><span>검증</span><span>KPI = 각 목록 필터 건수</span><span>0건 카드 숨김 여부 정책 일치</span><span>context 유지</span></div>
+    </section>
+
+    <section class="slide" data-title="페이지 구현 · 리포트·지도·관리">
+      <header><p class="eyebrow">34 · PAGE CONTRACT / REPORT · MAP · ADMIN</p><h2>리포트·지도·관리기능의 공통 scope 및 tenant 경계 적용</h2></header>
+      <div class="ddl-grid">
+        <article><h3>리포트·지도 SQL</h3><pre><code>SELECT o.working_month,o.group_id,
+ SUM(o.working_time),SUM(o.distance),
+ SUM(o.error_cnt),SUM(o.repair_cnt)
+FROM tb_equipment_month_operation o
+JOIN accessible_equipment a ON a.equipment_id=o.equipment_id
+GROUP BY o.working_month,o.group_id;
+
+SELECT s.equipment_id,s.longitude,s.latitude,
+       s.gps_datetime,e.equipment_name
+FROM tb_sample_last s
+JOIN tb_equipment e ON e.equipment_id=s.equipment_id
+JOIN accessible_equipment a ON a.equipment_id=s.equipment_id;</code></pre></article>
+        <article><h3>관리기능 SQL</h3><pre><code>SELECT u.user_id,u.user_name,
+       uor.organization_id,uor.role_code,
+       u.locale_code,u.timezone_id,u.use_yn
+FROM tb_user u
+JOIN user_organization_role uor ON uor.user_id=u.user_id
+JOIN organization o ON o.organization_id=uor.organization_id
+WHERE o.tenant_id=:tenantId
+  AND uor.organization_id=:organizationId
+  AND :asOf&gt;=uor.valid_from
+  AND (uor.valid_to IS NULL OR :asOf&lt;uor.valid_to);</code></pre></article>
+      </div>
+      <div class="api-line"><b>API</b><code>GET /api/v1/reports · GET /api/v1/map/equipment · GET /api/v1/admin/users?organizationId={id}</code></div>
+      <p class="final-rule"><b>구현 기준</b> 지도 전체보기·리포트 다운로드·관리자 검색 요청의 ID를 서버 scope에서 재검증.</p>
+    </section>
+
+    <section class="slide" data-title="결정 질문">
+      <header><p class="eyebrow">35 · DECISION WORKSHOP</p><h2>데이터 모델과 이관 규칙 확정에 필요한 확인 항목</h2></header>
+      <div class="decision-matrix">
+        <p><b>D-01</b><span><code>TB_EQUIPMENT.COMPANY_ID</code>는 소유자와 운영자 중 무엇인가?</span><em>업무·데이터</em></p>
+        <p><b>D-02</b><span>판매 딜러와 정비 담당 딜러가 다를 수 있는가?</span><em>서비스·영업</em></p>
+        <p><b>D-03</b><span>한 차량을 여러 업체가 동시에 운영·조회할 수 있는가?</span><em>업무·권한</em></p>
+        <p><b>D-04</b><span><code>PERMIT_YN</code>은 소속, 조회 허용, 계약 상태 중 무엇인가?</span><em>업무·DB</em></p>
+        <p><b>D-05</b><span>관계 변경의 과거 이력을 언제까지 보존해야 하는가?</span><em>보안·운영</em></p>
+        <p><b>D-06</b><span>글로벌 tenant 기준은 국가, 법인, 서비스 계약 중 무엇인가?</span><em>글로벌·법무</em></p>
+        <p><b>D-07</b><span>국가 간 차량 이동 시 데이터와 권한을 어떻게 승계할 것인가?</span><em>글로벌·업무</em></p>
+        <p><b>D-08</b><span>전환 허용 중단 시간과 페이지별 우선순위는?</span><em>개발·운영</em></p>
+      </div>
+    </section>
+
+    <section class="slide" data-title="단계별 실행안">
+      <header><p class="eyebrow">36 · IMPLEMENTATION PLAN</p><h2>업무 기준 확정·데이터 진단·시범 이관 순서</h2></header>
+      <div class="action-columns">
+        <article><span>1주차</span><h3>업무 의미 확정</h3><ul><li>D-01~D-07 결정</li><li>관계 유형과 중복 규칙 승인</li><li>tenant·시간·단위 원칙 확정</li></ul></article>
+        <article><span>2주차</span><h3>데이터 진단</h3><ul><li>불일치·중복·미매핑 프로파일</li><li>자동/규칙/수동 이관 범위 산정</li><li>권한 테스트 케이스 작성</li></ul></article>
+        <article><span>3~4주차</span><h3>시범 구조 검증</h3><ul><li>관계 원장·호환 뷰 구현</li><li>대표 업체·차량으로 비교</li><li>성능·권한·롤백 검증</li></ul></article>
+      </div>
+      <div class="final-recommendation">
+        <b>적용안</b>
+        <p>현행 원천 테이블 유지. 관계 의미를 분리한 원장 추가. 기존·신규 API 결과 비교 후 페이지별 읽기 기준 전환.</p>
+      </div>
+    </section>
+
+    <section class="slide closing" data-title="요약">
+      <span class="closing-mark">IMPLEMENTATION SUMMARY</span>
+      <h2>글로벌 적용을 위한<br><em>차량·조직 관계 기준 통합</em></h2>
+      <p>플릿·딜러 화면은 분리 유지. 차량–조직 관계 유형과 유효기간, 권한 조회 기준은 공통 구조로 관리.</p>
+      <div class="closing-actions"><span>관계 의미 승인</span><span>프로파일링 실행</span><span>대표 조직 시범 이관</span><span>페이지별 단계 전환</span></div>
+      <footer>현행 문제 → 확정 해결안 → 이관 SQL → 페이지별 SQL/API → 검증·전환을 한 문서로 통합</footer>
+    </section>
+  </main>
+
+  <nav class="deck-controls" aria-label="슬라이드 제어">
+    <button type="button" data-action="prev" aria-label="이전">‹</button>
+    <button type="button" class="page-indicator" data-action="overview"><b>1</b><span>/ 20</span></button>
+    <button type="button" data-action="next" aria-label="다음">›</button>
+    <button type="button" class="pdf-button" data-action="print">PDF</button>
+  </nav>
+  <div class="progress"><i></i></div>
+  <dialog class="overview">
+    <header><b>전체 슬라이드</b><button type="button" data-action="close" aria-label="닫기">×</button></header>
+    <div class="overview-list"></div>
+  </dialog>
+  <script src="assets/decision.js"></script>
+</body>
+</html>

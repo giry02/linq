@@ -79,7 +79,8 @@ button { color:inherit; }
 .dashboard-panel__head h2 { margin:0; font-size:14px; }
 .dashboard-panel__head span { color:#777; font-size:9px; }
 .dashboard-distribution { display:grid; grid-template-columns:98px minmax(0,1fr); align-items:center; gap:14px; }
-.dashboard-donut { position:relative; display:grid; place-items:center; width:92px; height:92px; border-radius:50%; background:conic-gradient(#e52921 0 var(--error-share), #eb7d00 var(--error-share) 100%); }
+.dashboard-donut { --error-share:0%; --total-share:0%; position:relative; display:grid; place-items:center; width:92px; height:92px; border-radius:50%; background:conic-gradient(#e52921 0 var(--error-share), #eb7d00 var(--error-share) var(--total-share), #e1e4e6 var(--total-share) 100%); }
+.dashboard-donut.is-animating { will-change:background; }
 .dashboard-donut.is-empty { background:#e1e4e6; }
 .dashboard-donut::before { position:absolute; width:58px; height:58px; border-radius:50%; background:#fff; content:''; }
 .dashboard-donut span { position:relative; z-index:1; color:#777; text-align:center; font-size:8px; }

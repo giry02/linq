@@ -1,0 +1,8 @@
+{
+  "method": "GET",
+  "path": "/fleet/analysis/li/stat/equipment/FBA36-003906",
+  "status": 200,
+  "contentType": "application/json",
+  "bodyEncoding": "base64",
+  "body": "eyJjb2RlIjoiMDIiLCJtc2ciOiJObyB2YWx1ZSBwcmVzZW50Iiwic3RhdHVzIjoyMDAsInJlc3VsdCI6bnVsbH0="
+}

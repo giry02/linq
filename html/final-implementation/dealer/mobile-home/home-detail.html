@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#ff3600">
+  <title>MACHINE IQ 딜러 모바일 · 상세 현황형</title>
+  <link rel="icon" href="../favicon.ico">
+  <link rel="stylesheet" href="../assets/local-fonts.css">
+  <link rel="stylesheet" href="./mobile.css?v=20260824-6">
+  <link rel="stylesheet" href="./home-variants.css?v=20260824-3">
+</head>
+<body data-home-variant="detail">
+  <div class="mobile-app">
+    <header class="app-header">
+      <div class="brand"><strong>Bobcat</strong><span>MACHINE IQ</span></div>
+      <button class="header-button" type="button" data-open-current aria-label="알림 열기"><i data-lucide="bell"></i><b data-notification-count>0</b></button>
+    </header>
+    <main>
+      <section class="app-view is-active variant-home" aria-labelledby="detail-home-title">
+        <h1 class="sr-only" id="detail-home-title">상세 현황형 홈</h1>
+        <div class="dashboard-period">
+          <div><strong>조회 기간</strong><small data-period-label></small></div>
+          <div class="period-tabs" role="group" aria-label="조회 기간"><button type="button" data-period="day">금일</button><button type="button" data-period="week">주</button><button class="is-active" type="button" data-period="month">월</button></div>
+        </div>
+        <section class="dashboard-kpis" aria-label="주요 업무 현황">
+          <button class="dashboard-kpi is-danger" type="button" data-open-current><i data-lucide="triangle-alert"></i><span>미처리 에러</span><strong data-error-total>0</strong><small>차량·배터리 통합</small></button>
+          <button class="dashboard-kpi is-warning" type="button" data-open-current><i data-lucide="refresh-cw"></i><span>소모품</span><strong data-supply-total>0</strong><small>교체 대상</small></button>
+          <button class="dashboard-kpi" type="button" data-open-current><i data-lucide="clipboard-check"></i><span>처리 완료</span><strong data-maintenance-total>0</strong><small>완료된 정비</small></button>
+        </section>
+        <section class="variant-panel">
+          <header><div><h2>조치 필요 차량</h2><p>차량별 문제와 상태를 함께 확인합니다.</p></div><button type="button" data-open-current>전체보기<i data-lucide="chevron-right"></i></button></header>
+          <div class="detail-status-list" data-detail-status-list></div>
+        </section>
+        <section class="variant-panel">
+          <header><div><h2>최근 알림</h2><p>우선 확인이 필요한 순서입니다.</p></div><span data-priority-total>0건</span></header>
+          <div class="variant-alert-list" data-alert-list></div>
+        </section>
+      </section>
+    </main>
+    <nav class="bottom-nav" aria-label="주 메뉴">
+      <button type="button" class="is-active"><i data-lucide="house"></i><span>홈</span></button><button type="button" data-open-current><i data-lucide="truck"></i><span>차량</span></button><button type="button" data-open-current><i data-lucide="triangle-alert"></i><span>에러</span></button><button type="button" data-open-current><i data-lucide="wrench"></i><span>소모품</span></button><button type="button" data-open-current><i data-lucide="settings"></i><span>설정</span></button>
+    </nav>
+  </div>
+  <script src="./preview-lock.js?v=20260824-4"></script>
+  <script src="./layouts/vendor/lucide.min.js"></script>
+  <script src="./data.js?v=20260824-6"></script>
+  <script src="./home-variants.js?v=20260824-1"></script>
+</body>
+</html>

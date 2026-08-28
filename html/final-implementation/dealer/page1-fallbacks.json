@@ -1,0 +1,19 @@
+{
+  "/fleet/analysis/hi/stat/company/151": [
+    {"companyId":151,"companyName":"두산지게차 경남중부판매 주식회사","groupId":418,"groupName":"기본그룹","equipmentId":"FIGMA-DH-1","equipmentNumber":"DH_#1","soc":85,"workTimeUnit":"3H 49M","sysVol":"-","sysCur":"-","res":"ok","sysErrorStat":"","leakWarning":"","drainAlarm":0},
+    {"companyId":151,"companyName":"두산지게차 경남중부판매 주식회사","groupId":418,"groupName":"기본그룹","equipmentId":"FIGMA-DH-2","equipmentNumber":"DH_#2","soc":85,"workTimeUnit":"3H 49M","sysVol":"-","sysCur":"-","res":"ok","sysErrorStat":"","leakWarning":"","drainAlarm":0}
+  ],
+  "/fleet/analysis/hi/stat/group/418": [
+    {"companyId":151,"companyName":"두산지게차 경남중부판매 주식회사","groupId":418,"groupName":"기본그룹","equipmentId":"FIGMA-DH-1","equipmentNumber":"DH_#1","soc":85,"workTimeUnit":"3H 49M","sysVol":"-","sysCur":"-","res":"ok","sysErrorStat":"","leakWarning":"","drainAlarm":0}
+  ],
+  "/fleet/service/ocses": [
+    {"orderNo":2001,"companyId":151,"companyName":"두산지게차 경남중부판매 주식회사","groupId":418,"groupName":"기본그룹","equipmentId":"FBA11-004433","equipmentNumber":"FBA11-004433","codeName":"15,20T-7","sectionName":"엔진","breakdownCategory":"연료 계통","breakdownContent":"연료 필터 압력 센서 값 낮음, 연료공급시스템 점검","rgstDatetime":"2023-01-15 09:00","resultDatetime":"2023-01-15 11:00","eaiYn":"N"},
+    {"orderNo":2002,"companyId":151,"companyName":"두산지게차 경남중부판매 주식회사","groupId":418,"groupName":"기본그룹","equipmentId":"FBA11-001212","equipmentNumber":"FBA11-001212","codeName":"70R-4","sectionName":"연료장치","breakdownCategory":"공급 계통","breakdownContent":"연료공급시스템 점검 및 조치","rgstDatetime":"2023-01-15 13:00","resultDatetime":"2023-01-15 15:00","eaiYn":"N"}
+  ],
+  "/fleet/admin/account/requests": [
+    {"seq":2001,"userId":"Test_Dealer2_Employee","userName":"경남중부 - 직원","email":"dealer.review@local.test","telno":"01000000000","roleId":"ROLE_DEALER_GROUP","isLeader":false,"isPersonal":false,"companyId":151,"companyName":"두산지게차 경남중부판매 주식회사","companyRegNumber":"1234567890","regDatetime":"2026-08-13 10:00:00","procDatetime":null,"procStatus":"REQ","procUserId":null}
+  ],
+  "/fleet/admin/equipment/requests": [
+    {"seq":5,"companyId":1933,"equipmentId":"FDB21_225380081","terminalId":225380081,"dealerCompanyId":33798,"regUserId":null,"regDateTime":"2026-05-18 08:12:11","procUserId":null,"procDatetime":null,"procStatus":"REQ","deleteYn":"N","rentalCompanyId":null,"companyName":"(주)세종물류중부지점","dealerCompanyName":"두산지게차충북판매서비스 주식회사","rentalCompanyName":null,"equipmentNumber":"FDB21_225380081","equipmentCodeId":772,"codeName":"D70S-9"}
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "method": "GET",
+  "path": "/common/workingtime/company",
+  "status": 200,
+  "contentType": "application/json",
+  "bodyEncoding": "base64",
+  "body": "eyJjb2RlIjoiMDAiLCJtc2ciOiJzdWNjZXNzIiwic3RhdHVzIjoyMDAsInJlc3VsdCI6eyJzZXR0aW5nVHlwZUNvZGUiOiJTIiwic2V0dGluZ0RhdGUiOm51bGwsInN0YXJ0VGltZSI6IjA4MDAiLCJlbmRUaW1lIjoiMTcwMCIsImJyZWFrVGltZSI6NjAsInRpbWV6b25lSWQiOiJBc2lhL1Nlb3VsIiwid29ya2luZ1RpbWVNaW51dGUiOjQ4MCwiaG9saWRheVdvcmsiOjF9fQ=="
+}

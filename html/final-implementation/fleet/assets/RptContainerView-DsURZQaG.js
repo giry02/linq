@@ -1,0 +1,1 @@
+import{s as e,G as t,o as a,l as r,p as o,z as s}from"./index-dGkWfo-f.js";import{P as p}from"./PageBody-DKK6JoRf.js";/* empty css                                                                 */const u={__name:"RptContainerView",setup(c){return(i,n)=>(a(),e(p,{class:"page-report",title:"리포트"},{default:t(()=>[r(o(s))]),_:1}))}};export{u as default};

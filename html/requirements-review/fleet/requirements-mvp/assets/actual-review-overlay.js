@@ -157,11 +157,11 @@
       const visible = rect.width > 0 && rect.height > 0 && rect.right > 0 && rect.left < viewportWidth && rect.bottom > 0 && rect.top < viewportHeight;
       entry.marker.hidden = !visible;
       if (!visible) return;
-      let left = window.scrollX + rect.right - 13 - entry.offset * 30;
+      let left = window.scrollX + rect.left - 13 + entry.offset * 30;
       const markerTop = alignedPeriodIds.has(entry.item.id) && Number.isFinite(periodTop) ? periodTop : rect.top;
       const top = window.scrollY + Math.max(4, markerTop - 9);
       left = Math.min(left, window.scrollX + viewportWidth - 30);
-      while (occupied.some(point => Math.abs(point.left - left) < 27 && Math.abs(point.top - top) < 27)) left -= 30;
+      while (occupied.some(point => Math.abs(point.left - left) < 27 && Math.abs(point.top - top) < 27)) left += 30;
       occupied.push({left, top});
       entry.marker.style.left = `${Math.max(3, left)}px`;
       entry.marker.style.top = `${top}px`;
@@ -289,14 +289,15 @@
         input.addEventListener('input', () => custom?.click(), { once: true });
       });
       markReview(inputs[0].parentElement, 'R-SVC-004');
-      const host = inputs[0].closest('form, fieldset, .search-form, [class*="search"]') || inputs[0].parentElement;
-      if (host && !host.querySelector('.linq-review-period-help')) {
-        const help = document.createElement('p');
-        help.className = 'linq-review-period-help';
-        help.textContent = '사용자설정 조회기간은 최대 31일까지 선택할 수 있습니다.';
-        markReview(help, 'R-SVC-003');
-        host.append(help);
+      const helpText = '시작일과 종료일을 직접 선택합니다. 서버에서 허용하는 최대 조회 범위는 확인이 필요합니다.';
+      const infoTarget = custom || inputs[0].parentElement;
+      if (infoTarget) {
+        infoTarget.classList.add('linq-review-period-info');
+        infoTarget.setAttribute('title', helpText);
+        infoTarget.setAttribute('aria-description', helpText);
+        markReview(infoTarget, 'R-SVC-003');
       }
+      content.querySelectorAll('.linq-review-period-help').forEach(node => node.remove());
     }
   }
 

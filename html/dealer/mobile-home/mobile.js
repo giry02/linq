@@ -10,6 +10,7 @@
   let notificationState = 'unresolved';
   let previousView = 'home';
   let selectedServiceItem = null;
+  let dashboardSummaryAnimationFrame = 0;
 
   const fuelName = { LI: '리튬', LA: '납축', LM: '엔진', HI: '수소' };
 
@@ -441,6 +442,7 @@
     const titles = { vehicles:'차량', 'vehicle-detail':'차량 상세', maintenance:'에러', supplies:'소모품', 'service-detail':'상세 정보', notifications:'알림 내역', settings:'설정' };
     $('[data-header-title]').textContent = titles[name] || '';
     if (name === 'notifications') renderNotificationHistory();
+    if (name === 'home') animateDashboardSummaryFromStoredValues();
     window.scrollTo({ top: 0, behavior: 'instant' });
   }
 
@@ -578,6 +580,53 @@
     renderNotificationHistory();
   }
 
+  function applyDashboardSummaryFrame(progress, values) {
+    const eased = 1 - Math.pow(1 - progress, 3);
+    const donut = $('#service-donut');
+    donut.style.setProperty('--error-share', `${values.errorShare * eased}%`);
+    donut.style.setProperty('--total-share', `${values.actionTotal ? 100 * eased : 0}%`);
+    $('#service-donut-total').textContent = Math.round(values.actionTotal * eased);
+    $('#legend-error-total').textContent = Math.round(values.errorTotal * eased);
+    $('#legend-supply-total').textContent = Math.round(values.supplyTotal * eased);
+  }
+
+  function animateDashboardSummary(values) {
+    cancelAnimationFrame(dashboardSummaryAnimationFrame);
+    const donut = $('#service-donut');
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    donut.classList.toggle('is-empty', values.actionTotal === 0);
+    donut.classList.remove('is-animating');
+
+    if (reduceMotion || values.actionTotal === 0) {
+      applyDashboardSummaryFrame(1, values);
+      return;
+    }
+
+    donut.classList.add('is-animating');
+    applyDashboardSummaryFrame(0, values);
+    const startedAt = performance.now();
+    const duration = 800;
+
+    const draw = now => {
+      const progress = Math.min((now - startedAt) / duration, 1);
+      applyDashboardSummaryFrame(progress, values);
+      if (progress < 1) dashboardSummaryAnimationFrame = requestAnimationFrame(draw);
+      else donut.classList.remove('is-animating');
+    };
+    dashboardSummaryAnimationFrame = requestAnimationFrame(draw);
+  }
+
+  function animateDashboardSummaryFromStoredValues() {
+    const donut = $('#service-donut');
+    if (!donut.dataset.actionTotal) return;
+    animateDashboardSummary({
+      actionTotal: Number(donut.dataset.actionTotal),
+      errorTotal: Number(donut.dataset.errorTotal),
+      supplyTotal: Number(donut.dataset.supplyTotal),
+      errorShare: Number(donut.dataset.errorShare)
+    });
+  }
+
   function updateSummaryCounts() {
     const vehicleErrorTotal = data.service.error.filter(item => item.errorKind !== '배터리 에러').length;
     const batteryErrorTotal = data.service.error.filter(item => item.errorKind === '배터리 에러').length;
@@ -593,11 +642,19 @@
     $('#schedule-total').textContent = supplyTotal;
     $('#maintenance-total').textContent = maintenanceTotal;
     $('#service-total').textContent = `미처리 ${actionTotal}건`;
-    $('#service-donut-total').textContent = actionTotal;
-    $('#legend-error-total').textContent = errorTotal;
-    $('#legend-supply-total').textContent = supplyTotal;
-    $('#service-donut').style.setProperty('--error-share', `${actionTotal ? (activeUrgent / actionTotal) * 100 : 0}%`);
-    $('#service-donut').classList.toggle('is-empty', actionTotal === 0);
+    const donut = $('#service-donut');
+    const summaryValues = {
+      actionTotal,
+      errorTotal,
+      supplyTotal,
+      errorShare: actionTotal ? (activeUrgent / actionTotal) * 100 : 0
+    };
+    donut.dataset.actionTotal = actionTotal;
+    donut.dataset.errorTotal = errorTotal;
+    donut.dataset.supplyTotal = supplyTotal;
+    donut.dataset.errorShare = summaryValues.errorShare;
+    if ($('[data-view-panel="home"]').classList.contains('is-active')) animateDashboardSummary(summaryValues);
+    else applyDashboardSummaryFrame(1, summaryValues);
     $('#home-vehicle-total').textContent = vehicleTotal;
     $('#home-vehicle-normal').textContent = vehicleTotal - attentionVehicleTotal;
     $('#home-vehicle-attention').textContent = attentionVehicleTotal;
