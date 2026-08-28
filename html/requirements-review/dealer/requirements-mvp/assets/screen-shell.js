@@ -93,16 +93,19 @@
       script.dataset.requirementsPrototypeShell = '';
       doc.head.append(script);
     }
-    if (!doc.querySelector('link[data-requirements-review]')) {
+    const reviewStyle = doc.querySelector('link[data-requirements-review]');
+    if (reviewStyle) {
+      reviewStyle.href = '/requirements-mvp/assets/actual-review-overlay.css?v=20260828-1';
+    } else {
       const style = doc.createElement('link');
       style.rel = 'stylesheet';
-      style.href = '/requirements-mvp/assets/actual-review-overlay.css?v=20260822-22';
+      style.href = '/requirements-mvp/assets/actual-review-overlay.css?v=20260828-1';
       style.dataset.requirementsReview = '';
       doc.head.append(style);
     }
     if (!doc.querySelector('script[data-requirements-review]')) {
       const script = doc.createElement('script');
-      script.src = '/requirements-mvp/assets/actual-review-overlay.js?v=20260822-22';
+      script.src = '/requirements-mvp/assets/actual-review-overlay.js?v=20260828-1';
       script.async = false;
       script.dataset.requirementsReview = '';
       doc.head.append(script);

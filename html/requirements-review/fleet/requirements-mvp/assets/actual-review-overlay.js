@@ -290,15 +290,40 @@
       });
       markReview(inputs[0].parentElement, 'R-SVC-004');
       const helpText = '시작일과 종료일을 직접 선택합니다. 서버에서 허용하는 최대 조회 범위는 확인이 필요합니다.';
-      const infoTarget = custom || inputs[0].parentElement;
-      if (infoTarget) {
-        infoTarget.classList.add('linq-review-period-info');
-        infoTarget.setAttribute('title', helpText);
-        infoTarget.setAttribute('aria-description', helpText);
-        markReview(infoTarget, 'R-SVC-003');
+      if (custom?.parentElement) {
+        custom.classList.remove('linq-review-period-info');
+        const infoButtons = [...custom.parentElement.querySelectorAll('.linq-review-period-info-button, .linq-static-period-info')];
+        let info = infoButtons.shift();
+        infoButtons.forEach(node => node.remove());
+        if (!info) {
+          info = document.createElement('button');
+          info.type = 'button';
+          info.textContent = 'i';
+          custom.parentElement.insertBefore(info, custom);
+        }
+        info.className = 'linq-review-period-info-button';
+        info.setAttribute('title', helpText);
+        info.setAttribute('aria-label', helpText);
+        markReview(info, 'R-SVC-003');
       }
       content.querySelectorAll('.linq-review-period-help').forEach(node => node.remove());
     }
+    const form = inputs[0]?.closest('.filter-form');
+    const head = content.closest('.content-container')?.querySelector(':scope > .content-head')
+      || content.parentElement?.querySelector(':scope > .content-head');
+    if (form && head) {
+      head.classList.add('linq-review-title-filter-row');
+      if (form.parentElement !== head) head.append(form);
+    }
+  }
+
+  function removeHeaderCompanySearch() {
+    const input = document.querySelector('input[placeholder="Find Company"]');
+    if (!input) return;
+    const dropdown = input.closest('.dropdown');
+    const wrapper = dropdown?.parentElement;
+    if (wrapper && wrapper.children.length === 1) wrapper.remove();
+    else dropdown?.remove();
   }
 
   function markPrototypeSide() {
@@ -344,14 +369,6 @@
     }
     if (screen === 'service-errors') markReview(errorSummary, 'R-SVC-006');
     serviceTabs.classList.add('linq-review-service-summary-in-side');
-    const content = serviceTabs.closest('.content-body');
-    const sectionTop = content ? [...content.children].find(node => node.classList?.contains('section-top')) : null;
-    if (sectionTop && !serviceTabs.closest('.linq-review-service-toolbar-row')) {
-      const toolbarRow = document.createElement('div');
-      toolbarRow.className = 'linq-review-service-toolbar-row';
-      content.insertBefore(toolbarRow, serviceTabs);
-      toolbarRow.append(serviceTabs, sectionTop);
-    }
     mountServiceCountsInSide();
     return {serviceTabs, errorSummary};
   }
@@ -387,7 +404,7 @@
         badge.className = 'linq-review-side-count';
         text.append(badge);
       }
-      badge.textContent = String(counts[icon] || fallbackCounts[icon]);
+      badge.textContent = String(fallbackCounts[icon]);
       badge.setAttribute('aria-label', `${label} ${badge.textContent}건`);
     });
   }
@@ -663,29 +680,8 @@
   }
 
   function applyOperationEfficiency(content) {
-    const selectedPeriod = content.querySelector('input[type="radio"][name="dataPeriod"]:checked')?.value || 'monthly';
-    renderOperationEfficiency(content, selectedPeriod);
-    const periodInputs = [...content.querySelectorAll('input[type="radio"][name="dataPeriod"]')];
-    periodInputs.forEach(input => {
-      if (input.dataset.reviewEfficiencyBound) return;
-      input.dataset.reviewEfficiencyBound = 'true';
-      input.addEventListener('change', () => window.setTimeout(() => renderOperationEfficiency(content, input.value), 50));
-      const label = input.closest('label');
-      if (label && !label.dataset.reviewEfficiencyClickBound) {
-        label.dataset.reviewEfficiencyClickBound = 'true';
-        label.addEventListener('click', event => {
-          event.preventDefault();
-          event.stopImmediatePropagation();
-          periodInputs.forEach(periodInput => { periodInput.checked = periodInput === input; });
-          input.dispatchEvent(new Event('change', {bubbles:true}));
-          window.setTimeout(() => {
-            const currentInputs = [...content.querySelectorAll('input[type="radio"][name="dataPeriod"]')];
-            currentInputs.forEach(periodInput => { periodInput.checked = periodInput.value === input.value; });
-            renderOperationEfficiency(content, input.value);
-          }, 80);
-        }, true);
-      }
-    });
+    // 상단 운영효율 영역은 원본 세로 막대 그래프와 Top5를 그대로 유지한다.
+    // 하단 요구사항 검토안(실제 작업시간·31일 무스크롤 비교)은 별도 영역으로 유지한다.
   }
 
   function replaceExactText(root, from, to) {
@@ -1175,6 +1171,7 @@
   }
 
   function applyRequirementContent() {
+    removeHeaderCompanySearch();
     document.querySelectorAll('.linq-review-fallback').forEach(node => node.remove());
     document.querySelectorAll('.linq-review-original-hidden').forEach(node => node.classList.remove('linq-review-original-hidden'));
     const content = contentBody();
@@ -1208,16 +1205,6 @@
   if (location.pathname.includes('/srvc/') && !window.__linqServiceSummaryObserver) {
     window.__linqServiceSummaryObserver = new MutationObserver(() => configureServiceSummary());
     window.__linqServiceSummaryObserver.observe(document.body, {childList: true, subtree: true});
-  }
-  if (screen === 'operation-efficiency' && !window.__linqOperationEfficiencyGuard) {
-    window.__linqOperationEfficiencyGuard = window.setInterval(() => {
-      const content = contentBody();
-      if (!content) return;
-      const selectedPeriod = content.querySelector('input[type="radio"][name="dataPeriod"]:checked')?.value || 'monthly';
-      const expectedRows = selectedPeriod === 'daily' ? 1 : selectedPeriod === 'weekly' ? 7 : 31;
-      const chart = content.querySelector(`.linq-review-efficiency-chart[data-period="${selectedPeriod}"]`);
-      if (!chart || chart.querySelectorAll('.linq-review-efficiency-row').length !== expectedRows || chart.getBoundingClientRect().height === 0) applyOperationEfficiency(content);
-    }, 250);
   }
   if (screen === 'lithium-battery' && !window.__linqLithiumBatteryGuard) {
     let attempts = 0;

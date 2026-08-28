@@ -186,7 +186,7 @@
       return side('서비스', items, active);
     }
     if (type === 'analysis') {
-      const items = [['요약정보','../prototypes/analysis-summary-option-3.html?service=fleet&companyId=all&section=summary'],['사용시간','#'],['운영효율','operation-efficiency.html'],['충격','operation-shock.html'],['엔진 연비','engine-efficiency.html'],['리튬배터리','lithium-battery.html']];
+      const items = [['요약정보','../prototypes/analysis-summary-option-3.html?service=fleet&companyId=all&section=summary'],['사용시간','#'],['운영효율','operation-efficiency.html'],['충격','operation-shock.html'],['엔진 연비','engine-efficiency.html'],['배터리','lithium-battery.html']];
       return side('운행이력', items, active);
     }
     if (type === 'dashboard') return side('대시보드', [['기본그룹','dashboard.html'],['테스트그룹','#']], active);

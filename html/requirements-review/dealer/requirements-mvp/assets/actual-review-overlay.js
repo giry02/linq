@@ -240,15 +240,24 @@
         input.addEventListener('input', () => custom?.click(), { once: true });
       });
       markReview(inputs[0].parentElement, 'R-SVC-004');
-      const host = inputs[0].closest('form, fieldset, .search-form, [class*="search"]') || inputs[0].parentElement;
-      if (host && !host.querySelector('.linq-review-period-help')) {
-        const help = document.createElement('p');
-        help.className = 'linq-review-period-help';
-        help.textContent = '사용자설정 조회기간은 최대 31일까지 선택할 수 있습니다.';
-        markReview(help, 'R-SVC-003');
-        host.append(help);
-      }
+      content.querySelectorAll('.linq-review-period-help, .linq-review-period-info-button, .linq-static-period-info').forEach(node => node.remove());
     }
+    const form = inputs[0]?.closest('.filter-form');
+    const head = content.closest('.content-container')?.querySelector(':scope > .content-head')
+      || content.parentElement?.querySelector(':scope > .content-head');
+    if (form && head) {
+      head.classList.add('linq-review-title-filter-row');
+      if (form.parentElement !== head) head.append(form);
+    }
+  }
+
+  function removeHeaderCompanySearch() {
+    const input = document.querySelector('input[placeholder="Find Company"]');
+    if (!input) return;
+    const dropdown = input.closest('.dropdown');
+    const wrapper = dropdown?.parentElement;
+    if (wrapper && wrapper.children.length === 1) wrapper.remove();
+    else dropdown?.remove();
   }
 
   function markPrototypeSide() {
@@ -294,14 +303,6 @@
       serviceTabs.setAttribute('aria-label', '\uc11c\ube44\uc2a4 \ud604\ud669 \uc694\uc57d');
     }
     serviceTabs.classList.add('linq-review-service-summary-in-side');
-    const content = serviceTabs.closest('.content-body');
-    const sectionTop = content ? [...content.children].find(node => node.classList?.contains('section-top')) : null;
-    if (sectionTop && !serviceTabs.closest('.linq-review-service-toolbar-row')) {
-      const toolbarRow = document.createElement('div');
-      toolbarRow.className = 'linq-review-service-toolbar-row';
-      content.insertBefore(toolbarRow, serviceTabs);
-      toolbarRow.append(serviceTabs, sectionTop);
-    }
     mountServiceCountsInSide();
     return {serviceTabs, errorSummary};
   }
@@ -319,7 +320,7 @@
       const current = Number(item.querySelector('.srvc-tab__count')?.textContent.replace(/[^0-9]/g, '')) || 0;
       counts[icon] = current || Number(storedCounts[icon]) || 0;
     });
-    const fallbackCounts = {maintenance: 3, supplies: 1, error: 3};
+    const fallbackCounts = {maintenance: 3, supplies: 213, error: 3};
     [
       {label: '정비이력', icon: 'maintenance'},
       {label: '소모품관리', icon: 'supplies'},
@@ -335,7 +336,7 @@
         badge.className = 'linq-review-side-count';
         text.append(badge);
       }
-      badge.textContent = String(counts[icon] || fallbackCounts[icon]);
+      badge.textContent = String(fallbackCounts[icon]);
       badge.setAttribute('aria-label', `${label} ${badge.textContent}건`);
     });
   }
@@ -713,6 +714,7 @@
   }
 
   function applyRequirementContent() {
+    removeHeaderCompanySearch();
     document.querySelectorAll('.linq-review-fallback').forEach(node => node.remove());
     document.querySelectorAll('.linq-review-original-hidden').forEach(node => node.classList.remove('linq-review-original-hidden'));
     const content = contentBody();

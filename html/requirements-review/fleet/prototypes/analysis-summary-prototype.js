@@ -118,6 +118,31 @@ const OPTION3_ACTUAL_VEHICLES = [
 ];
 const OPTION3_ACTUAL_TOTALS = {operatingTotal:102,engine:42,lead:22,lithium:38,hydrogen:0,operatingRate:187.1,efficiencyRate:55.1,shockCnt:3217,distance:4664,operatingTime:"16,663H",fuelConsumption:"4.2L/h",batteryConsumption:"0.7kWh"};
 
+const BATTERY_LISTS = {
+  lithium: [
+    ['FBA32_224030257',0,0,'0시간 0분','0시간 0분',false],
+    ['FBA32_224250076',88,99,'7시간 14분','72시간 0분',false],
+    ['FBA32_224250075',98,99,'49시간 0분','12시간 0분',false],
+    ['FBA32_224030258',0,0,'0시간 0분','0시간 0분',false],
+    ['FBA32_224250082',92,99,'10시간 37분','48시간 0분',false],
+    ['FBA32_224250383',86,100,'6시간 58분','84시간 0분',false],
+    ['FBA32_224250083',100,99,'5시간 40분','0시간 0분',true],
+    ['FBA32_224250212',98,100,'12시간 47분','12시간 0분',false],
+    ['FBA32_224250094',76,98,'5시간 11분','144시간 0분',false],
+    ['FBA32_224250271',83,98,'8시간 26분','102시간 0분',false],
+    ['FBA32_224250092',83,99,'5시간 36분','102시간 0분',false],
+    ['FBA32_224030259',91,98,'11시간 23분','54시간 0분',false],
+    ['FBA34_224250279',76,98,'3시간 32분','0시간 30분',false],
+    ['FBA34_224030249',82,98,'8시간 57분','0시간 22분',false],
+    ['FBA34_224250211',85,98,'8시간 6분','90시간 0분',false],
+    ['FBA34_224250277',0,0,'0시간 0분','0시간 0분',false],
+  ],
+  hydrogen: [
+    ['DH_#1',85,'3H 49M','-V','-W'],
+    ['DH_#2',85,'3H 49M','-V','-W'],
+  ],
+};
+
 const SECTIONS = {
   summary:"요약정보", usage:"사용시간", efficiency:"운영효율", shock:"충격", engine:"엔진 연비",
   battery:"배터리", lithium:"리튬배터리", hydrogen:"수소배터리", lead:"납축배터리", supplies:"소모품관리", errors:"차량에러",
@@ -185,7 +210,10 @@ function bind(){
 function setPeriod(button){
   state.period=button.textContent.trim();
   $$('.period-tabs button').forEach(b=>b.classList.toggle('active',b===button));
-  if(isCompactList()) renderCards();
+  if(isCompactList()) {
+    if(state.section==='battery') renderBatteryLists();
+    else renderCards();
+  }
 }
 
 function setCompany(id){state.companyId=id;state.vehicleId=null;state.source=null;updateUrl();render();}
@@ -202,7 +230,9 @@ function render(){
   $('#breadcrumb-current').textContent=SECTIONS[state.section];
   $('#dataset-name').textContent=selectedVehicle()?selectedVehicle().id:data().groupName;
   $$('[data-section]').forEach(b=>b.classList.toggle('active',b.dataset.section===state.section));
-  renderSelectors(); renderSummary(); renderCards();
+  renderSelectors();
+  if(isCompactList() && state.section==='battery') renderBatteryLists();
+  else { renderSummary(); renderCards(); }
 }
 
 function renderSelectors(){
@@ -266,6 +296,25 @@ function renderSummary(){
 
 function sectionVehicles(list){return state.section==='battery'?list.filter(v=>v.fuel==='리튬'||v.fuel==='수소'):list;}
 function renderCards(){const list=sectionVehicles(selectedVehicle()?[selectedVehicle()]:companyVehicles());if(isCompactList()){renderCompactCards(list);return;}$('#vehicle-cards').innerHTML=list.map(v=>`<section class="content-section"><div class="content-section__container"><div class="goods-summary"><div class="goods-summary__image"><img src="../assets/images/B20253032S7.jpg" alt="${v.model}"><button class="goods-summary__location" type="button" aria-label="위치찾기">⌖</button></div><div class="goods-summary__data"><div class="goods-summary__simple"><em>${v.model} (${v.id})</em></div><div class="goods-summary__detail">${detail(v)}</div></div></div></div></section>`).join('');}
+function renderBatteryLists(){
+  const lithiumRows=BATTERY_LISTS.lithium.map(([id,capacity,life,work,charge,charging])=>{
+    const hasData=capacity>0;
+    const stateText=hasData?'<span>♨ 온도 <b>정상</b></span><span>ϟ 충전 <b>정상</b></span><span>▥ 배터리 <b>정상</b></span>':'<span>♨ 온도 <i>-</i></span><span>ϟ 충전 <i>-</i></span><span>▥ 배터리 <i>-</i></span>';
+    return `<tr><td>${id}</td><td><span class="battery-level"><i style="width:${capacity}%">${charging?'ϟ':''}</i></span><b>${capacity}%</b></td><td>${life}%</td><td>${work}</td><td>${charge}</td><td>X</td><td><div class="battery-state-list">${stateText}</div></td></tr>`;
+  }).join('');
+  const hydrogenRows=BATTERY_LISTS.hydrogen.map(([id,capacity,work,voltage,current])=>`<tr><td>${id}</td><td><span class="battery-level"><i style="width:${capacity}%"></i></span><b>${capacity}%</b></td><td>${work}</td><td>${voltage}</td><td>${current}</td><td><div class="battery-state-list hydrogen"><span>▥ 연료전지</span><span>◉ 수소누출</span><span>ϟ 만충여부 <b>O</b></span></div></td></tr>`).join('');
+  $('#summary-table').innerHTML='';
+  $('#vehicle-cards').innerHTML=`<div class="battery-combined-list">
+    <section class="battery-list-section">
+      <div class="battery-list-section__head"><h4>리튬배터리</h4><span>총 ${BATTERY_LISTS.lithium.length}대</span><label><input type="checkbox"> 상태이상 차량만</label></div>
+      <div class="battery-table"><table><thead><tr><th>차량명</th><th>배터리잔량</th><th>예상수명</th><th>작업예상시간</th><th>예상충전시간</th><th>스마트충전</th><th>상태</th></tr></thead><tbody>${lithiumRows}</tbody></table></div>
+    </section>
+    <section class="battery-list-section">
+      <div class="battery-list-section__head"><h4>수소배터리</h4><span>총 ${BATTERY_LISTS.hydrogen.length}대</span><label><input type="checkbox"> 상태이상 차량만</label></div>
+      <div class="battery-table hydrogen"><table><thead><tr><th>차량명</th><th>수소연료잔량</th><th>작업예상시간</th><th>출력전압</th><th>출력전류</th><th>상태</th></tr></thead><tbody>${hydrogenRows}</tbody></table></div>
+    </section>
+  </div>`;
+}
 function renderCompactCards(list){
   const remaining=[...list];
   const representatives=['리튬','엔진','납축','수소'].map(f=>{

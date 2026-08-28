@@ -98,16 +98,19 @@
       script.dataset.requirementsPrototypeShell = '';
       doc.head.append(script);
     }
-    if (!doc.querySelector('link[data-requirements-review]')) {
+    const reviewStyle = doc.querySelector('link[data-requirements-review]');
+    if (reviewStyle) {
+      reviewStyle.href = '/requirements-mvp/assets/actual-review-overlay.css?v=20260828-1';
+    } else {
       const style = doc.createElement('link');
       style.rel = 'stylesheet';
-    style.href = '/requirements-mvp/assets/actual-review-overlay.css?v=20260822-44';
+      style.href = '/requirements-mvp/assets/actual-review-overlay.css?v=20260828-1';
       style.dataset.requirementsReview = '';
       doc.head.append(style);
     }
     if (!doc.querySelector('script[data-requirements-review]')) {
       const script = doc.createElement('script');
-    script.src = '/requirements-mvp/assets/actual-review-overlay.js?v=20260822-44';
+    script.src = '/requirements-mvp/assets/actual-review-overlay.js?v=20260828-1';
       script.async = false;
       script.dataset.requirementsReview = '';
       doc.head.append(script);
@@ -119,14 +122,9 @@
     if (!serviceSide) return;
 
     const serviceSummary = doc.querySelector('.srvc-tab');
-    const countByIcon = {};
-    serviceSummary?.querySelectorAll('.srvc-tab__item[data-icon]').forEach(item => {
-      const value = Number(item.querySelector('.srvc-tab__count')?.textContent.replace(/[^0-9]/g, '')) || 0;
-      countByIcon[item.dataset.icon] = value;
-    });
     serviceSummary?.remove();
 
-    const fallbackCounts = {maintenance: 2, supplies: 25, error: 9};
+    const serviceCounts = {maintenance: 2, supplies: 25, error: 9};
     [
       {label: '정비이력', icon: 'maintenance'},
       {label: '소모품관리', icon: 'supplies'},
@@ -142,7 +140,7 @@
         badge.className = 'linq-review-side-count';
         text.append(badge);
       }
-      badge.textContent = String(countByIcon[icon] || fallbackCounts[icon]);
+      badge.textContent = String(serviceCounts[icon]);
       badge.setAttribute('aria-label', `${label} ${badge.textContent}건`);
     });
 
@@ -191,29 +189,45 @@
     }
 
     const contentHead = doc.querySelector('.content-head');
-    const dateForm = doc.querySelector('.content-body .section-top .filter-form')
-      || doc.querySelector('.content-head .filter-form');
+    const dateForm = [...doc.querySelectorAll('.filter-form')]
+      .find(form => form.querySelector('.date-inputs') && form.querySelector('label, button, input'));
     if (contentHead && dateForm) {
+      [...contentHead.querySelectorAll(':scope > .filter-form')]
+        .filter(form => form !== dateForm && !form.querySelector('label, button, input'))
+        .forEach(form => form.remove());
       contentHead.classList.add('linq-static-title-filter-row');
       if (dateForm.parentElement !== contentHead) contentHead.append(dateForm);
 
       const custom = [...dateForm.querySelectorAll('label, button')]
         .find(node => node.textContent.replace(/\s/g, '') === '사용자설정');
       if (custom) {
-        let info = dateForm.querySelector('.linq-static-period-info');
+        const existingInfo = [...dateForm.querySelectorAll('.linq-static-period-info, .linq-review-period-info-button')];
+        let info = existingInfo.shift();
+        existingInfo.forEach(node => node.remove());
         if (!info) {
           info = doc.createElement('button');
           info.type = 'button';
-          info.className = 'linq-static-period-info';
           info.textContent = 'i';
-          custom.parentElement.insertBefore(info, custom);
         }
+        info.className = 'linq-static-period-info';
+        custom.parentElement.insertBefore(info, custom);
         const helpText = '사용자설정 조회 가능 기간은 서버 기준 확인이 필요합니다.';
         info.title = helpText;
         info.setAttribute('aria-label', helpText);
       }
     }
     doc.querySelectorAll('.linq-review-period-help').forEach(node => node.remove());
+
+    const analysisSide = doc.querySelector('.requirements-prototype-side .analysis-menu-list');
+    if (analysisSide) {
+      [...analysisSide.querySelectorAll('.side-item')].forEach(item => {
+        const label = item.querySelector('em') || item;
+        const text = label.textContent.replace(/\s/g, '');
+        if (text === '엔진') label.textContent = '엔진 연비';
+        if (text === '리튬배터리') label.textContent = '배터리';
+        if (text === '수소배터리') item.remove();
+      });
+    }
 
     if (!doc.querySelector('style[data-static-requirement-chrome]')) {
       const style = doc.createElement('style');
@@ -254,6 +268,18 @@
     }
   }
 
+  function applyStaticPageCleanup(doc) {
+    const removableHeadings = new Set(['장비점검 목록', '소모품 도래']);
+    [...doc.querySelectorAll('.section-top__text')].forEach(title => {
+      if (!removableHeadings.has(title.textContent.trim())) return;
+      const sectionTop = title.closest('.section-top');
+      title.remove();
+      if (sectionTop && !sectionTop.textContent.trim() && !sectionTop.querySelector('button, input, select, a')) {
+        sectionTop.remove();
+      }
+    });
+  }
+
   function applyStaticDashboardLayout(doc) {
     const layout = doc.querySelector('.vue-grid-layout');
     if (!layout) return;
@@ -274,57 +300,8 @@
   }
 
   function applyStaticOperationEfficiency(doc) {
-    const customChart = doc.querySelector('.linq-review-efficiency-chart');
-    if (!customChart) return;
-    doc.querySelectorAll('.linq-review-period-metrics').forEach(node => node.remove());
-
-    const rows = [
-      [0.2,36.4,63.3],[1.0,0.1,98.7],[0,0,0],[17.9,2.4,79.5],[63.5,7.9,28.5],[17.7,4.9,77.3],
-      [15.2,2.9,81.7],[9.3,6.4,84.1],[12.6,0.8,86.4],[43.1,27.6,29.2],[43.1,25.2,31.5],[40.0,24.4,35.4],
-      ...Array.from({length:19}, () => [0,0,0]),
-    ];
-    const bars = rows.map((values, index) => {
-      const [workRate, idleRate, offRate] = values;
-      const x = 58 + index * 29.5;
-      const usableHeight = 164;
-      const work = usableHeight * workRate / 100;
-      const idle = usableHeight * idleRate / 100;
-      const off = usableHeight * offRate / 100;
-      const bottom = 204;
-      const workY = bottom - work;
-      const idleY = workY - idle;
-      const offY = idleY - off;
-      const day = index + 1;
-      return `<g tabindex="0" role="img" aria-label="8월 ${day}일 작업 ${workRate}%, 대기 ${idleRate}%, 미사용 ${offRate}%">
-        <title>8월 ${day}일 · 작업 ${workRate}% · 대기 ${idleRate}% · 미사용 ${offRate}%</title>
-        <rect x="${x}" y="${workY}" width="18" height="${work}" fill="#8aabbd"/>
-        <rect x="${x}" y="${idleY}" width="18" height="${idle}" fill="#d4dfe5"/>
-        <rect x="${x}" y="${offY}" width="18" height="${off}" fill="#c9c9c9"/>
-        <text x="${x + 9}" y="226" text-anchor="middle">${day}</text>
-      </g>`;
-    }).join('');
-    const restored = doc.createElement('div');
-    restored.className = 'linq-static-efficiency-restored';
-    restored.setAttribute('role', 'img');
-    restored.setAttribute('aria-label', '1일부터 31일까지 작업시간, 대기시간, 미사용시간을 표시한 운영효율 차트');
-    restored.innerHTML = `<svg viewBox="0 0 1000 245" preserveAspectRatio="none" aria-hidden="true">
-      <g class="grid"><line x1="48" y1="40" x2="982" y2="40"/><line x1="48" y1="81" x2="982" y2="81"/><line x1="48" y1="122" x2="982" y2="122"/><line x1="48" y1="163" x2="982" y2="163"/><line x1="48" y1="204" x2="982" y2="204"/></g>
-      <g class="axis"><text x="8" y="44">100</text><text x="18" y="85">75</text><text x="18" y="126">50</text><text x="18" y="167">25</text><text x="26" y="208">0</text></g>
-      ${bars}
-    </svg>`;
-    customChart.replaceWith(restored);
-
-    if (!doc.querySelector('style[data-static-operation-efficiency]')) {
-      const style = doc.createElement('style');
-      style.dataset.staticOperationEfficiency = '';
-      style.textContent = `
-        .linq-static-efficiency-restored { width:100%; height:280rem; padding:10rem 24rem 0; box-sizing:border-box; }
-        .linq-static-efficiency-restored svg { display:block; width:100%; height:100%; overflow:visible; }
-        .linq-static-efficiency-restored .grid line { stroke:#e1e4e7; stroke-width:1; }
-        .linq-static-efficiency-restored text { fill:#5e646a; font-family:inherit; font-size:11px; }
-      `;
-      doc.head.append(style);
-    }
+    doc.querySelector('.linq-static-efficiency-restored')?.remove();
+    doc.querySelectorAll('style[data-static-operation-efficiency]').forEach(style => style.remove());
   }
 
   function applyStaticBatteryLayout(doc, route) {
@@ -399,6 +376,7 @@
       frame.addEventListener('load', () => {
         try { applyStaticRequirementChrome(frame.contentDocument); } catch (_error) {}
         try { applyStaticServiceCounts(frame.contentDocument); } catch (_error) {}
+        try { applyStaticPageCleanup(frame.contentDocument); } catch (_error) {}
         if (reviewScreen === 'dashboard') {
           try { applyStaticDashboardLayout(frame.contentDocument); } catch (_error) {}
         }

@@ -233,6 +233,36 @@ html[lang="en"] .fuel-legend::before { content:"Power Type"; }
 .compact-card__info strong,.compact-card__metrics strong { display:block; max-width:220px; overflow:hidden; color:#111; font-size:13px; line-height:18px; text-overflow:ellipsis; white-space:nowrap; }
 .compact-card__metrics .period-basis { display:inline-flex; align-items:center; margin-left:5px; padding:0 4px; color:#777d87; font-size:9px; font-weight:600; line-height:14px; white-space:nowrap; vertical-align:1px; border:1px solid #d9dce1; border-radius:3px; background:#f7f8f9; }
 
+/* 배터리 통합 목록: 기존 리튬/수소 목록을 한 화면에서 각각의 표 구조로 유지 */
+.battery-combined-list { display:grid; gap:34px; }
+.battery-list-section { min-width:0; }
+.battery-list-section__head { display:flex; min-height:48px; align-items:center; gap:12px; border-bottom:1px solid #111; }
+.battery-list-section__head h4 { margin:0; font-size:22px; }
+.battery-list-section__head>span { color:#777; font-size:13px; }
+.battery-list-section__head label { display:inline-flex; align-items:center; gap:7px; margin-left:auto; color:#555; font-size:13px; }
+.battery-table { overflow:hidden; }
+.battery-table table { width:100%; table-layout:fixed; border-collapse:collapse; }
+.battery-table th,.battery-table td { height:58px; padding:8px 12px; text-align:center; vertical-align:middle; border-right:1px solid #e6e6e6; border-bottom:1px solid #ddd; }
+.battery-table th { height:52px; color:#111; background:#f8f8f8; font-size:14px; }
+.battery-table th:last-child,.battery-table td:last-child { border-right:0; }
+.battery-table th:nth-child(1) { width:16%; }
+.battery-table th:nth-child(2) { width:15%; }
+.battery-table th:nth-child(3) { width:11%; }
+.battery-table th:nth-child(4),.battery-table th:nth-child(5) { width:14%; }
+.battery-table th:nth-child(6) { width:10%; }
+.battery-table th:nth-child(7) { width:20%; }
+.battery-table.hydrogen th:nth-child(1) { width:18%; }
+.battery-table.hydrogen th:nth-child(2) { width:18%; }
+.battery-table.hydrogen th:nth-child(3),.battery-table.hydrogen th:nth-child(4),.battery-table.hydrogen th:nth-child(5) { width:14%; }
+.battery-table.hydrogen th:nth-child(6) { width:22%; }
+.battery-level { display:inline-block; position:relative; width:58px; height:24px; margin-right:8px; padding:3px; vertical-align:middle; border:1px solid #bbb; border-radius:3px; background:#f5f5f5; box-sizing:border-box; }
+.battery-level::after { position:absolute; top:7px; right:-5px; width:4px; height:9px; border-radius:0 2px 2px 0; background:#bbb; content:""; }
+.battery-level i { display:grid; height:100%; place-items:center; min-width:0; color:#fff; background:#14923b; font-style:normal; font-size:10px; }
+.battery-state-list { display:flex; align-items:center; justify-content:space-around; gap:12px; color:#555; white-space:nowrap; }
+.battery-state-list b { margin-left:4px; color:#138b3a; }
+.battery-state-list i { margin-left:4px; color:#888; font-style:normal; }
+.battery-state-list.hydrogen { justify-content:center; gap:28px; }
+
 
 .page-foot { display:grid; grid-template-columns:300px 1fr 320px; align-items:center; min-height:130px; padding:30px 40px; color:#fff; background:#333; }
 .page-foot strong { font-size:22px; }.page-foot strong span { font-size:15px; font-weight:300; }

@@ -16,17 +16,43 @@
 }
 
 .linq-review-period-help { display: none !important; }
-.linq-review-period-info { position: relative !important; }
-.linq-review-period-info::after {
-  position: absolute;
-  top: 50%;
-  right: 6px;
-  color: #777;
-  font-size: 12px;
-  font-weight: 700;
-  line-height: 1;
-  content: '\24D8';
-  transform: translateY(-50%);
+.linq-review-period-info::after { content: none !important; }
+.linq-review-period-info-button {
+  position: relative !important;
+  z-index: 2 !important;
+  display: inline-grid !important;
+  flex: 0 0 22rem !important;
+  width: 22rem !important;
+  height: 22rem !important;
+  margin: 0 6rem 0 0 !important;
+  padding: 0 !important;
+  place-items: center !important;
+  color: #666 !important;
+  border: 1px solid #999 !important;
+  border-radius: 50% !important;
+  background: #fff !important;
+  font: 700 12rem/1 Arial, sans-serif !important;
+  cursor: help !important;
+  pointer-events: auto !important;
+}
+
+.content-head.linq-review-title-filter-row {
+  display: flex !important;
+  width: 100% !important;
+  min-height: 72rem !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 24rem !important;
+}
+
+.content-head.linq-review-title-filter-row > .content-head__main {
+  flex: 0 0 auto !important;
+  min-width: 0 !important;
+}
+
+.content-head.linq-review-title-filter-row > .filter-form {
+  flex: 0 0 auto !important;
+  margin: 0 0 0 auto !important;
 }
 
 .linq-review-marker:hover,
@@ -497,7 +523,7 @@ table[data-review-service-applied="true"] [data-review-wrap="true"] { white-spac
   top: -3px;
   left: 0;
   color: #666;
-  font-size: 10px;
+  font-size: 12px;
 }
 .linq-review-month-chart__y {
   display: flex;
@@ -507,7 +533,7 @@ table[data-review-service-applied="true"] [data-review-wrap="true"] { white-spac
   padding-right: 7px;
   color: #777;
   border-right: 1px solid #aaa;
-  font-size: 9px;
+  font-size: 11px;
   text-align: right;
 }
 .linq-review-month-chart__plot {
@@ -567,7 +593,7 @@ table[data-review-service-applied="true"] [data-review-wrap="true"] { white-spac
   grid-template-columns: repeat(31, minmax(0, 1fr));
   padding: 5px 4px 0;
   color: #777;
-  font-size: 8px;
+  font-size: 10px;
   text-align: center;
 }
 .linq-review-month-chart__x-label { grid-column: 2; color: #777; font-size: 10px; text-align: right; }
@@ -973,7 +999,7 @@ body.linq-review-map-fullscreen .linq-review-map-card.linq-review-map-widget-ful
   padding: 0 10px 8px;
   color: #666;
   border-bottom: 1px solid #d8d8d8;
-  font-size: 13px;
+  font-size: 14px;
   box-sizing: border-box;
 }
 .linq-review-efficiency-scale > div {
@@ -1030,7 +1056,7 @@ body.linq-review-map-fullscreen .linq-review-map-card.linq-review-map-widget-ful
   gap: 8px;
   min-width: 0;
   padding: 0 12px;
-  font-size: 13px;
+  font-size: 14px;
   text-align: center;
   box-sizing: border-box;
 }
@@ -1043,7 +1069,7 @@ body.linq-review-map-fullscreen .linq-review-map-card.linq-review-map-widget-ful
 .linq-review-efficiency-values b { color: #222; font-weight: 700; }
 .linq-review-efficiency-time {
   color: #222;
-  font-size: 13px;
+  font-size: 14px;
   text-align: right;
   white-space: nowrap;
 }
