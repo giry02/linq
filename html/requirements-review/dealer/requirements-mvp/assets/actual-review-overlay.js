@@ -293,6 +293,7 @@
     });
       serviceTabs.setAttribute('aria-label', '\uc11c\ube44\uc2a4 \ud604\ud669 \uc694\uc57d');
     }
+    serviceTabs.classList.add('linq-review-service-summary-in-side');
     const content = serviceTabs.closest('.content-body');
     const sectionTop = content ? [...content.children].find(node => node.classList?.contains('section-top')) : null;
     if (sectionTop && !serviceTabs.closest('.linq-review-service-toolbar-row')) {
@@ -301,7 +302,42 @@
       content.insertBefore(toolbarRow, serviceTabs);
       toolbarRow.append(serviceTabs, sectionTop);
     }
+    mountServiceCountsInSide();
     return {serviceTabs, errorSummary};
+  }
+
+  function mountServiceCountsInSide() {
+    if (!location.pathname.includes('/srvc/')) return;
+    const serviceTabs = document.querySelector('.srvc-tab');
+    const side = document.querySelector('.requirements-prototype-side .analysis-menu-list');
+    if (!serviceTabs || !side) return;
+    let storedCounts = {};
+    try { storedCounts = JSON.parse(sessionStorage.getItem('linqReviewServiceCounts') || '{}'); } catch (_error) {}
+    const counts = {};
+    serviceTabs.querySelectorAll('.srvc-tab__item[data-icon]').forEach(item => {
+      const icon = item.dataset.icon;
+      const current = Number(item.querySelector('.srvc-tab__count')?.textContent.replace(/[^0-9]/g, '')) || 0;
+      counts[icon] = current || Number(storedCounts[icon]) || 0;
+    });
+    const fallbackCounts = {maintenance: 3, supplies: 1, error: 3};
+    [
+      {label: '정비이력', icon: 'maintenance'},
+      {label: '소모품관리', icon: 'supplies'},
+      {label: '차량에러', icon: 'error'},
+    ].forEach(({label, icon}) => {
+      const item = [...side.querySelectorAll('.side-item')]
+        .find(button => button.textContent.replace(/\s/g, '').includes(label));
+      const text = item?.querySelector('em');
+      if (!text) return;
+      let badge = text.querySelector('.linq-review-side-count');
+      if (!badge) {
+        badge = document.createElement('span');
+        badge.className = 'linq-review-side-count';
+        text.append(badge);
+      }
+      badge.textContent = String(counts[icon] || fallbackCounts[icon]);
+      badge.setAttribute('aria-label', `${label} ${badge.textContent}건`);
+    });
   }
 
   function syncServiceSummaryCount(content) {
@@ -318,6 +354,7 @@
       stored[icon] = rows.length;
       sessionStorage.setItem('linqReviewServiceCounts', JSON.stringify(stored));
     } catch (_error) {}
+    mountServiceCountsInSide();
   }
 
   function applyDealerServiceErrors(content) {

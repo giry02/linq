@@ -119,8 +119,8 @@ const OPTION3_ACTUAL_VEHICLES = [
 const OPTION3_ACTUAL_TOTALS = {operatingTotal:102,engine:42,lead:22,lithium:38,hydrogen:0,operatingRate:187.1,efficiencyRate:55.1,shockCnt:3217,distance:4664,operatingTime:"16,663H",fuelConsumption:"4.2L/h",batteryConsumption:"0.7kWh"};
 
 const SECTIONS = {
-  summary:"요약정보", usage:"사용시간", efficiency:"운영효율", shock:"충격", engine:"엔진",
-  lithium:"리튬배터리", hydrogen:"수소배터리", lead:"납축배터리", supplies:"소모품관리", errors:"차량에러",
+  summary:"요약정보", usage:"사용시간", efficiency:"운영효율", shock:"충격", engine:"엔진 연비",
+  battery:"배터리", lithium:"리튬배터리", hydrogen:"수소배터리", lead:"납축배터리", supplies:"소모품관리", errors:"차량에러",
 };
 
 const state = {
@@ -240,16 +240,17 @@ function renderGlobalVehicleSearch(){
       : '<p class="vehicle-result-empty">입력한 차량번호와 일치하는 차량이 없습니다.</p>';
 }
 
-function aggregate(){const list=companyVehicles().length?companyVehicles():availableVehicles();const avg=k=>list.reduce((a,v)=>a+v[k],0)/list.length;return{operatingRate:avg('operatingRate'),efficiencyRate:avg('efficiencyRate'),shockCnt:list.reduce((a,v)=>a+v.shockCnt,0),distance:list.reduce((a,v)=>a+v.distance,0),operatingTime:`${Math.round(list.reduce((a,v)=>a+parseFloat(v.operatingTime),0))}H`,batteryRate:avg('batteryRate')};}
+function aggregate(sourceList){const list=sourceList?.length?sourceList:(companyVehicles().length?companyVehicles():availableVehicles());const avg=k=>list.reduce((a,v)=>a+(Number(v[k])||0),0)/list.length;return{operatingRate:avg('operatingRate'),efficiencyRate:avg('efficiencyRate'),shockCnt:list.reduce((a,v)=>a+v.shockCnt,0),distance:list.reduce((a,v)=>a+v.distance,0),operatingTime:`${Math.round(list.reduce((a,v)=>a+parseFloat(v.operatingTime),0))}H`,batteryRate:avg('batteryRate')};}
 function renderSummary(){
   const compact=isCompactList();
-  const useActualOverall=compact&&state.companyId==='all'&&!selectedVehicle();
-  const s=useActualOverall?OPTION3_ACTUAL_TOTALS:selectedVehicle()||aggregate();
-  const count=companyVehicles();
+  const batteryMode=state.section==='battery';
+  const count=sectionVehicles(companyVehicles());
+  const useActualOverall=compact&&state.companyId==='all'&&!selectedVehicle()&&!batteryMode;
+  const s=useActualOverall?OPTION3_ACTUAL_TOTALS:selectedVehicle()||aggregate(count);
   const counts=useActualOverall
     ? {엔진:OPTION3_ACTUAL_TOTALS.engine,납축:OPTION3_ACTUAL_TOTALS.lead,리튬:OPTION3_ACTUAL_TOTALS.lithium,수소:OPTION3_ACTUAL_TOTALS.hydrogen+1}
     : {엔진:count.filter(v=>v.fuel==='엔진').length,납축:count.filter(v=>v.fuel==='납축').length,리튬:count.filter(v=>v.fuel==='리튬').length,수소:count.filter(v=>v.fuel==='수소').length};
-  const vehicleText=selectedVehicle()?`${s.model} (${s.id})`:compact?`엔진 ${counts.엔진}대 / 납축 ${counts.납축}대 / 리튬 ${counts.리튬}대 / 수소 ${counts.수소}대`:`엔진 ${counts.엔진} 대 / 납축 ${counts.납축} 대 / 리튬 ${counts.리튬} 대 / 수소 ${counts.수소} 대`;
+  const vehicleText=selectedVehicle()?`${s.model} (${s.id})`:batteryMode?`리튬 ${counts.리튬}대 / 수소 ${counts.수소}대`:compact?`엔진 ${counts.엔진}대 / 납축 ${counts.납축}대 / 리튬 ${counts.리튬}대 / 수소 ${counts.수소}대`:`엔진 ${counts.엔진} 대 / 납축 ${counts.납축} 대 / 리튬 ${counts.리튬} 대 / 수소 ${counts.수소} 대`;
   const distanceText=compact?`${s.distance.toLocaleString()}km`:`${s.distance}Km`;
   const engineVehicles=count.filter(v=>v.fuel==='엔진'&&Number.isFinite(parseFloat(v.fuelConsumption)));
   const batteryVehicles=count.filter(v=>(v.fuel==='리튬'||v.fuel==='납축')&&Number.isFinite(parseFloat(v.fuelConsumption)));
@@ -263,7 +264,8 @@ function renderSummary(){
   $('#summary-table').innerHTML=`<table${compact?' class="summary-one-line"':''}><thead><tr><th>차량</th><th>운영률</th><th>운영효율</th><th>충격 횟수</th><th>거리</th><th>시간</th><th>평균연료소비량</th><th>평균배터리소비량</th></tr></thead><tbody><tr><td>${vehicleText}</td><td>${s.operatingRate.toFixed(1)}%</td><td>${s.efficiencyRate.toFixed(1)}%</td><td>${s.shockCnt}</td><td>${distanceText}</td><td>${s.operatingTime}</td><td>${fuelText}</td><td>${batteryText}</td></tr></tbody></table>`;
 }
 
-function renderCards(){const list=selectedVehicle()?[selectedVehicle()]:companyVehicles();if(isCompactList()){renderCompactCards(list);return;}$('#vehicle-cards').innerHTML=list.map(v=>`<section class="content-section"><div class="content-section__container"><div class="goods-summary"><div class="goods-summary__image"><img src="../assets/images/B20253032S7.jpg" alt="${v.model}"><button class="goods-summary__location" type="button" aria-label="위치찾기">⌖</button></div><div class="goods-summary__data"><div class="goods-summary__simple"><em>${v.model} (${v.id})</em></div><div class="goods-summary__detail">${detail(v)}</div></div></div></div></section>`).join('');}
+function sectionVehicles(list){return state.section==='battery'?list.filter(v=>v.fuel==='리튬'||v.fuel==='수소'):list;}
+function renderCards(){const list=sectionVehicles(selectedVehicle()?[selectedVehicle()]:companyVehicles());if(isCompactList()){renderCompactCards(list);return;}$('#vehicle-cards').innerHTML=list.map(v=>`<section class="content-section"><div class="content-section__container"><div class="goods-summary"><div class="goods-summary__image"><img src="../assets/images/B20253032S7.jpg" alt="${v.model}"><button class="goods-summary__location" type="button" aria-label="위치찾기">⌖</button></div><div class="goods-summary__data"><div class="goods-summary__simple"><em>${v.model} (${v.id})</em></div><div class="goods-summary__detail">${detail(v)}</div></div></div></div></section>`).join('');}
 function renderCompactCards(list){
   const remaining=[...list];
   const representatives=['리튬','엔진','납축','수소'].map(f=>{
@@ -271,14 +273,17 @@ function renderCompactCards(list){
     return index<0?null:remaining.splice(index,1)[0];
   }).filter(Boolean);
   const ordered=[...representatives,...remaining];
-  const listLabel=state.companyId==='all'&&!selectedVehicle()
+  const listLabel=state.section==='battery'
+    ? `배터리 차량 ${ordered.length}대 <small>리튬·수소 통합 목록</small>`
+    : state.companyId==='all'&&!selectedVehicle()
     ? `차량 상세 ${ordered.length}대 <small>운영 전체 ${OPTION3_ACTUAL_TOTALS.operatingTotal}대</small>`
     : `${selectedVehicle()?'선택 차량':'차량'} ${ordered.length}대`;
+  const legendTypes=state.section==='battery'?['리튬','수소']:['엔진','리튬','납축','수소'];
   $('#vehicle-cards').innerHTML=`
     <div class="compact-list-head">
       <strong>${listLabel}</strong>
       <div class="fuel-legend" aria-label="동력 유형">
-        ${['엔진','리튬','납축','수소'].map(f=>`<span><i class="fuel-icon ${fuelClass(f)}">${fuelIconSvg(f)}</i>${f}</span>`).join('')}
+        ${legendTypes.map(f=>`<span><i class="fuel-icon ${fuelClass(f)}">${fuelIconSvg(f)}</i>${f}</span>`).join('')}
       </div>
     </div>
     <div class="compact-card-list">
@@ -296,7 +301,9 @@ function compactCard(v,index){
   const energyAvailable=Number.isFinite(energyRate);
   const serial=(v.id.replace(/\D/g,'').slice(-8)||String(index+1)).padStart(8,'0');
   const periodBasis=state.period==='사용자설정'?'설정 기간 기준':`${state.period} 기준`;
-  const sectionStatus=state.section!=='summary'&&v[state.section]?`<div><span>${SECTIONS[state.section]}</span><strong>${v[state.section].value}</strong></div>`:'';
+  const sectionItem=state.section==='battery'?(v.fuel==='수소'?v.hydrogen:v.lithium):v[state.section];
+  const sectionLabel=state.section==='battery'?`${v.fuel} 배터리 상태`:SECTIONS[state.section];
+  const sectionStatus=state.section!=='summary'&&sectionItem?`<div><span>${sectionLabel}</span><strong>${sectionItem.value}</strong></div>`:'';
   return `<article class="compact-vehicle-card ${fuelClass(v.fuel)}">
     <div class="compact-card__icon"><i class="fuel-icon ${fuelClass(v.fuel)}">${fuelIconSvg(v.fuel)}</i></div>
     <div class="compact-card__body">

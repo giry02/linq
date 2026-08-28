@@ -973,7 +973,7 @@ body.linq-review-map-fullscreen .linq-review-map-card.linq-review-map-widget-ful
   padding: 0 10px 8px;
   color: #666;
   border-bottom: 1px solid #d8d8d8;
-  font-size: 11px;
+  font-size: 13px;
   box-sizing: border-box;
 }
 .linq-review-efficiency-scale > div {
@@ -1030,7 +1030,7 @@ body.linq-review-map-fullscreen .linq-review-map-card.linq-review-map-widget-ful
   gap: 8px;
   min-width: 0;
   padding: 0 12px;
-  font-size: 11px;
+  font-size: 13px;
   text-align: center;
   box-sizing: border-box;
 }
@@ -1043,7 +1043,7 @@ body.linq-review-map-fullscreen .linq-review-map-card.linq-review-map-widget-ful
 .linq-review-efficiency-values b { color: #222; font-weight: 700; }
 .linq-review-efficiency-time {
   color: #222;
-  font-size: 12px;
+  font-size: 13px;
   text-align: right;
   white-space: nowrap;
 }
@@ -1058,8 +1058,97 @@ body.linq-review-map-fullscreen .linq-review-map-card.linq-review-map-widget-ful
     grid-template-columns: 42px minmax(180px, 1fr) minmax(230px, 270px) 78px;
     gap: 9px;
   }
-  .linq-review-efficiency-values { gap: 5px; font-size: 10px; }
-  .linq-review-efficiency-time { font-size: 11px; }
+  .linq-review-efficiency-values { gap: 5px; font-size: 12px; }
+  .linq-review-efficiency-time { font-size: 12px; }
+}
+
+.srvc-tab.linq-review-service-summary-in-side {
+  display: none !important;
+}
+.requirements-prototype-side .side-item em {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10rem;
+  width: 100%;
+}
+.requirements-prototype-side .linq-review-side-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 24rem;
+  height: 24rem;
+  padding: 0 6rem;
+  color: #ff3600;
+  border-radius: 12rem;
+  background: #fff1ed;
+  font-size: 13rem;
+  font-weight: 800;
+  line-height: 1;
+  box-sizing: border-box;
+}
+.requirements-prototype-side .side-item.active .linq-review-side-count {
+  color: #ff3600;
+  background: #fff;
+}
+
+.linq-static-chart-host {
+  position: relative !important;
+  overflow: hidden !important;
+}
+.linq-static-chart-host > div:not(.linq-static-chart-fallback) {
+  visibility: hidden !important;
+}
+.linq-static-chart-fallback {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 8px 10px 4px;
+  background: #fff;
+  box-sizing: border-box;
+}
+.linq-static-chart-fallback svg { display: block; width: 100%; height: 100%; overflow: visible; }
+.linq-static-chart-fallback .grid line { stroke: #e1e4e7; stroke-width: 1; }
+.linq-static-chart-fallback text { fill: #5e646a; font-family: inherit; font-size: 11px; }
+.linq-static-chart-fallback text.value { fill: #222; font-size: 10px; font-weight: 700; }
+.linq-static-dashboard-fallback {
+  display: grid;
+  grid-template-columns: 132px minmax(0, 1fr);
+  align-items: center;
+  gap: 18px;
+  padding: 16px 18px;
+}
+.linq-static-dashboard-fallback__ring {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 116px;
+  height: 116px;
+  border-radius: 50%;
+  background: conic-gradient(#445b72 0 40.8%, #f0a64a 40.8% 62.1%, #21a179 62.1% 99%, #4aa7d8 99% 100%);
+}
+.linq-static-dashboard-fallback__ring::before { position: absolute; inset: 23px; border-radius: 50%; background: #fff; content: ''; }
+.linq-static-dashboard-fallback__ring strong,
+.linq-static-dashboard-fallback__ring span { position: relative; z-index: 1; }
+.linq-static-dashboard-fallback__ring strong { color: #111; font-size: 23px; }
+.linq-static-dashboard-fallback__ring span { color: #777; font-size: 11px; }
+.linq-static-dashboard-fallback ul { margin: 0; padding: 0; list-style: none; }
+.linq-static-dashboard-fallback li { display: grid; grid-template-columns: 10px 1fr auto; align-items: center; gap: 8px; min-height: 28px; border-bottom: 1px solid #eee; }
+.linq-static-dashboard-fallback li:last-child { border-bottom: 0; }
+.linq-static-dashboard-fallback li i { width: 8px; height: 8px; border-radius: 50%; background: #445b72; }
+.linq-static-dashboard-fallback li i.lead { background: #f0a64a; }
+.linq-static-dashboard-fallback li i.lithium { background: #21a179; }
+.linq-static-dashboard-fallback li i.hydrogen { background: #4aa7d8; }
+.linq-static-dashboard-fallback li span { color: #555; font-size: 12px; }
+.linq-static-dashboard-fallback li b { color: #111; font-size: 13px; }
+
+.linq-review-fuel-fallback__dates {
+  font-size: 12px;
 }
 
 /* Engine fuel chart fallback: shown only in the requirements-review copy when

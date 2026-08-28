@@ -343,6 +343,7 @@
       serviceTabs.setAttribute('aria-label', '서비스 현황 요약');
     }
     if (screen === 'service-errors') markReview(errorSummary, 'R-SVC-006');
+    serviceTabs.classList.add('linq-review-service-summary-in-side');
     const content = serviceTabs.closest('.content-body');
     const sectionTop = content ? [...content.children].find(node => node.classList?.contains('section-top')) : null;
     if (sectionTop && !serviceTabs.closest('.linq-review-service-toolbar-row')) {
@@ -351,7 +352,44 @@
       content.insertBefore(toolbarRow, serviceTabs);
       toolbarRow.append(serviceTabs, sectionTop);
     }
+    mountServiceCountsInSide();
     return {serviceTabs, errorSummary};
+  }
+
+  function mountServiceCountsInSide() {
+    if (!location.pathname.includes('/srvc/')) return;
+    const serviceTabs = document.querySelector('.srvc-tab');
+    const side = document.querySelector('.requirements-prototype-side .analysis-menu-list');
+    if (!serviceTabs || !side) return;
+
+    let storedCounts = {};
+    try { storedCounts = JSON.parse(sessionStorage.getItem('linqReviewServiceCounts') || '{}'); } catch (_error) {}
+    const counts = {};
+    serviceTabs.querySelectorAll('.srvc-tab__item[data-icon]').forEach(item => {
+      const icon = item.dataset.icon;
+      const current = Number(item.querySelector('.srvc-tab__count')?.textContent.replace(/[^0-9]/g, '')) || 0;
+      counts[icon] = current || Number(storedCounts[icon]) || 0;
+    });
+    const fallbackCounts = {maintenance: 2, supplies: 25, error: 9};
+    const menuIcons = [
+      {label: '정비이력', icon: 'maintenance'},
+      {label: '소모품관리', icon: 'supplies'},
+      {label: '차량에러', icon: 'error'},
+    ];
+    menuIcons.forEach(({label, icon}) => {
+      const item = [...side.querySelectorAll('.side-item')]
+        .find(button => button.textContent.replace(/\s/g, '').includes(label));
+      const text = item?.querySelector('em');
+      if (!text) return;
+      let badge = text.querySelector('.linq-review-side-count');
+      if (!badge) {
+        badge = document.createElement('span');
+        badge.className = 'linq-review-side-count';
+        text.append(badge);
+      }
+      badge.textContent = String(counts[icon] || fallbackCounts[icon]);
+      badge.setAttribute('aria-label', `${label} ${badge.textContent}건`);
+    });
   }
 
   function syncServiceSummaryCount(content) {
@@ -372,6 +410,7 @@
       stored[icon] = rows.length;
       sessionStorage.setItem('linqReviewServiceCounts', JSON.stringify(stored));
     } catch (_error) {}
+    mountServiceCountsInSide();
   }
 
   function applyServiceErrors(content) {
@@ -982,6 +1021,94 @@
     host.insertBefore(chart, host.firstChild);
   }
 
+  function serializedEfficiencyChart() {
+    const bars = operationEfficiencyRows.map((row, index) => {
+      const x = 58 + index * 29.5;
+      const usableHeight = 164;
+      const work = usableHeight * row.workingRate / 100;
+      const idle = usableHeight * row.idleRate / 100;
+      const off = usableHeight * row.offRate / 100;
+      const bottom = 204;
+      const workY = bottom - work;
+      const idleY = workY - idle;
+      const offY = idleY - off;
+      const day = index + 1;
+      return `<g tabindex="0" role="img" aria-label="8월 ${day}일 작업 ${row.workingRate.toFixed(1)}%, 대기 ${row.idleRate.toFixed(1)}%, 미사용 ${row.offRate.toFixed(1)}%">
+        <title>8월 ${day}일 · 작업 ${row.workingRate.toFixed(1)}% · 대기 ${row.idleRate.toFixed(1)}% · 미사용 ${row.offRate.toFixed(1)}%</title>
+        <rect x="${x}" y="${workY}" width="18" height="${work}" fill="#8aabbd" rx="1"/>
+        <rect x="${x}" y="${idleY}" width="18" height="${idle}" fill="#d4dfe5" rx="1"/>
+        <rect x="${x}" y="${offY}" width="18" height="${off}" fill="#c9c9c9" rx="1"/>
+        <text x="${x + 9}" y="226" text-anchor="middle">${day}</text>
+      </g>`;
+    }).join('');
+    return `<div class="linq-static-chart-fallback linq-static-efficiency-fallback" role="img" aria-label="1일부터 31일까지 운영효율 차트">
+      <svg viewBox="0 0 1000 245" preserveAspectRatio="none" aria-hidden="true">
+        <g class="grid"><line x1="48" y1="40" x2="982" y2="40"/><line x1="48" y1="81" x2="982" y2="81"/><line x1="48" y1="122" x2="982" y2="122"/><line x1="48" y1="163" x2="982" y2="163"/><line x1="48" y1="204" x2="982" y2="204"/></g>
+        <g class="axis"><text x="8" y="44">100</text><text x="18" y="85">75</text><text x="18" y="126">50</text><text x="18" y="167">25</text><text x="26" y="208">0</text></g>
+        ${bars}
+      </svg>
+    </div>`;
+  }
+
+  function serializedShockChart() {
+    const values = Array.from({length:31}, (_value, index) => index === 7 ? 1 : index === 11 ? 2 : 0);
+    const columns = values.map((value, index) => {
+      const x = 54 + index * 29.6;
+      const height = value * 64;
+      const day = index + 1;
+      return `<g tabindex="0" role="img" aria-label="8월 ${day}일 민감 충격 ${value}회">
+        <title>8월 ${day}일 · 민감 ${value}회 · 주의 0회 · 경고 0회</title>
+        <rect x="${x}" y="${300 - height}" width="18" height="${height}" rx="2" fill="#43a36b"/>
+        <text x="${x + 9}" y="324" text-anchor="middle">${day}</text>
+        ${value ? `<text x="${x + 9}" y="${290 - height}" text-anchor="middle" class="value">${value}</text>` : ''}
+      </g>`;
+    }).join('');
+    return `<div class="linq-static-chart-fallback linq-static-shock-fallback" role="img" aria-label="1일부터 31일까지 일별 충격 횟수 차트">
+      <svg viewBox="0 0 1000 350" preserveAspectRatio="none" aria-hidden="true">
+        <g class="grid"><line x1="44" y1="44" x2="982" y2="44"/><line x1="44" y1="108" x2="982" y2="108"/><line x1="44" y1="172" x2="982" y2="172"/><line x1="44" y1="236" x2="982" y2="236"/><line x1="44" y1="300" x2="982" y2="300"/></g>
+        <g class="axis"><text x="20" y="48">4</text><text x="20" y="112">3</text><text x="20" y="176">2</text><text x="20" y="240">1</text><text x="20" y="304">0</text></g>
+        ${columns}
+      </svg>
+    </div>`;
+  }
+
+  function serializedDashboardChart() {
+    return `<div class="linq-static-chart-fallback linq-static-dashboard-fallback" role="img" aria-label="보유 장비 동력 유형 분포. 엔진 42대, 납축 22대, 리튬 38대, 수소 1대">
+      <div class="linq-static-dashboard-fallback__ring"><strong>103</strong><span>전체 차량</span></div>
+      <ul><li><i class="engine"></i><span>엔진</span><b>42</b></li><li><i class="lead"></i><span>납축</span><b>22</b></li><li><i class="lithium"></i><span>리튬</span><b>38</b></li><li><i class="hydrogen"></i><span>수소</span><b>1</b></li></ul>
+    </div>`;
+  }
+
+  function mountSerializedCanvasFallbacks(content) {
+    if (!/\/requirements-mvp\/static\//.test(location.pathname)) return;
+    if (screen === 'operation-efficiency') {
+      const host = content.querySelector('.operate-top-group .content-section .content-section__body > div[style*="height: 200px"]');
+      if (host && !host.querySelector('.linq-static-chart-fallback')) {
+        host.classList.add('linq-static-chart-host');
+        host.insertAdjacentHTML('beforeend', serializedEfficiencyChart());
+      }
+    }
+    if (screen === 'operation-shock') {
+      const host = [...content.querySelectorAll('.content-section__body > div[style*="height: 500px"]')].find(node => node.querySelector('canvas'));
+      if (host && !host.querySelector('.linq-static-chart-fallback')) {
+        host.classList.add('linq-static-chart-host');
+        host.insertAdjacentHTML('beforeend', serializedShockChart());
+      }
+    }
+    if (screen === 'dashboard') {
+      const host = content.querySelector('.main-info__status > div[style*="width: 300px"][style*="height: 200px"]');
+      if (host && !host.querySelector('.linq-static-chart-fallback')) {
+        host.classList.add('linq-static-chart-host');
+        host.insertAdjacentHTML('beforeend', serializedDashboardChart());
+      }
+    }
+    if (screen === 'shock-horizontal') {
+      const chart = content.querySelector('.requirements-horizontal-chart');
+      const original = chart?.nextElementSibling;
+      if (original?.querySelector('canvas')) original.hidden = true;
+    }
+  }
+
   function ensureDashboardControls() {
     if (screen !== 'dashboard') return;
     if (document.querySelector('.linq-review-fullscreen-button')) return;
@@ -1064,6 +1191,7 @@
     if (screen === 'home-vehicles') applyHomeVehicles(content);
     if (screen === 'supplies-management') applySupplies(content);
     if (screen === 'shock-horizontal') applyShockHorizontal(content);
+    mountSerializedCanvasFallbacks(content);
     syncServiceSummaryCount(content);
     const needsRefine = document.body.dataset.reviewMarkersRefined !== 'true';
     if (needsRefine) {

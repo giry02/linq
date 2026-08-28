@@ -583,3 +583,32 @@ body.linq-review-dashboard-fullscreen .requirements-option3-dashboard-layout > .
   width: 100vw;
   min-height: 100vh;
 }
+.srvc-tab.linq-review-service-summary-in-side {
+  display: none !important;
+}
+.requirements-prototype-side .side-item em {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10rem;
+  width: 100%;
+}
+.requirements-prototype-side .linq-review-side-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 24rem;
+  height: 24rem;
+  padding: 0 6rem;
+  color: #ff3600;
+  border-radius: 12rem;
+  background: #fff1ed;
+  font-size: 13rem;
+  font-weight: 800;
+  line-height: 1;
+  box-sizing: border-box;
+}
+.requirements-prototype-side .side-item.active .linq-review-side-count {
+  color: #ff3600;
+  background: #fff;
+}
