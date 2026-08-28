@@ -162,7 +162,8 @@
         status.hidden = true;
         frame.classList.add('is-ready');
       }, {once:true});
-      frame.src = `./static/${reviewScreen}.html?service=dealer&screen=${encodeURIComponent(reviewScreen)}`;
+      const previewVersion = query.get('v') || '20260828-4';
+      frame.src = `./static/${reviewScreen}.html?service=dealer&screen=${encodeURIComponent(reviewScreen)}&v=${encodeURIComponent(previewVersion)}`;
       return;
     }
     try {
