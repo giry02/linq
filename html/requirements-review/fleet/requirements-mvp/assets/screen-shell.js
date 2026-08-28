@@ -81,9 +81,14 @@
   function addReviewAssets(doc) {
     let currentRoute = requestedRoute;
     try { currentRoute = doc.defaultView.location.href; } catch (_error) {}
-    const previewRoute = normalizeRoute(currentRoute) || normalizeRoute(requestedRoute);
+    const normalizedCurrentRoute = normalizeRoute(currentRoute);
+    const previewRoute = /\/requirements-mvp\/static\//.test(normalizedCurrentRoute)
+      ? normalizeRoute(requestedRoute)
+      : normalizedCurrentRoute || normalizeRoute(requestedRoute);
+    const reviewScreen = reviewScreenForRoute(previewRoute);
     doc.defaultView.LINQ_REQUIREMENT_REVIEW = window.LINQ_REQUIREMENT_REVIEW;
-    doc.defaultView.LINQ_REVIEW_SCREEN = reviewScreenForRoute(previewRoute);
+    doc.defaultView.LINQ_REVIEW_SCREEN = reviewScreen;
+    doc.documentElement.dataset.linqReviewScreen = reviewScreen;
     if (!doc.querySelector('link[data-requirements-prototype-shell]')) {
       const style = doc.createElement('link');
       style.rel = 'stylesheet';
@@ -100,17 +105,24 @@
     }
     const reviewStyle = doc.querySelector('link[data-requirements-review]');
     if (reviewStyle) {
-      reviewStyle.href = '/requirements-mvp/assets/actual-review-overlay.css?v=20260828-2';
+      reviewStyle.href = '/requirements-mvp/assets/actual-review-overlay.css?v=20260828-4';
     } else {
       const style = doc.createElement('link');
       style.rel = 'stylesheet';
-      style.href = '/requirements-mvp/assets/actual-review-overlay.css?v=20260828-2';
+      style.href = '/requirements-mvp/assets/actual-review-overlay.css?v=20260828-4';
       style.dataset.requirementsReview = '';
       doc.head.append(style);
     }
-    if (!doc.querySelector('script[data-requirements-review]')) {
+    const existingReviewScript = doc.querySelector('script[data-requirements-review], script[src*="actual-review-overlay.js"]');
+    const currentReviewVersion = '20260828-16';
+    const existingReviewIsCurrent = existingReviewScript?.src.includes(`v=${currentReviewVersion}`);
+    if (doc.defaultView.__linqReviewOverlayMounted && existingReviewIsCurrent) {
+      if (existingReviewScript) existingReviewScript.dataset.requirementsReview = '';
+    } else {
+      doc.defaultView.__linqReviewOverlayMounted = false;
+      if (existingReviewScript) existingReviewScript.remove();
       const script = doc.createElement('script');
-    script.src = '/requirements-mvp/assets/actual-review-overlay.js?v=20260828-3';
+      script.src = `/requirements-mvp/assets/actual-review-overlay.js?v=${currentReviewVersion}`;
       script.async = false;
       script.dataset.requirementsReview = '';
       doc.head.append(script);
@@ -201,6 +213,7 @@
       const custom = [...dateForm.querySelectorAll('label, button')]
         .find(node => node.textContent.replace(/\s/g, '') === '사용자설정');
       if (custom) {
+        custom.parentElement.classList.add('linq-static-period-control-row');
         const existingInfo = [...dateForm.querySelectorAll('.linq-static-period-info, .linq-review-period-info-button')];
         let info = existingInfo.shift();
         existingInfo.forEach(node => node.remove());
@@ -216,14 +229,47 @@
         info.setAttribute('aria-label', helpText);
         if (info.dataset.periodInfoBound !== 'true') {
           info.dataset.periodInfoBound = 'true';
+          const popover = doc.createElement('div');
+          popover.className = 'linq-static-period-popover';
+          popover.textContent = helpText;
+          popover.hidden = true;
+          popover.setAttribute('role', 'tooltip');
+          popover.setAttribute('aria-hidden', 'true');
+          doc.body.append(popover);
+          const closePopover = () => {
+            info.classList.remove('is-open');
+            info.setAttribute('aria-expanded', 'false');
+            popover.hidden = true;
+            popover.setAttribute('aria-hidden', 'true');
+          };
+          const positionPopover = () => {
+            if (popover.hidden) return;
+            const rect = info.getBoundingClientRect();
+            const width = Math.min(360, Math.max(240, doc.defaultView.innerWidth - 32));
+            const left = Math.min(doc.defaultView.innerWidth - width - 16, Math.max(16, rect.right - width));
+            popover.style.width = `${width}px`;
+            popover.style.left = `${left}px`;
+            popover.style.top = `${rect.bottom + 8}px`;
+          };
+          info.setAttribute('aria-expanded', 'false');
           info.addEventListener('click', event => {
             event.preventDefault();
             event.stopPropagation();
-            info.classList.toggle('is-open');
+            if (!popover.hidden) {
+              closePopover();
+              return;
+            }
+            info.classList.add('is-open');
+            info.setAttribute('aria-expanded', 'true');
+            popover.hidden = false;
+            popover.setAttribute('aria-hidden', 'false');
+            positionPopover();
           });
           doc.addEventListener('click', event => {
-            if (!info.contains(event.target)) info.classList.remove('is-open');
+            if (!info.contains(event.target) && !popover.contains(event.target)) closePopover();
           });
+          doc.defaultView.addEventListener('resize', positionPopover);
+          doc.defaultView.addEventListener('scroll', positionPopover, true);
         }
       }
     }
@@ -250,7 +296,8 @@
         .linq-static-title-filter-row {
           display:flex !important;
           width:100% !important;
-          min-height:72rem !important;
+          min-height:48rem !important;
+          margin-bottom:8rem !important;
           align-items:center !important;
           justify-content:space-between !important;
           gap:24rem !important;
@@ -258,6 +305,7 @@
         .linq-static-title-filter-row > .content-head__main { flex:0 0 auto !important; min-width:0 !important; }
         .linq-static-title-filter-row > .filter-form { flex:0 0 auto !important; margin:0 0 0 auto !important; }
         .linq-static-title-filter-row .filter-form__body { display:flex !important; align-items:center !important; justify-content:flex-end !important; gap:0 !important; }
+        .linq-static-period-control-row { display:inline-flex !important; flex-wrap:nowrap !important; align-items:center !important; }
         .linq-static-period-info {
           position:relative !important;
           z-index:2 !important;
@@ -265,7 +313,7 @@
           flex:0 0 22rem !important;
           width:22rem !important;
           height:22rem !important;
-          margin:0 6rem 0 0 !important;
+          margin:0 0 0 6rem !important;
           padding:0 !important;
           place-items:center !important;
           color:#666 !important;
@@ -276,25 +324,22 @@
           cursor:help !important;
           pointer-events:auto !important;
         }
-        .linq-static-period-info.is-open::after {
-          position:absolute;
-          z-index:10030;
-          top:calc(100% + 8rem);
-          right:0;
-          display:block;
-          width:max-content;
-          max-width:360rem;
-          padding:10rem 12rem;
+        .linq-static-period-info.is-open::after { content:none !important; }
+        .linq-static-period-popover {
+          position:fixed;
+          z-index:10040;
+          box-sizing:border-box;
+          padding:10px 12px;
           color:#333;
           border:1px solid #d8d8d8;
-          border-radius:4rem;
+          border-radius:4px;
           background:#fff;
-          box-shadow:0 4rem 14rem rgba(0,0,0,.14);
-          content:attr(aria-label);
-          font:400 13rem/1.5 Arial,sans-serif;
+          box-shadow:0 4px 14px rgba(0,0,0,.14);
+          font:400 13px/1.5 Arial,sans-serif;
           text-align:left;
           white-space:normal;
         }
+        .linq-static-period-popover[hidden] { display:none !important; }
       `;
       doc.head.append(style);
     }
@@ -405,7 +450,12 @@
         return;
       }
       setStatus('공개용 검토 화면을 불러오고 있습니다.');
-      frame.addEventListener('load', () => {
+      const handleStaticLoad = () => {
+        try {
+          if (!/\/requirements-mvp\/static\//.test(frame.contentWindow.location.pathname)) return;
+        } catch (_error) { return; }
+        frame.removeEventListener('load', handleStaticLoad);
+        try { addReviewAssets(frame.contentDocument); } catch (_error) {}
         try { applyStaticRequirementChrome(frame.contentDocument); } catch (_error) {}
         try { applyStaticServiceCounts(frame.contentDocument); } catch (_error) {}
         try { applyStaticPageCleanup(frame.contentDocument); } catch (_error) {}
@@ -420,7 +470,8 @@
         }
         status.hidden = true;
         frame.classList.add('is-ready');
-      }, {once:true});
+      };
+      frame.addEventListener('load', handleStaticLoad);
       frame.src = `./static/${reviewScreen}.html${location.search}`;
       return;
     }

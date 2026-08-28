@@ -24,7 +24,7 @@
   flex: 0 0 22rem !important;
   width: 22rem !important;
   height: 22rem !important;
-  margin: 0 6rem 0 0 !important;
+  margin: 0 0 0 6rem !important;
   padding: 0 !important;
   place-items: center !important;
   color: #666 !important;
@@ -36,30 +36,36 @@
   pointer-events: auto !important;
 }
 
-.linq-review-period-info-button.is-open::after {
-  position: absolute;
-  z-index: 10030;
-  top: calc(100% + 8rem);
-  right: 0;
-  display: block;
-  width: max-content;
-  max-width: 360rem;
-  padding: 10rem 12rem;
+.linq-review-period-info-button.is-open::after { content: none !important; }
+
+.linq-review-period-control-row {
+  display: inline-flex !important;
+  flex-wrap: nowrap !important;
+  align-items: center !important;
+}
+
+.linq-review-period-popover {
+  position: fixed;
+  z-index: 10040;
+  box-sizing: border-box;
+  padding: 10px 12px;
   color: #333;
   border: 1px solid #d8d8d8;
-  border-radius: 4rem;
+  border-radius: 4px;
   background: #fff;
-  box-shadow: 0 4rem 14rem rgba(0, 0, 0, .14);
-  content: attr(aria-label);
-  font: 400 13rem/1.5 Arial, sans-serif;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, .14);
+  font: 400 13px/1.5 Arial, sans-serif;
   text-align: left;
   white-space: normal;
 }
 
+.linq-review-period-popover[hidden] { display: none !important; }
+
 .content-head.linq-review-title-filter-row {
   display: flex !important;
   width: 100% !important;
-  min-height: 72rem !important;
+  min-height: 48rem !important;
+  margin-bottom: 8rem !important;
   align-items: center !important;
   justify-content: space-between !important;
   gap: 24rem !important;
@@ -1565,6 +1571,17 @@ body.linq-review-map-fullscreen .linq-review-map-card.linq-review-map-widget-ful
 .linq-review-battery-production-chart.is-compact .linq-review-battery-production-chart__plot { height: 210px; }
 .linq-review-battery-production-chart.is-compact .linq-review-battery-production-chart__dates small,
 .linq-review-battery-production-chart.is-compact .linq-review-battery-range-day > b { font-size: 7px; }
+
+.linq-review-battery-production-chart.is-source {
+  height: 430px;
+  margin-top: 0;
+  padding: 28px 24px 8px 8px;
+  box-sizing: border-box;
+}
+.linq-review-battery-production-chart.is-source .linq-review-battery-production-chart__axis,
+.linq-review-battery-production-chart.is-source .linq-review-battery-production-chart__plot { height: 360px; }
+.linq-review-battery-production-chart.is-source .linq-review-battery-production-chart__dates small,
+.linq-review-battery-production-chart.is-source .linq-review-battery-range-day > b { font-size: 9px; }
 
 @media (max-width: 1280px) {
   .linq-review-battery-compare__head { align-items: flex-start; flex-direction: column; }

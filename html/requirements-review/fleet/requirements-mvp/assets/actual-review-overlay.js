@@ -3,7 +3,7 @@
   window.__linqReviewOverlayMounted = true;
 
   const data = window.LINQ_REQUIREMENT_REVIEW || {};
-  const screen = window.LINQ_REVIEW_SCREEN || '';
+  const screen = window.LINQ_REVIEW_SCREEN || document.documentElement.dataset.linqReviewScreen || '';
   const problemCatalog = data.problemCatalog || {};
   const issueMap = data.requirementIssueIds || {};
 
@@ -68,7 +68,12 @@
   }
 
   const items = routeItems();
-  if (!items.length) return;
+  document.querySelectorAll('.linq-review-guide, .linq-review-drawer, .linq-review-marker').forEach(node => node.remove());
+  document.querySelectorAll('.linq-review-target').forEach(node => node.classList.remove('linq-review-target', 'is-active'));
+  if (!items.length) {
+    applyRequirementContent();
+    return;
+  }
   const entries = [];
   let activeItem = null;
 
@@ -183,7 +188,8 @@
   });
   // Observe the stable document body. The Vue app can replace its #page node after API rendering;
   // observing that replaceable node made the review graph appear briefly and then disappear.
-  observer.observe(document.body, {childList:true, subtree:true});
+  const observerRoot = document.body || document.documentElement;
+  try { if (observerRoot) observer.observe(observerRoot, {childList:true, subtree:true}); } catch (_error) {}
 
   function markReview(node, ...ids) {
     if (!node) return node;
@@ -291,6 +297,7 @@
       markReview(inputs[0].parentElement, 'R-SVC-004');
       const helpText = '시작일과 종료일을 직접 선택합니다. 서버에서 허용하는 최대 조회 범위는 확인이 필요합니다.';
       if (custom?.parentElement) {
+        custom.parentElement.classList.add('linq-review-period-control-row');
         custom.classList.remove('linq-review-period-info');
         const infoButtons = [...custom.parentElement.querySelectorAll('.linq-review-period-info-button, .linq-static-period-info')];
         let info = infoButtons.shift();
@@ -304,16 +311,71 @@
         info.setAttribute('title', helpText);
         info.setAttribute('aria-label', helpText);
         custom.parentElement.insertBefore(info, custom.nextSibling);
-        if (info.dataset.periodInfoBound !== 'true') {
-          info.dataset.periodInfoBound = 'true';
-          info.addEventListener('click', event => {
-            event.preventDefault();
-            event.stopPropagation();
-            info.classList.toggle('is-open');
-          });
+        let popover = document.getElementById('linq-review-period-popover');
+        if (!popover) {
+          popover = document.createElement('div');
+          popover.id = 'linq-review-period-popover';
+          popover.className = 'linq-review-period-popover';
+          popover.hidden = true;
+          popover.setAttribute('role', 'tooltip');
+          popover.setAttribute('aria-hidden', 'true');
+          document.body.append(popover);
+        }
+        popover.textContent = helpText;
+        info.setAttribute('aria-controls', popover.id);
+        info.setAttribute('aria-expanded', 'false');
+
+        const closePopover = () => {
+          info.classList.remove('is-open');
+          info.setAttribute('aria-expanded', 'false');
+          popover.hidden = true;
+          popover.setAttribute('aria-hidden', 'true');
+        };
+        const positionPopover = () => {
+          if (popover.hidden) return;
+          const rect = info.getBoundingClientRect();
+          const width = Math.min(360, Math.max(240, window.innerWidth - 32));
+          const left = Math.min(window.innerWidth - width - 16, Math.max(16, rect.right - width));
+          popover.style.width = `${width}px`;
+          popover.style.left = `${left}px`;
+          popover.style.top = `${rect.bottom + 8}px`;
+        };
+
+        info.onclick = event => {
+          event.preventDefault();
+          event.stopPropagation();
+          const willOpen = popover.hidden;
+          if (!willOpen) {
+            closePopover();
+            return;
+          }
+          info.classList.add('is-open');
+          info.setAttribute('aria-expanded', 'true');
+          popover.hidden = false;
+          popover.setAttribute('aria-hidden', 'false');
+          positionPopover();
+        };
+        info.onkeydown = event => {
+          if (event.key === 'Escape') closePopover();
+        };
+        if (document.body.dataset.periodInfoOutsideBound !== 'true') {
+          document.body.dataset.periodInfoOutsideBound = 'true';
           document.addEventListener('click', event => {
-            if (!info.contains(event.target)) info.classList.remove('is-open');
+            const activeButton = document.querySelector('.linq-review-period-info-button.is-open');
+            const activePopover = document.getElementById('linq-review-period-popover');
+            if (activeButton && activePopover && !activeButton.contains(event.target) && !activePopover.contains(event.target)) {
+              activeButton.classList.remove('is-open');
+              activeButton.setAttribute('aria-expanded', 'false');
+              activePopover.hidden = true;
+              activePopover.setAttribute('aria-hidden', 'true');
+            }
           });
+        }
+        window.__linqPositionPeriodPopover = positionPopover;
+        if (window.__linqPeriodPopoverWindowBound !== true) {
+          window.__linqPeriodPopoverWindowBound = true;
+          window.addEventListener('resize', () => window.__linqPositionPeriodPopover?.());
+          window.addEventListener('scroll', () => window.__linqPositionPeriodPopover?.(), true);
         }
         markReview(info, 'R-SVC-003');
       }
@@ -795,13 +857,32 @@
     markReview(fallback || canvas?.parentElement || canvas || content, 'R-OPS-007', 'Q-OPS-001', 'R-OPS-008');
   }
 
+  function sourceBatteryRangeChartMarkup(records, type) {
+    const minimum = type === 'battery' ? 82 : 22;
+    const maximum = type === 'battery' ? 94 : 27;
+    const unit = type === 'battery' ? '%' : '℃';
+    const ticks = type === 'battery' ? ['94%','92%','90%','88%','86%','84%','82%'] : ['27℃','26℃','25℃','24℃','23℃','22℃'];
+    const recordByDay = new Map(records.map(record => [record.day, record]));
+    const columns = Array.from({length:31}, (_value, index) => {
+      const day = index + 1;
+      const record = recordByDay.get(day);
+      if (!record) return '<span class="linq-review-battery-range-day is-empty"></span>';
+      const bottom = ((record.low - minimum) / (maximum - minimum)) * 100;
+      const height = Math.max(((record.high - record.low) / (maximum - minimum)) * 100, 1.2);
+      return `<button type="button" class="linq-review-battery-range-day ${record.tone ? `is-${record.tone}` : ''}" data-day="${day}" data-tooltip="8월 ${day}일 · 최저 ${record.low}${unit} · 최고 ${record.high}${unit}"><i style="bottom:${bottom}%;height:${height}%"></i><b style="bottom:${Math.min(bottom + height + 1, 95)}%">${record.high}${unit}</b></button>`;
+    }).join('');
+    const dates = Array.from({length:31}, (_value, index) => `<small>${index + 1}일</small>`).join('');
+    return `<div class="linq-review-battery-production-chart is-source" data-chart-type="${type}"><div class="linq-review-battery-production-chart__axis">${ticks.map(tick => `<span>${tick}</span>`).join('')}</div><div class="linq-review-battery-production-chart__body"><div class="linq-review-battery-production-chart__plot">${columns}</div><div class="linq-review-battery-production-chart__dates">${dates}</div></div></div>`;
+  }
+
   function applyLithiumBattery(content) {
     if (!content.classList.contains('content-body')) {
-      if (content.dataset.reviewBatteryRetry !== 'true') {
-        content.dataset.reviewBatteryRetry = 'true';
+      if (!window.__linqBatteryRetryScheduled) {
+        window.__linqBatteryRetryScheduled = true;
         window.setTimeout(() => {
           const mountedContent = document.querySelector('.content-body');
           if (mountedContent) applyLithiumBattery(mountedContent);
+          window.__linqBatteryRetryScheduled = false;
         }, 450);
       }
       return;
@@ -825,7 +906,7 @@
           if (host) [...host.children].forEach(child => { child.style.display = ''; });
         });
 
-      const vehicleSelect = [...content.querySelectorAll('select')]
+      const vehicleSelect = [...document.querySelectorAll('.content-head select, .content-head__suffix select')]
         .find(select => [...select.options].some(option => option.textContent.trim() === 'FBA32_224250383'));
       const vehicleOption = vehicleSelect
         ? [...vehicleSelect.options].find(option => option.textContent.trim() === 'FBA32_224250383')
@@ -854,6 +935,32 @@
         const value = healthBar.querySelector('span');
         if (value) value.textContent = '100%';
       }
+
+      const sourceBatteryRanges = [
+        {day:9,low:93,high:93,tone:'charge'}, {day:10,low:93,high:93,tone:'charge'}, {day:11,low:93,high:93,tone:'charge'},
+        {day:12,low:88,high:93}, {day:13,low:86,high:88}, {day:14,low:86,high:86,tone:'charge'},
+        {day:26,low:84,high:87}, {day:27,low:84,high:86}, {day:28,low:84,high:84,tone:'charge'},
+      ];
+      const sourceTemperatureRanges = [
+        {day:9,low:23,high:25,tone:'hot'}, {day:10,low:25,high:26,tone:'hot'}, {day:11,low:23,high:24,tone:'hot'},
+        {day:12,low:25,high:26,tone:'hot'}, {day:26,low:23,high:25,tone:'hot'}, {day:27,low:25,high:26,tone:'hot'},
+        {day:28,low:26,high:26,tone:'hot'},
+      ];
+      const sourceSections = [...content.querySelectorAll(':scope > .content-section')];
+      const sourceChargeSection = sourceSections.find(section => /배터리\s*충전.*방전량/.test(section.textContent.replace(/\s+/g, ' ')));
+      const sourceTemperatureSection = sourceSections.find(section => /온도\s*정보/.test(section.textContent.replace(/\s+/g, ' ')));
+      [[sourceChargeSection, sourceBatteryRanges, 'battery'], [sourceTemperatureSection, sourceTemperatureRanges, 'temperature']].forEach(([section, records, type]) => {
+        const host = section?.querySelector('.content-section__body');
+        if (!host) return;
+        [...host.children].forEach(child => { child.style.display = 'none'; });
+        host.insertAdjacentHTML('beforeend', sourceBatteryRangeChartMarkup(records, type));
+        section.querySelectorAll('input').forEach((input, index) => { input.value = index === 0 ? '2026-08-01' : '2026-08-28'; });
+        if (type === 'temperature') {
+          const values = section.querySelectorAll('.section-top em');
+          if (values[0]) values[0].textContent = '23℃';
+          if (values[1]) values[1].textContent = '26℃';
+        }
+      });
       return;
     }
 
@@ -1260,7 +1367,8 @@
   applyRequirementContent();
   if (location.pathname.includes('/srvc/') && !window.__linqServiceSummaryObserver) {
     window.__linqServiceSummaryObserver = new MutationObserver(() => configureServiceSummary());
-    window.__linqServiceSummaryObserver.observe(document.body, {childList: true, subtree: true});
+    const serviceObserverRoot = document.body || document.documentElement;
+    try { if (serviceObserverRoot) window.__linqServiceSummaryObserver.observe(serviceObserverRoot, {childList: true, subtree: true}); } catch (_error) {}
   }
   if (screen === 'lithium-battery' && !window.__linqLithiumBatteryGuard) {
     let attempts = 0;
