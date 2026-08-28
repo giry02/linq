@@ -404,21 +404,29 @@
 table.is-customer-view [data-role-sensitive="true"] { display: none !important; }
 
 table[data-review-service-applied="true"] {
-  min-width: 1760px;
-  table-layout: auto !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  table-layout: fixed !important;
 }
 table[data-review-service-applied="true"] th,
 table[data-review-service-applied="true"] td {
-  min-width: 76px;
-  padding-right: 10px;
-  padding-left: 10px;
-  white-space: nowrap;
+  min-width: 0 !important;
+  padding: 12px 8px;
+  white-space: normal !important;
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+  line-height: 1.45;
+  vertical-align: middle;
 }
-table[data-review-service-applied="true"] th:nth-child(10),
-table[data-review-service-applied="true"] td:nth-child(10) {
-  min-width: 250px;
-  white-space: normal;
-}
+table[data-review-service-applied="true"] th:nth-child(1), table[data-review-service-applied="true"] td:nth-child(1) { width: 6%; }
+table[data-review-service-applied="true"] th:nth-child(2), table[data-review-service-applied="true"] td:nth-child(2) { width: 9%; }
+table[data-review-service-applied="true"] th:nth-child(3), table[data-review-service-applied="true"] td:nth-child(3) { width: 12%; }
+table[data-review-service-applied="true"] th:nth-child(4), table[data-review-service-applied="true"] td:nth-child(4) { width: 17%; }
+table[data-review-service-applied="true"] th:nth-child(5), table[data-review-service-applied="true"] td:nth-child(5) { width: 23%; }
+table[data-review-service-applied="true"] th:nth-child(6), table[data-review-service-applied="true"] td:nth-child(6) { width: 6%; }
+table[data-review-service-applied="true"] th:nth-child(7), table[data-review-service-applied="true"] td:nth-child(7) { width: 11%; }
+table[data-review-service-applied="true"] th:nth-child(8), table[data-review-service-applied="true"] td:nth-child(8) { width: 11%; }
+table[data-review-service-applied="true"] th:nth-child(9), table[data-review-service-applied="true"] td:nth-child(9) { width: 5%; }
 .linq-review-table-scroll {
   width: 100%;
   max-width: 100%;
