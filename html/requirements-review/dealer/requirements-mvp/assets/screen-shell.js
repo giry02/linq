@@ -6,6 +6,10 @@
   const frame = document.querySelector('.review-shell__frame');
   let recoveringSession = false;
 
+  function isStaticPreviewHost() {
+    return query.get('static') === '1' || location.hostname.endsWith('github.io') || location.protocol === 'file:';
+  }
+
   function reviewScreenForRoute(value) {
     const target = new URL(value, location.origin);
     if (target.searchParams.get('chart') === 'horizontal') return 'shock-horizontal';
@@ -79,33 +83,34 @@
     const previewRoute = normalizeRoute(currentRoute) || normalizeRoute(requestedRoute);
     doc.defaultView.LINQ_REQUIREMENT_REVIEW = window.LINQ_REQUIREMENT_REVIEW;
     doc.defaultView.LINQ_REVIEW_SCREEN = reviewScreenForRoute(previewRoute);
+    doc.defaultView.LINQ_REVIEW_SERVICE = 'dealer';
     if (!doc.querySelector('link[data-requirements-prototype-shell]')) {
       const style = doc.createElement('link');
       style.rel = 'stylesheet';
-      style.href = '/requirements-mvp/assets/requirements-prototype-shell.css?v=20260822-22';
+      style.href = new URL('./assets/requirements-prototype-shell.css?v=20260822-22', location.href).href;
       style.dataset.requirementsPrototypeShell = '';
       doc.head.append(style);
     }
     if (!doc.querySelector('script[data-requirements-prototype-shell]')) {
       const script = doc.createElement('script');
-      script.src = '/requirements-mvp/assets/requirements-prototype-shell.js?v=20260822-22';
+      script.src = new URL('./assets/requirements-prototype-shell.js?v=20260822-22', location.href).href;
       script.async = false;
       script.dataset.requirementsPrototypeShell = '';
       doc.head.append(script);
     }
     const reviewStyle = doc.querySelector('link[data-requirements-review]');
     if (reviewStyle) {
-      reviewStyle.href = '/requirements-mvp/assets/actual-review-overlay.css?v=20260828-1';
+      reviewStyle.href = new URL('./assets/actual-review-overlay.css?v=20260828-2', location.href).href;
     } else {
       const style = doc.createElement('link');
       style.rel = 'stylesheet';
-      style.href = '/requirements-mvp/assets/actual-review-overlay.css?v=20260828-1';
+      style.href = new URL('./assets/actual-review-overlay.css?v=20260828-2', location.href).href;
       style.dataset.requirementsReview = '';
       doc.head.append(style);
     }
     if (!doc.querySelector('script[data-requirements-review]')) {
       const script = doc.createElement('script');
-      script.src = '/requirements-mvp/assets/actual-review-overlay.js?v=20260828-1';
+      script.src = new URL('./assets/actual-review-overlay.js?v=20260828-2', location.href).href;
       script.async = false;
       script.dataset.requirementsReview = '';
       doc.head.append(script);
@@ -144,6 +149,20 @@
     const route = normalizeRoute(requestedRoute);
     if (!route) {
       setStatus('열 수 없는 검토 화면 경로입니다.', true);
+      return;
+    }
+    if (isStaticPreviewHost()) {
+      const reviewScreen = reviewScreenForRoute(route);
+      if (!reviewScreen) {
+        setStatus('공개용 검토 화면을 찾지 못했습니다.', true);
+        return;
+      }
+      setStatus('공개용 딜러 검토 화면을 불러오고 있습니다.');
+      frame.addEventListener('load', () => {
+        status.hidden = true;
+        frame.classList.add('is-ready');
+      }, {once:true});
+      frame.src = `./static/${reviewScreen}.html?service=dealer&screen=${encodeURIComponent(reviewScreen)}`;
       return;
     }
     try {

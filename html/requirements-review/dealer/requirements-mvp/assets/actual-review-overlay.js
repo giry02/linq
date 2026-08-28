@@ -4,6 +4,8 @@
 
   const data = window.LINQ_REQUIREMENT_REVIEW || {};
   const screen = window.LINQ_REVIEW_SCREEN || '';
+  const isDealerPreview = window.LINQ_REVIEW_SERVICE === 'dealer' || location.pathname.startsWith('/dealer/');
+  const isServiceScreen = ['service-errors', 'maintenance-history', 'supplies-management'].includes(screen);
   const problemCatalog = data.problemCatalog || {};
   const issueMap = data.requirementIssueIds || {};
 
@@ -272,7 +274,7 @@
   }
 
   function configureServiceSummary() {
-    if (!location.pathname.includes('/srvc/')) return {};
+    if (!isServiceScreen) return {};
     const serviceTabs = document.querySelector('.srvc-tab');
     if (!serviceTabs) return {};
     const errorSummary = serviceTabs.querySelector('.srvc-tab__item[data-icon="error"]');
@@ -308,7 +310,7 @@
   }
 
   function mountServiceCountsInSide() {
-    if (!location.pathname.includes('/srvc/')) return;
+    if (!isServiceScreen) return;
     const serviceTabs = document.querySelector('.srvc-tab');
     const side = document.querySelector('.requirements-prototype-side .analysis-menu-list');
     if (!serviceTabs || !side) return;
@@ -419,7 +421,7 @@
   }
 
   function applyServiceErrors(content) {
-    if (location.pathname.startsWith('/dealer/')) {
+    if (isDealerPreview) {
       applyDealerServiceErrors(content);
       return;
     }
@@ -544,7 +546,7 @@
   }
 
   function applyMaintenance(content) {
-    if (location.pathname.startsWith('/dealer/')) {
+    if (isDealerPreview) {
       applyDealerMaintenance(content);
       return;
     }
@@ -721,7 +723,7 @@
     ensureDashboardControls();
     markPrototypeSide();
     if (!content) return;
-    if (location.pathname.includes('/srvc/')) configureServiceSummary();
+    if (isServiceScreen) configureServiceSummary();
     if (['service-errors', 'maintenance-history', 'supplies-management'].includes(screen)) configurePeriodFilter(content);
     if (screen === 'service-errors') applyServiceErrors(content);
     if (screen === 'maintenance-history') applyMaintenance(content);
