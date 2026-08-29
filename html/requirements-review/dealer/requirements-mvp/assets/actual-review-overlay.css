@@ -78,8 +78,8 @@
 .content-head.linq-review-title-filter-row {
   display: flex !important;
   width: 100% !important;
-  min-height: 72rem !important;
-  align-items: center !important;
+  min-height: 71rem !important;
+  align-items: flex-end !important;
   justify-content: space-between !important;
   gap: 24rem !important;
 }
@@ -90,8 +90,30 @@
 }
 
 .content-head.linq-review-title-filter-row > .filter-form {
+  display: flex !important;
   flex: 0 0 auto !important;
+  flex-direction: column !important;
+  align-items: flex-end !important;
   margin: 0 0 0 auto !important;
+}
+
+.content-head.linq-review-title-filter-row > .filter-form .filter-form__body {
+  display: flex !important;
+  justify-content: flex-end !important;
+  padding-right: 0 !important;
+}
+
+.content-head.linq-review-title-filter-row .linq-review-period-help {
+  margin: 0 0 5px !important;
+  color: #777 !important;
+  font-size: 11px !important;
+  line-height: 14px !important;
+  text-align: right !important;
+  white-space: nowrap !important;
+}
+
+.linq-review-service-toolbar-row.linq-review-period-detached {
+  display: none !important;
 }
 
 .srvc-tab.linq-review-service-summary-compact {

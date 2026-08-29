@@ -246,10 +246,13 @@
     }
     const form = inputs[0]?.closest('.filter-form');
     const head = content.closest('.content-container')?.querySelector(':scope > .content-head')
-      || content.parentElement?.querySelector(':scope > .content-head');
+      || content.parentElement?.querySelector(':scope > .content-head')
+      || document.querySelector('.content-head');
     if (form && head) {
+      const toolbar = form.closest('.linq-review-service-toolbar-row');
       head.classList.add('linq-review-title-filter-row');
       if (form.parentElement !== head) head.append(form);
+      toolbar?.classList.add('linq-review-period-detached');
     }
   }
 

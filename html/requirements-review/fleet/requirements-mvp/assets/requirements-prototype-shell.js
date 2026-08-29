@@ -1,6 +1,11 @@
 (() => {
   const initialUrl = new URL(location.href);
-  if (initialUrl.searchParams.get('layout') !== 'prototype3') return;
+  const wrappedRoute = initialUrl.searchParams.get('route') || '';
+  const wrappedUrl = new URL(wrappedRoute || location.href, location.origin);
+  if (
+    initialUrl.searchParams.get('layout') !== 'prototype3'
+    && wrappedUrl.searchParams.get('layout') !== 'prototype3'
+  ) return;
   const reviewScreen = window.LINQ_REVIEW_SCREEN || '';
 
   let refreshQueued = false;
@@ -8,6 +13,24 @@
   let equipmentPromise = null;
   const text = node => node?.textContent?.trim() || '';
   const normalizeVehicleId = value => String(value || '').toLowerCase().replace(/[-_\s]/g, '');
+  const activeScreenPath = () => {
+    const requestedRoute = new URL(location.href).searchParams.get('route');
+    if (!requestedRoute) return location.pathname;
+    try {
+      return new URL(requestedRoute, location.origin).pathname;
+    } catch (_error) {
+      return location.pathname;
+    }
+  };
+  const forcedVehicleDetail = () => {
+    const match = activeScreenPath().match(/\/detail\/equip\/([^/]+)\/([^/]+)\/([^/?#]+)/i);
+    if (!match) return null;
+    return {
+      companyId: decodeURIComponent(match[1]),
+      groupId: decodeURIComponent(match[2]),
+      vehicleId: decodeURIComponent(match[3]),
+    };
+  };
   const companyRecords = [
     {id:'all', name:'전체차량'},
     {id:'1933', name:'(주)세종물류중부지점'},
@@ -214,19 +237,58 @@
     const side = sourceSide();
     const vehicles = sourceVehicles(side);
     const companyName = currentCompanyName(side);
+    const detailScope = forcedVehicleDetail();
     const company = section.querySelector('[data-company]');
     const vehicle = section.querySelector('[data-vehicle]');
     const context = section.querySelector('[data-context]');
     const remoteVehicles = await loadEquipment();
-    const signature = JSON.stringify([companyName, vehicles.map(item => [item.id, item.active]), remoteVehicles.map(item => [item.id, item.model])]);
+    const signature = JSON.stringify([detailScope, companyName, vehicles.map(item => [item.id, item.active]), remoteVehicles.map(item => [item.id, item.model, item.companyId])]);
     if (section.dataset.signature === signature) return;
     section.dataset.signature = signature;
     const currentCompany = companyRecords.find(item => item.name === companyName) || companyRecords[1];
+    const mergedVehicles = [...remoteVehicles, ...vehicles.map(item => ({id:item.id, model:modelForVehicle(item.id), companyId:currentCompany.id, company:companyName}))]
+      .filter((item, index, array) => item.id && array.findIndex(other => normalizeVehicleId(other.id) === normalizeVehicleId(item.id)) === index);
+
+    if (detailScope) {
+      const forcedVehicle = mergedVehicles.find(item => normalizeVehicleId(item.id) === normalizeVehicleId(detailScope.vehicleId));
+      const forcedCompany = companyRecords.find(item => item.id === detailScope.companyId) || {
+        id: detailScope.companyId,
+        name: forcedVehicle?.company || companyName,
+      };
+      const companyVehicles = mergedVehicles.filter(item => String(item.companyId) === String(detailScope.companyId));
+      if (!companyVehicles.some(item => normalizeVehicleId(item.id) === normalizeVehicleId(detailScope.vehicleId))) {
+        companyVehicles.unshift({
+          id: detailScope.vehicleId,
+          model: modelForVehicle(detailScope.vehicleId),
+          companyId: detailScope.companyId,
+          company: forcedCompany.name,
+        });
+      }
+
+      setSelectOptions(company, [{value: forcedCompany.id, label: forcedCompany.name, selected: true}]);
+      company.value = forcedCompany.id;
+      company.disabled = true;
+      company.setAttribute('aria-readonly', 'true');
+      setSelectOptions(vehicle, companyVehicles.map(item => ({
+        value: item.id,
+        label: [item.id, item.model].filter(Boolean).join(' \u00b7 '),
+        selected: normalizeVehicleId(item.id) === normalizeVehicleId(detailScope.vehicleId),
+      })));
+      const selectedVehicle = [...vehicle.options].find(option => normalizeVehicleId(option.value) === normalizeVehicleId(detailScope.vehicleId));
+      if (selectedVehicle) vehicle.value = selectedVehicle.value;
+      context.textContent = `\ud604\uc7ac \uc870\ud68c \u00b7 \ucc28\ub7c9 ${detailScope.vehicleId}`;
+      company.onchange = null;
+      vehicle.onchange = () => {
+        if (vehicle.value) chooseVehicle(vehicle.value);
+      };
+      return;
+    }
+
+    company.disabled = false;
+    company.removeAttribute('aria-readonly');
     const selectedCompanyId = section.dataset.selectedCompany || currentCompany.id;
     setSelectOptions(company, companyRecords.map(item => ({ value: item.id, label: item.name, selected: item.id === selectedCompanyId })));
     company.value = selectedCompanyId;
-    const mergedVehicles = [...remoteVehicles, ...vehicles.map(item => ({id:item.id, model:modelForVehicle(item.id), companyId:currentCompany.id, company:companyName}))]
-      .filter((item, index, array) => item.id && array.findIndex(other => normalizeVehicleId(other.id) === normalizeVehicleId(item.id)) === index);
     const populateVehicles = companyId => {
       const rows = mergedVehicles.filter(item => companyId === 'all' || item.companyId === companyId);
       setSelectOptions(vehicle, rows.map(item => ({

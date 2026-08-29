@@ -98,7 +98,7 @@
     }
     if (!doc.querySelector('script[data-requirements-prototype-shell]')) {
       const script = doc.createElement('script');
-    script.src = '/requirements-mvp/assets/requirements-prototype-shell.js?v=20260822-44';
+    script.src = '/requirements-mvp/assets/requirements-prototype-shell.js?v=20260829-7';
       script.async = false;
       script.dataset.requirementsPrototypeShell = '';
       doc.head.append(script);
