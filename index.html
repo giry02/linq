@@ -150,6 +150,29 @@
         font-size: 13px;
       }
 
+      .document-downloads {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 18px;
+      }
+
+      .document-downloads a {
+        display: inline-flex;
+        align-items: center;
+        min-height: 42px;
+        padding: 0 16px;
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        color: var(--ink);
+        background: var(--surface);
+        font-size: 14px;
+        font-weight: 700;
+        text-decoration: none;
+      }
+
+      .document-downloads a:hover { border-color: var(--orange); color: var(--orange); }
+
       @media (max-width: 760px) {
         header { height: 72px; padding: 0 24px; }
         .brand strong { font-size: 24px; }
@@ -185,6 +208,12 @@
           <p>요구사항별 이해 내용과 확인이 필요한 문제, 협의 항목을 확인합니다.</p>
           <span class="enter">워크숍 자료 열기 <b aria-hidden="true">→</b></span>
         </a>
+        <a class="service" id="requirements-questions-link" href="./html/workshop/requirements-questions-20260829/">
+          <span class="tag">QUESTIONS</span>
+          <h2>요구사항 질의</h2>
+          <p>메뉴·화면별 요구사항 원문과 확인이 필요한 질의를 함께 확인합니다.</p>
+          <span class="enter">요구사항 회의 질의서 열기 <b aria-hidden="true">→</b></span>
+        </a>
         <a class="service" id="api-document-link" href="./html/developer-atlas/frontend-screen-contracts/">
           <span class="tag">API</span>
           <h2>API 문서</h2>
@@ -197,6 +226,11 @@
           <p>플릿·딜러 관계 구조, 글로벌 확장 문제와 데이터 마이그레이션 방안을 확인합니다.</p>
           <span class="enter">플릿·딜러 글로벌 개발 아틀라스 열기 <b aria-hidden="true">→</b></span>
         </a>
+      </section>
+      <section class="document-downloads" aria-label="개발 문서 PPT 다운로드">
+        <a href="./html/project-links/documents/MACHINE_IQ_요구사항_회의질의서_PPT_20260829.pptx">요구사항 질의서 PPT</a>
+        <a href="./html/project-links/documents/MACHINE_IQ_API_문서_프론트_화면별_변수_API_계약_20260829.pptx">API 문서 PPT</a>
+        <a href="./html/project-links/documents/MACHINE_IQ_DB_문서_플릿_딜러_글로벌_개발_아틀라스_20260829.pptx">DB 문서 PPT</a>
       </section>
       <footer>MACHINE IQ HTML mirror · Local JSON API</footer>
     </main>
