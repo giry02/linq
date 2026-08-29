@@ -260,21 +260,6 @@
     const custom = customText?.closest('label, button') || customText;
     if (!custom?.parentElement) return;
 
-    custom.parentElement.querySelectorAll('.linq-review-period-info-button, .linq-static-period-info').forEach(node => node.remove());
-    document.getElementById('linq-review-period-popover')?.remove();
-    const form = custom.closest('.filter-form');
-    if (form) {
-      let help = form.querySelector('.linq-review-period-help');
-      if (!help) {
-        help = document.createElement('p');
-        help.className = 'linq-review-period-help';
-        form.prepend(help);
-      }
-      help.textContent = '사용자설정 조회기간은 최대 31일까지 선택할 수 있습니다.';
-    }
-    markReview(custom, 'R-SVC-003');
-    return;
-
     const helpText = '시작일과 종료일을 직접 선택합니다. 서버에서 허용하는 최대 조회 범위는 확인이 필요합니다.';
     custom.parentElement.classList.add('linq-review-period-control-row');
     const duplicates = [...custom.parentElement.querySelectorAll('.linq-review-period-info-button, .linq-static-period-info')];

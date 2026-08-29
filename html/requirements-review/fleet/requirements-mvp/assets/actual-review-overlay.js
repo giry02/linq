@@ -68,12 +68,12 @@
   }
 
   const items = routeItems();
+  document.querySelectorAll('.linq-review-guide, .linq-review-drawer, .linq-review-marker').forEach(node => node.remove());
+  document.querySelectorAll('.linq-review-target').forEach(node => node.classList.remove('linq-review-target', 'is-active'));
   if (!items.length) {
     applyRequirementContent();
     return;
   }
-  document.querySelectorAll('.linq-review-guide, .linq-review-drawer, .linq-review-marker').forEach(node => node.remove());
-  document.querySelectorAll('.linq-review-target').forEach(node => node.classList.remove('linq-review-target', 'is-active'));
   const entries = [];
   let activeItem = null;
 
@@ -377,7 +377,7 @@
           window.addEventListener('resize', () => window.__linqPositionPeriodPopover?.());
           window.addEventListener('scroll', () => window.__linqPositionPeriodPopover?.(), true);
         }
-        markReview(custom, 'R-SVC-003');
+        markReview(info, 'R-SVC-003');
       }
       content.querySelectorAll('.linq-review-period-help').forEach(node => node.remove());
     }
@@ -447,7 +447,7 @@
   }
 
   function mountServiceCountsInSide() {
-    if (!['service-errors', 'maintenance-history', 'supplies-management'].includes(screen)) return;
+    if (!location.pathname.includes('/srvc/')) return;
     const serviceTabs = document.querySelector('.srvc-tab');
     const side = document.querySelector('.requirements-prototype-side .analysis-menu-list');
     if (!serviceTabs || !side) return;
@@ -747,7 +747,7 @@
         <div class="linq-review-efficiency-scale"><span>일자</span><div><i>0</i><i>25</i><i>50</i><i>75</i><i>100%</i></div><span>작업 · 대기 · 미사용</span><span>실제 작업시간</span></div>
         <div class="linq-review-efficiency-list">${bars}</div>
       </div>`);
-    markReview(host.querySelector('.linq-review-efficiency-chart'), 'R-OPS-002');
+    markReview(content.querySelector('.operate-top-group .content-section') || host.querySelector('.linq-review-efficiency-chart'), 'R-OPS-002');
     markReview(host.querySelector('.linq-review-period-metrics'), 'R-OPS-003');
     markReview(host.querySelector('.linq-review-efficiency-list'), 'R-OPS-004');
   }
@@ -755,17 +755,6 @@
   function applyOperationEfficiency(content) {
     // 상단 운영효율 영역은 원본 세로 막대 그래프와 Top5를 그대로 유지한다.
     // 하단 요구사항 검토안(실제 작업시간·31일 무스크롤 비교)은 별도 영역으로 유지한다.
-    const lowerChart = content.querySelector('.linq-review-efficiency-chart');
-    const metrics = content.querySelector('.linq-review-period-metrics');
-    const list = content.querySelector('.linq-review-efficiency-list');
-    content.querySelectorAll('[data-review-id~="R-OPS-002"]').forEach(node => {
-      const ids = (node.getAttribute('data-review-id') || '').split(/\s+/).filter(id => id && id !== 'R-OPS-002');
-      if (ids.length) node.setAttribute('data-review-id', ids.join(' '));
-      else node.removeAttribute('data-review-id');
-    });
-    markReview(lowerChart, 'R-OPS-002');
-    markReview(metrics, 'R-OPS-003');
-    markReview(list, 'R-OPS-004');
   }
 
   function replaceExactText(root, from, to) {
@@ -907,69 +896,6 @@
     window.__linqBatteryFunctionVersion = 'restore-original-v3';
     window.__linqBatteryCompareValue = compare;
     if (!compare) {
-      // 일반 요구사항 화면은 운영 화면의 원본 DOM과 그래프 영역을 그대로 사용한다.
-      // 비교용으로 만든 차트는 batteryCompare=1인 별도 화면에서만 표시한다.
-      content.querySelectorAll('.linq-review-battery-compare, .linq-review-battery-production-chart').forEach(node => node.remove());
-      [...content.querySelectorAll(':scope > .content-section')].forEach(section => {
-        section.style.display = '';
-        section.querySelectorAll(':scope > .content-section__body > *').forEach(child => { child.style.display = ''; });
-      });
-
-      {
-      const vehicleSelect = [...document.querySelectorAll('.content-head select, .content-head__suffix select')]
-        .find(select => [...select.options].some(option => option.textContent.trim() === 'FBA32_224250383'));
-      const vehicleOption = vehicleSelect
-        ? [...vehicleSelect.options].find(option => option.textContent.trim() === 'FBA32_224250383')
-        : null;
-      if (vehicleSelect && vehicleOption) {
-        vehicleSelect.value = vehicleOption.value;
-        [...vehicleSelect.options].forEach(option => { option.selected = option === vehicleOption; });
-      }
-
-      const summaryText = content.querySelector('.battery-graph.mode-detail .battery-graph__text');
-      if (summaryText) summaryText.textContent = '84%';
-      const summaryBar = content.querySelector('.battery-graph.mode-detail .battery-graph__bar');
-      if (summaryBar) {
-        summaryBar.style.width = '84%';
-        summaryBar.classList.add('charge-active');
-      }
-      [...content.querySelectorAll('.battery-status__value')].slice(0, 3).forEach(value => { value.textContent = '정상'; });
-      const infoValues = ['7시간 6분', '3.692kWh', '0.064kWh', '96시간 0분', '0.052kWh'];
-      [...content.querySelectorAll('.battery-info__info em')].slice(0, infoValues.length).forEach((value, index) => {
-        value.textContent = infoValues[index];
-      });
-      const healthBar = content.querySelector('.battery-graph.mode-soh .battery-graph__bar');
-      if (healthBar) {
-        healthBar.style.height = '100%';
-        healthBar.classList.add('charge-active');
-        const value = healthBar.querySelector('span');
-        if (value) value.textContent = '100%';
-      }
-
-      const sourceBatteryRanges = [
-        {day:9,low:93,high:93,tone:'charge'}, {day:10,low:93,high:93,tone:'charge'}, {day:11,low:93,high:93,tone:'charge'},
-        {day:12,low:88,high:93}, {day:13,low:86,high:88}, {day:14,low:86,high:86,tone:'charge'},
-        {day:26,low:84,high:87}, {day:27,low:84,high:86}, {day:28,low:84,high:84,tone:'charge'},
-      ];
-      const sourceTemperatureRanges = [
-        {day:9,low:23,high:25,tone:'hot'}, {day:10,low:25,high:26,tone:'hot'}, {day:11,low:23,high:24,tone:'hot'},
-        {day:12,low:25,high:26,tone:'hot'}, {day:26,low:23,high:25,tone:'hot'}, {day:27,low:25,high:26,tone:'hot'},
-        {day:28,low:26,high:26,tone:'hot'},
-      ];
-      const sourceSections = [...content.querySelectorAll(':scope > .content-section')];
-      const sourceChargeSection = sourceSections.find(section => /배터리\s*충전.*방전량/.test(section.textContent.replace(/\s+/g, ' ')));
-      const sourceTemperatureSection = sourceSections.find(section => /온도\s*정보/.test(section.textContent.replace(/\s+/g, ' ')));
-      [[sourceChargeSection, sourceBatteryRanges, 'battery'], [sourceTemperatureSection, sourceTemperatureRanges, 'temperature']].forEach(([section, records, type]) => {
-        const host = section?.querySelector('.content-section__body');
-        if (!host) return;
-        host.querySelectorAll(':scope > .linq-review-battery-production-chart').forEach(node => node.remove());
-        [...host.children].forEach(child => { child.style.display = 'none'; });
-        host.insertAdjacentHTML('beforeend', sourceBatteryRangeChartMarkup(records, type));
-        section.querySelectorAll('input').forEach((input, index) => { input.value = index === 0 ? '2026-08-01' : '2026-08-28'; });
-      });
-      }
-      return;
-
       content.querySelectorAll('.linq-review-battery-compare').forEach(node => node.remove());
       content.querySelectorAll('.linq-review-battery-production-chart').forEach(node => node.remove());
       [...content.querySelectorAll(':scope > .content-section')]

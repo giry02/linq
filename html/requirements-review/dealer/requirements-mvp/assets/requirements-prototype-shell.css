@@ -62,8 +62,7 @@ body.requirements-prototype-shell .account-info button { font-size: 13rem !impor
 .requirements-prototype-selector select { width: 250rem; }
 .requirements-prototype-selector label:nth-of-type(2) select { width: 230rem; }
 .requirements-prototype-selector .selection-context { display: inline-flex; align-items: center; height: 36rem; padding: 0 12rem; color: #b82400; border: 1rem solid #ffc7b8; border-radius: 4rem; background: #fff5f3; font-size: 13rem; line-height: 1; font-weight: 700; white-space: nowrap; }
-.requirements-prototype-selector .line-button { display: inline-flex; align-items: center; justify-content: center; gap: 7rem; margin-left: auto; height: 36rem; padding: 0 20rem; color: #333; border: 1rem solid #aaa; border-radius: 4rem; background: #fff; font-weight: 700; }
-.requirements-prototype-selector .line-button__icon { width: 17rem; height: 17rem; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.requirements-prototype-selector .line-button { margin-left: auto; height: 36rem; padding: 0 20rem; color: #333; border: 1rem solid #aaa; border-radius: 4rem; background: #fff; font-weight: 700; }
 .requirements-prototype-selector .top-selection__detail { display: grid; grid-template-columns: 300rem minmax(0,1fr); gap: 24rem; width: calc(100% - 80rem); max-width: 1600rem; max-height: 154rem; margin: 0 auto; padding: 16rem 0 20rem; overflow: hidden; border-top: 1rem solid #eee; transition: max-height .18s ease,padding .18s ease,opacity .18s ease; }
 .requirements-prototype-selector.collapsed .top-selection__detail { max-height: 0; padding-top: 0; padding-bottom: 0; border-top-color: transparent; opacity: 0; pointer-events: none; }
 .requirements-prototype-selector .detail-search-field { display: block !important; color: #333 !important; font-size: 14rem !important; }
