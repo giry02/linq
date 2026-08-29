@@ -1006,7 +1006,6 @@ body.linq-review-map-fullscreen .linq-review-map-card.linq-review-map-widget-ful
 }
 .linq-review-efficiency-chart {
   display: block;
-  grid-template: none !important;
   width: 100%;
   min-width: 0;
   padding: 20px 24px 24px;
@@ -1147,7 +1146,6 @@ body.linq-review-map-fullscreen .linq-review-map-card.linq-review-map-widget-ful
 
 .linq-static-chart-host {
   position: relative !important;
-  min-height: 200px !important;
   overflow: hidden !important;
 }
 .linq-static-chart-host > div:not(.linq-static-chart-fallback) {
