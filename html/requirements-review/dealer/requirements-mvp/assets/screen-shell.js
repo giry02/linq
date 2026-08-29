@@ -7,7 +7,8 @@
   let recoveringSession = false;
 
   function isStaticPreviewHost() {
-    return query.get('static') === '1' || location.hostname.endsWith('github.io') || location.protocol === 'file:';
+    const isLocalReviewHost = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
+    return query.get('static') === '1' || isLocalReviewHost || location.hostname.endsWith('github.io') || location.protocol === 'file:';
   }
 
   function reviewScreenForRoute(value) {

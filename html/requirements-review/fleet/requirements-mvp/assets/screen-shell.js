@@ -7,7 +7,8 @@
   let recoveringSession = false;
 
   function isStaticPreviewHost() {
-    return query.get('static') === '1' || location.hostname.endsWith('github.io') || location.protocol === 'file:';
+    const isLocalReviewHost = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
+    return query.get('static') === '1' || isLocalReviewHost || location.hostname.endsWith('github.io') || location.protocol === 'file:';
   }
 
   function reviewScreenForRoute(value) {
@@ -86,34 +87,45 @@
       ? normalizeRoute(requestedRoute)
       : normalizedCurrentRoute || normalizeRoute(requestedRoute);
     const reviewScreen = reviewScreenForRoute(previewRoute);
+    let staticPreviewDocument = false;
+    try {
+      staticPreviewDocument = /\/requirements-mvp\/static\//.test(doc.defaultView.location.pathname);
+    } catch (_error) {}
+    const assetUrl = (file) => staticPreviewDocument
+      ? new URL(`../assets/${file}`, doc.defaultView.location.href).href
+      : new URL(`/requirements-mvp/assets/${file}`, doc.defaultView.location.origin).href;
     doc.defaultView.LINQ_REQUIREMENT_REVIEW = window.LINQ_REQUIREMENT_REVIEW;
     doc.defaultView.LINQ_REVIEW_SCREEN = reviewScreen;
     doc.documentElement.dataset.linqReviewScreen = reviewScreen;
     if (!doc.querySelector('link[data-requirements-prototype-shell]')) {
       const style = doc.createElement('link');
       style.rel = 'stylesheet';
-    style.href = '/requirements-mvp/assets/requirements-prototype-shell.css?v=20260829-5';
+      style.href = assetUrl('requirements-prototype-shell.css?v=20260829-5');
       style.dataset.requirementsPrototypeShell = '';
       doc.head.append(style);
     }
     if (!doc.querySelector('script[data-requirements-prototype-shell]')) {
       const script = doc.createElement('script');
-    script.src = '/requirements-mvp/assets/requirements-prototype-shell.js?v=20260829-7';
+      script.src = assetUrl('requirements-prototype-shell.js?v=20260829-7');
       script.async = false;
       script.dataset.requirementsPrototypeShell = '';
       doc.head.append(script);
     }
     const reviewStyle = doc.querySelector('link[data-requirements-review]');
     if (reviewStyle) {
-      reviewStyle.href = '/requirements-mvp/assets/actual-review-overlay.css?v=20260829-5';
+      reviewStyle.href = assetUrl('actual-review-overlay.css?v=20260829-5');
     } else {
       const style = doc.createElement('link');
       style.rel = 'stylesheet';
-      style.href = '/requirements-mvp/assets/actual-review-overlay.css?v=20260829-5';
+      style.href = assetUrl('actual-review-overlay.css?v=20260829-5');
       style.dataset.requirementsReview = '';
       doc.head.append(style);
     }
     const existingReviewScript = doc.querySelector('script[data-requirements-review], script[src*="actual-review-overlay.js"]');
+    if (staticPreviewDocument && existingReviewScript) {
+      existingReviewScript.dataset.requirementsReview = '';
+      return;
+    }
     const currentReviewVersion = '20260829-5';
     const existingReviewIsCurrent = existingReviewScript?.src.includes(`v=${currentReviewVersion}`);
     if (doc.defaultView.__linqReviewOverlayMounted && existingReviewIsCurrent) {
@@ -122,7 +134,7 @@
       doc.defaultView.__linqReviewOverlayMounted = false;
       if (existingReviewScript) existingReviewScript.remove();
       const script = doc.createElement('script');
-      script.src = `/requirements-mvp/assets/actual-review-overlay.js?v=${currentReviewVersion}`;
+      script.src = assetUrl(`actual-review-overlay.js?v=${currentReviewVersion}`);
       script.async = false;
       script.dataset.requirementsReview = '';
       doc.head.append(script);
