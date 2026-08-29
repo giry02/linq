@@ -92,7 +92,7 @@
     if (!doc.querySelector('link[data-requirements-prototype-shell]')) {
       const style = doc.createElement('link');
       style.rel = 'stylesheet';
-    style.href = '/requirements-mvp/assets/requirements-prototype-shell.css?v=20260829-3';
+    style.href = '/requirements-mvp/assets/requirements-prototype-shell.css?v=20260829-5';
       style.dataset.requirementsPrototypeShell = '';
       doc.head.append(style);
     }
@@ -105,16 +105,16 @@
     }
     const reviewStyle = doc.querySelector('link[data-requirements-review]');
     if (reviewStyle) {
-      reviewStyle.href = '/requirements-mvp/assets/actual-review-overlay.css?v=20260829-3';
+      reviewStyle.href = '/requirements-mvp/assets/actual-review-overlay.css?v=20260829-5';
     } else {
       const style = doc.createElement('link');
       style.rel = 'stylesheet';
-      style.href = '/requirements-mvp/assets/actual-review-overlay.css?v=20260829-3';
+      style.href = '/requirements-mvp/assets/actual-review-overlay.css?v=20260829-5';
       style.dataset.requirementsReview = '';
       doc.head.append(style);
     }
     const existingReviewScript = doc.querySelector('script[data-requirements-review], script[src*="actual-review-overlay.js"]');
-    const currentReviewVersion = '20260829-3';
+    const currentReviewVersion = '20260829-5';
     const existingReviewIsCurrent = existingReviewScript?.src.includes(`v=${currentReviewVersion}`);
     if (doc.defaultView.__linqReviewOverlayMounted && existingReviewIsCurrent) {
       if (existingReviewScript) existingReviewScript.dataset.requirementsReview = '';

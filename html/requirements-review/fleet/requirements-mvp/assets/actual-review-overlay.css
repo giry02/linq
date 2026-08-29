@@ -72,7 +72,10 @@
 }
 
 .content-head.linq-review-title-filter-row > .content-head__main {
+  display: inline-flex !important;
   flex: 0 0 auto !important;
+  align-items: center !important;
+  gap: 10rem !important;
   min-width: 0 !important;
 }
 
@@ -1148,6 +1151,55 @@ body.linq-review-map-fullscreen .linq-review-map-card.linq-review-map-widget-ful
   position: relative !important;
   overflow: hidden !important;
 }
+
+.linq-review-title-inline-note {
+  color: #666;
+  font-size: 16rem;
+  font-weight: 400;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
+.linq-review-title-info-button {
+  position: relative;
+  z-index: 5;
+  display: inline-grid;
+  width: 21rem;
+  height: 21rem;
+  padding: 0;
+  place-items: center;
+  color: #666;
+  border: 1px solid #999;
+  border-radius: 50%;
+  background: #fff;
+  font: 700 12rem/1 Arial, sans-serif;
+  cursor: help;
+}
+
+.linq-review-title-info-tooltip {
+  position: absolute;
+  z-index: 10050;
+  top: calc(100% + 9rem);
+  left: 50%;
+  display: none;
+  width: max-content;
+  max-width: 360rem;
+  padding: 9rem 12rem;
+  color: #333;
+  border: 1px solid #d8d8d8;
+  border-radius: 4rem;
+  background: #fff;
+  box-shadow: 0 4rem 14rem rgba(0, 0, 0, .14);
+  font: 400 13rem/1.5 Arial, sans-serif;
+  transform: translateX(-50%);
+  white-space: normal;
+}
+
+.linq-review-title-info-button:hover .linq-review-title-info-tooltip,
+.linq-review-title-info-button:focus .linq-review-title-info-tooltip,
+.linq-review-title-info-button:focus-within .linq-review-title-info-tooltip {
+  display: block;
+}
 .linq-static-chart-host > div:not(.linq-static-chart-fallback) {
   visibility: hidden !important;
 }
@@ -1166,6 +1218,38 @@ body.linq-review-map-fullscreen .linq-review-map-card.linq-review-map-widget-ful
 .linq-static-chart-fallback .grid line { stroke: #e1e4e7; stroke-width: 1; }
 .linq-static-chart-fallback text { fill: #5e646a; font-family: inherit; font-size: 11px; }
 .linq-static-chart-fallback text.value { fill: #222; font-size: 10px; font-weight: 700; }
+.linq-static-efficiency-fallback.is-source-horizontal {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 28px 24px 16px;
+}
+.linq-static-efficiency-fallback__bar {
+  display: flex;
+  width: 100%;
+  height: 92px;
+  border: 1px solid #cfd3d6;
+  background: #f8f8f8;
+}
+.linq-static-efficiency-fallback__bar span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  color: #fff;
+  font-size: 15px;
+  text-align: center;
+}
+.linq-static-efficiency-fallback__bar .is-work { background: #8aabbd; }
+.linq-static-efficiency-fallback__bar .is-idle { background: #d4dfe5; }
+.linq-static-efficiency-fallback__bar .is-off { background: #c9c9c9; }
+.linq-static-efficiency-fallback__axis {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 8px;
+  color: #333;
+  font-size: 12px;
+}
 .linq-static-dashboard-fallback {
   display: grid;
   grid-template-columns: 132px minmax(0, 1fr);

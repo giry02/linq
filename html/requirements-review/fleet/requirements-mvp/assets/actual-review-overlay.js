@@ -753,8 +753,32 @@
   }
 
   function applyOperationEfficiency(content) {
-    // 상단 운영효율 영역은 원본 세로 막대 그래프와 Top5를 그대로 유지한다.
+    // 상단 운영효율 영역은 운영 화면의 단일 100% 가로 막대와 Top5 구성을 유지한다.
     // 하단 요구사항 검토안(실제 작업시간·31일 무스크롤 비교)은 별도 영역으로 유지한다.
+    const title = document.querySelector('.content-head');
+    const titleMain = title?.querySelector('.content-head__main');
+    const summary = document.querySelector('.content-summary');
+    const workTime = [...(summary?.querySelectorAll('.summary-title') || [])]
+      .find(node => node.textContent.replace(/\s+/g, ' ').includes('근로시간:'));
+    if (titleMain && workTime && !titleMain.querySelector('.linq-review-title-inline-note')) {
+      const note = document.createElement('span');
+      note.className = 'linq-review-title-inline-note';
+      note.textContent = workTime.textContent.replace(/\s+/g, ' ').trim();
+      titleMain.append(note);
+      workTime.remove();
+    }
+    const filter = summary?.querySelector('.filter-form');
+    if (title && filter) {
+      title.classList.add('linq-review-title-filter-row');
+      title.append(filter);
+    }
+    if (summary && !summary.textContent.trim() && !summary.querySelector('*')) summary.remove();
+
+    const workRanking = content.querySelector('.operate-top-group .top-list');
+    const sourceWorkTop5 = ['FBA34_224250211', 'FBA32_224250076', 'FBA32_224030259', 'FBA32_224250094', 'FBA34_224250279'];
+    workRanking?.querySelectorAll('.top-list__text').forEach((node, index) => {
+      if (sourceWorkTop5[index]) node.textContent = sourceWorkTop5[index];
+    });
     const lowerChart = content.querySelector('.linq-review-efficiency-chart');
     const metrics = content.querySelector('.linq-review-period-metrics');
     const list = content.querySelector('.linq-review-efficiency-list');
@@ -857,6 +881,25 @@
     replaceExactText(document.querySelector('.content-path') || content, '엔진', '엔진 연비');
     const title = document.querySelector('.content-head');
     markReview(title, 'R-OPS-006');
+    const titleMain = title?.querySelector('.content-head__main');
+    const summary = document.querySelector('.content-summary');
+    const notice = [...(summary?.querySelectorAll('.summary-title') || [])]
+      .find(node => node.textContent.replace(/\s+/g, ' ').includes('사용 환경에 따라 일부 오차가 발생할 수 있습니다.'));
+    if (titleMain && !titleMain.querySelector('.linq-review-title-info-button')) {
+      const info = document.createElement('button');
+      info.type = 'button';
+      info.className = 'linq-review-title-info-button';
+      info.setAttribute('aria-label', '사용 환경에 따른 오차 안내');
+      info.innerHTML = '<span aria-hidden="true">i</span><span class="linq-review-title-info-tooltip" role="tooltip">사용 환경에 따라 일부 오차가 발생할 수 있습니다.</span>';
+      titleMain.append(info);
+    }
+    notice?.remove();
+    const filter = summary?.querySelector('.filter-form');
+    if (title && filter) {
+      title.classList.add('linq-review-title-filter-row');
+      title.append(filter);
+    }
+    if (summary && !summary.textContent.trim() && !summary.querySelector('*')) summary.remove();
     if (content.dataset.reviewEngineApplied) return;
     content.dataset.reviewEngineApplied = 'true';
     [...content.querySelectorAll('input[type="radio"][name="dataPeriod"]')].forEach(input => {
@@ -907,6 +950,23 @@
     window.__linqBatteryFunctionVersion = 'restore-original-v3';
     window.__linqBatteryCompareValue = compare;
     if (!compare) {
+      const detailVehicleSelector = [...document.querySelectorAll('.content-head__suffix')]
+        .find(node => node.textContent.replace(/\s+/g, ' ').includes('차량별'));
+      detailVehicleSelector?.remove();
+
+      const globalVehicleSelect = [...document.querySelectorAll('select[data-vehicle], select[aria-label="차량 선택"]')]
+        .find(select => !content.contains(select) && [...select.options].some(option => option.textContent.includes('FBA32_224250383')));
+      const globalVehicleOption = globalVehicleSelect
+        ? [...globalVehicleSelect.options].find(option => option.textContent.includes('FBA32_224250383'))
+        : null;
+      if (globalVehicleSelect && globalVehicleOption) {
+        globalVehicleSelect.value = globalVehicleOption.value;
+        [...globalVehicleSelect.options].forEach(option => { option.selected = option === globalVehicleOption; });
+      }
+      const currentSelection = [...document.querySelectorAll('body *')]
+        .find(node => !content.contains(node) && node.children.length === 0 && node.textContent.trim().startsWith('현재 조회'));
+      if (currentSelection) currentSelection.textContent = '현재 조회 · 차량 FBA32_224250383';
+
       content.querySelectorAll('.linq-review-battery-compare').forEach(node => node.remove());
       content.querySelectorAll('.linq-review-battery-production-chart').forEach(node => node.remove());
       [...content.querySelectorAll(':scope > .content-section')]
@@ -916,16 +976,6 @@
           const host = section.querySelector('.content-section__body');
           if (host) [...host.children].forEach(child => { child.style.display = ''; });
         });
-
-      const vehicleSelect = [...document.querySelectorAll('.content-head select, .content-head__suffix select')]
-        .find(select => [...select.options].some(option => option.textContent.trim() === 'FBA32_224250383'));
-      const vehicleOption = vehicleSelect
-        ? [...vehicleSelect.options].find(option => option.textContent.trim() === 'FBA32_224250383')
-        : null;
-      if (vehicleSelect && vehicleOption) {
-        vehicleSelect.value = vehicleOption.value;
-        [...vehicleSelect.options].forEach(option => { option.selected = option === vehicleOption; });
-      }
 
       const summaryText = content.querySelector('.battery-graph.mode-detail .battery-graph__text');
       if (summaryText) summaryText.textContent = '84%';
@@ -1192,31 +1242,13 @@
   }
 
   function serializedEfficiencyChart() {
-    const bars = operationEfficiencyRows.map((row, index) => {
-      const x = 58 + index * 29.5;
-      const usableHeight = 164;
-      const work = usableHeight * row.workingRate / 100;
-      const idle = usableHeight * row.idleRate / 100;
-      const off = usableHeight * row.offRate / 100;
-      const bottom = 204;
-      const workY = bottom - work;
-      const idleY = workY - idle;
-      const offY = idleY - off;
-      const day = index + 1;
-      return `<g tabindex="0" role="img" aria-label="8월 ${day}일 작업 ${row.workingRate.toFixed(1)}%, 대기 ${row.idleRate.toFixed(1)}%, 미사용 ${row.offRate.toFixed(1)}%">
-        <title>8월 ${day}일 · 작업 ${row.workingRate.toFixed(1)}% · 대기 ${row.idleRate.toFixed(1)}% · 미사용 ${row.offRate.toFixed(1)}%</title>
-        <rect x="${x}" y="${workY}" width="18" height="${work}" fill="#8aabbd" rx="1"/>
-        <rect x="${x}" y="${idleY}" width="18" height="${idle}" fill="#d4dfe5" rx="1"/>
-        <rect x="${x}" y="${offY}" width="18" height="${off}" fill="#c9c9c9" rx="1"/>
-        <text x="${x + 9}" y="226" text-anchor="middle">${day}</text>
-      </g>`;
-    }).join('');
-    return `<div class="linq-static-chart-fallback linq-static-efficiency-fallback" role="img" aria-label="1일부터 31일까지 운영효율 차트">
-      <svg viewBox="0 0 1000 245" preserveAspectRatio="none" aria-hidden="true">
-        <g class="grid"><line x1="48" y1="40" x2="982" y2="40"/><line x1="48" y1="81" x2="982" y2="81"/><line x1="48" y1="122" x2="982" y2="122"/><line x1="48" y1="163" x2="982" y2="163"/><line x1="48" y1="204" x2="982" y2="204"/></g>
-        <g class="axis"><text x="8" y="44">100</text><text x="18" y="85">75</text><text x="18" y="126">50</text><text x="18" y="167">25</text><text x="26" y="208">0</text></g>
-        ${bars}
-      </svg>
+    return `<div class="linq-static-chart-fallback linq-static-efficiency-fallback is-source-horizontal" role="img" aria-label="작업 2.1시간 28.5%, 대기 1.5시간 20.5%, 미사용 3.7시간 50.9%">
+      <div class="linq-static-efficiency-fallback__bar">
+        <span class="is-work" style="width:28.5%"><b>2.1hr / 28.5%</b></span>
+        <span class="is-idle" style="width:20.5%"><b>1.5hr / 20.5%</b></span>
+        <span class="is-off" style="width:50.9%"><b>3.7hr / 50.9%</b></span>
+      </div>
+      <div class="linq-static-efficiency-fallback__axis"><span>0%</span><span>20%</span><span>40%</span><span>60%</span><span>80%</span><span>100%</span></div>
     </div>`;
   }
 
