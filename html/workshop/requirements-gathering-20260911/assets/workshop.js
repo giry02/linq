@@ -30,6 +30,7 @@
     if (action === 'prev') show(index - 1);
     if (action === 'overview') dialog.showModal();
     if (action === 'close') dialog.close();
+    if (action === 'print') window.print();
   });
   document.addEventListener('keydown', (event) => {
     if (['ArrowRight', 'PageDown', ' '].includes(event.key)) { event.preventDefault(); show(index + 1); }

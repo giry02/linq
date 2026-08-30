@@ -1,0 +1,32 @@
+.pdf-save {
+  position: fixed;
+  top: 16px;
+  right: 20px;
+  z-index: 12;
+  height: 38px;
+  padding: 0 16px;
+  border: 1px solid var(--orange);
+  border-radius: 6px;
+  background: #fff;
+  color: var(--orange);
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, .14);
+}
+
+.pdf-save:hover {
+  background: var(--orange);
+  color: #fff;
+}
+
+@media print {
+  .pdf-save {
+    display: none !important;
+  }
+}
+
+@page {
+  size: 13.333in 7.5in;
+  margin: 0;
+}
