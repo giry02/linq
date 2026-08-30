@@ -101,11 +101,11 @@
     }
     const reviewStyle = doc.querySelector('link[data-requirements-review]');
     if (reviewStyle) {
-      reviewStyle.href = new URL('./assets/actual-review-overlay.css?v=20260829-4', location.href).href;
+      reviewStyle.href = new URL('./assets/actual-review-overlay.css?v=20260830-2', location.href).href;
     } else {
       const style = doc.createElement('link');
       style.rel = 'stylesheet';
-      style.href = new URL('./assets/actual-review-overlay.css?v=20260829-4', location.href).href;
+      style.href = new URL('./assets/actual-review-overlay.css?v=20260830-2', location.href).href;
       style.dataset.requirementsReview = '';
       doc.head.append(style);
     }
