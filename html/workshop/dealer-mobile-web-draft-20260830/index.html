@@ -165,12 +165,12 @@
     <main class="document">
       <section class="page cover" id="cover">
         <div>
-          <p class="kicker">FIRST WORKSHOP DRAFT · 2026.08.30</p>
+          <p class="kicker">FUNCTION &amp; MENU DRAFT · 2026.08.30</p>
           <h1>딜러 모바일웹<br />메뉴·기능 초안</h1>
-          <p class="lead">화면 디자인을 결정하기 전, 딜러 사용자가 현장에서 어떤 정보를 확인하고 어떤 조치를 해야 하는지 합의하기 위한 첫 회의 자료입니다.</p>
+          <p class="lead">딜러 모바일웹의 메뉴, 필수 기능, 사용자 권한, 알림·처리 기준 정리</p>
         </div>
         <div class="meta">
-          <div><span>회의 목적</span><strong>메뉴·기능·처리 기준 합의</strong></div>
+          <div><span>문서 목적</span><strong>메뉴·기능·처리 기준 검토</strong></div>
           <div><span>대상 사용자</span><strong>딜러 관리자·딜러 직원</strong></div>
           <div><span>제외 범위</span><strong>화면 디자인·개발 방식 확정</strong></div>
         </div>
@@ -178,7 +178,7 @@
 
       <section class="page" id="purpose">
         <p class="kicker">01 · DOCUMENT PURPOSE</p>
-        <h2>이번 회의에서 정할 내용</h2>
+        <h2>검토 항목</h2>
         <div class="summary-grid">
           <div class="summary"><span>메뉴</span><strong>딜러가 매일 사용할 기능</strong></div>
           <div class="summary"><span>정보</span><strong>차량 문제와 조치 현황</strong></div>
@@ -186,12 +186,12 @@
         </div>
         <h3>모바일웹의 역할</h3>
         <ul class="plain-list">
-          <li>판매·관리 대상 차량 중 현재 확인이 필요한 차량을 빠르게 찾습니다.</li>
-          <li>차량 에러와 배터리 에러를 구분하고, 에러코드 안내와 조치 자료를 확인합니다.</li>
-          <li>교체가 필요한 소모품을 확인하고, 교체 완료일과 조치사항을 기록합니다.</li>
-          <li>발생 이력보다 현재 미처리 항목을 우선 보여주고, 완료된 항목은 별도 이력으로 보관합니다.</li>
+          <li>판매·관리 대상 중 확인 필요 차량 우선 탐색</li>
+          <li>차량 에러·배터리 에러 구분, 에러코드 안내·조치 자료 확인</li>
+          <li>교체 대상 소모품 확인, 교체 완료일·조치사항 기록</li>
+          <li>현재 미처리 항목 우선 표시, 완료 항목 별도 이력 보관</li>
         </ul>
-        <div class="note" style="margin-top:24px"><strong>전제</strong><br />모바일 화면 시안은 이번 회의 범위에서 제외합니다. 메뉴와 기능이 확정된 후 화면 설계로 전환합니다.</div>
+        <div class="note" style="margin-top:24px"><strong>작성 범위</strong><br />모바일 화면 디자인 제외. 메뉴·기능·권한·상태 기준 중심. 기준 확정 후 화면 설계 진행.</div>
       </section>
 
       <section class="page" id="menu">
@@ -211,7 +211,7 @@
             </tbody>
           </table>
         </div>
-        <p class="footer-note">정비이력은 독립 하단 메뉴로 두지 않고 차량 상세 또는 에러 처리 이력에서 연결하는 안입니다.</p>
+        <p class="footer-note">정비이력: 독립 하단 메뉴 제외. 차량 상세 또는 에러 처리 이력에서 연결.</p>
       </section>
 
       <section class="page" id="home">
@@ -227,12 +227,12 @@
         </div>
         <h3>알림 처리 원칙</h3>
         <ul class="plain-list">
-          <li>기본 목록은 현재 해결이 필요한 <strong>미처리</strong> 항목입니다.</li>
-          <li>조치가 완료되면 목록에서 단순 삭제하지 않고 <strong>처리 완료 이력</strong>으로 이동합니다.</li>
-          <li>에러 알림과 소모품 알림은 성격이 다르므로 사용자가 수신 여부를 각각 설정합니다.</li>
-          <li>최근 알림에는 더보기 기능을 제공하고, 전체 알림 화면에서 기간과 처리상태를 선택합니다.</li>
+          <li>기본 목록: 현재 해결이 필요한 <strong>미처리</strong> 항목</li>
+          <li>조치 완료 건: 목록 삭제 대신 <strong>처리 완료 이력</strong>으로 이동</li>
+          <li>차량·배터리 에러 알림과 소모품 알림 수신 설정 분리</li>
+          <li>최근 알림 더보기 제공. 전체 알림에서 기간·처리상태 선택</li>
         </ul>
-        <div class="note" style="margin-top:22px"><strong>확인 필요</strong><br />완료 상태를 사용자가 직접 변경하는지, 서버 데이터 변화로 자동 완료되는지 업무 기준 확정이 필요합니다.</div>
+        <div class="note" style="margin-top:22px"><strong>확인 필요</strong><br />완료 상태 변경 주체: 사용자 직접 처리 / 서버 데이터 변화에 따른 자동 처리</div>
       </section>
 
       <section class="page" id="vehicles">
@@ -250,7 +250,7 @@
           </table>
         </div>
         <h3>데이터가 없을 때</h3>
-        <p>값이 없는 항목에 <code>undefined</code>를 표시하지 않습니다. 항목별로 “정보 없음”, “미수신”, “위치 미등록”처럼 원인을 구분합니다.</p>
+        <p>값이 없는 항목의 <code>undefined</code> 표시 금지. “정보 없음”, “미수신”, “위치 미등록” 등 원인 구분.</p>
       </section>
 
       <section class="page" id="errors">
@@ -272,7 +272,7 @@
             </tbody>
           </table>
         </div>
-        <p class="footer-note">중요도 값이 근거 데이터에 없으면 화면에서 임의로 만들지 않습니다. 우선순위가 필요하면 별도 업무 규칙과 데이터 정의가 필요합니다.</p>
+        <p class="footer-note">근거 데이터가 없는 중요도 값 생성 금지. 우선순위 사용 시 업무 규칙·데이터 정의 추가 필요.</p>
       </section>
 
       <section class="page" id="supplies">
@@ -296,7 +296,7 @@
             </tbody>
           </table>
         </div>
-        <div class="note" style="margin-top:22px"><strong>권한 확인</strong><br />딜러 직원이 직접 소모품 사용량을 수정할 수 있는지, 교체 완료만 가능한지 구분이 필요합니다.</div>
+        <div class="note" style="margin-top:22px"><strong>권한 확인</strong><br />딜러 직원 권한 구분: 소모품 사용량 수정 / 교체 완료 처리</div>
       </section>
 
       <section class="page" id="settings">
@@ -304,7 +304,7 @@
         <h2>로그인·설정</h2>
         <div class="table-wrap">
           <table>
-            <thead><tr><th>영역</th><th>필수 기능</th><th>회의 확인사항</th></tr></thead>
+            <thead><tr><th>영역</th><th>필수 기능</th><th>확인사항</th></tr></thead>
             <tbody>
               <tr><td>로그인</td><td>아이디·비밀번호, 언어 선택, 자동 로그인 정책</td><td>웹 계정 공용 여부, 인증 만료 시간</td></tr>
               <tr><td>계정</td><td>사용자명, 소속 딜러, 역할, 로그아웃</td><td>관리자·일반직원 권한 차이</td></tr>
@@ -314,7 +314,7 @@
             </tbody>
           </table>
         </div>
-        <p class="footer-note">회원가입·비밀번호 찾기는 1차 모바일 로그인 화면에서 제외하는 안입니다. 계정 발급·승인 절차는 별도 운영 기준으로 확인합니다.</p>
+        <p class="footer-note">1차 모바일 로그인: 회원가입·비밀번호 찾기 제외. 계정 발급·승인 절차 별도 운영 기준 확인.</p>
       </section>
 
       <section class="page" id="roles">
@@ -330,7 +330,7 @@
             </tbody>
           </table>
         </div>
-        <div class="note" style="margin-top:22px"><strong>원칙</strong><br />화면마다 딜러·고객사·차량 범위를 별도로 계산하지 않고, 로그인 사용자의 권한 범위를 공통으로 적용하는 구조가 필요합니다.</div>
+        <div class="note" style="margin-top:22px"><strong>권장 기준</strong><br />로그인 사용자의 딜러·고객사·차량 권한 범위를 전 화면에 공통 적용. 화면별 중복 계산 제외.</div>
       </section>
 
       <section class="page" id="data">
@@ -350,36 +350,36 @@
           </table>
         </div>
         <h3>공통 전달 값</h3>
-        <p>화면 이동 시 사용자 권한, 딜러 ID, 고객사 ID, 차량 ID, 조회 기간, 언어, 현재 메뉴를 유지해야 합니다. 차량 상세 진입 화면에서는 선택된 차량과 그 차량의 소속 고객사를 고정합니다.</p>
+        <p>화면 이동 유지 값: 사용자 권한, 딜러 ID, 고객사 ID, 차량 ID, 조회 기간, 언어, 현재 메뉴. 차량 상세에서는 선택 차량과 소속 고객사 고정.</p>
       </section>
 
       <section class="page" id="qa-1">
-        <p class="kicker">10 · MEETING Q&A 1</p>
-        <h2>메뉴·업무 기준 질의</h2>
+        <p class="kicker">10 · REVIEW Q&amp;A 1</p>
+        <h2>메뉴·업무 기준 확인 질의</h2>
         <div class="qa">
-          <div class="qno">Q1</div><div><strong>1차 사용자는 딜러 관리자와 딜러 직원만 대상인가?</strong><small>본사 서비스 담당자와 고객사 사용자를 포함하면 권한·메뉴 범위가 달라집니다.</small></div>
-          <div class="qno">Q2</div><div><strong>딜러 직원은 소속 딜러의 전체 차량을 보나, 배정된 차량만 보나?</strong><small>차량 목록과 알림 수신 범위를 정하는 기준입니다.</small></div>
-          <div class="qno">Q3</div><div><strong>홈의 미처리 건수는 어떤 상태를 포함하나?</strong><small>차량 에러, 배터리 에러, 소모품을 각각 집계하고 중복 차량 집계 기준을 정해야 합니다.</small></div>
-          <div class="qno">Q4</div><div><strong>에러 완료는 사용자가 처리 완료를 누를 때인가, 장비에서 오류가 더 이상 수신되지 않을 때인가?</strong><small>완료 판정 기준과 책임 주체를 정하는 질문입니다.</small></div>
-          <div class="qno">Q5</div><div><strong>차량 에러와 배터리 에러를 구분하는 기준 데이터가 있는가?</strong><small>화면에서 임의로 분류하지 않도록 코드·수신 경로 기준 확인이 필요합니다.</small></div>
-          <div class="qno">Q6</div><div><strong>정비이력은 차량 상세에서만 제공해도 되는가?</strong><small>하단 메뉴를 5개로 유지하기 위한 메뉴 범위 확인입니다.</small></div>
-          <div class="qno">Q7</div><div><strong>소모품 완료 처리와 수정은 어떤 역할까지 가능한가?</strong><small>완료 기록의 신뢰성과 변경 이력 관리 범위를 정합니다.</small></div>
-          <div class="qno">Q8</div><div><strong>위치 정보는 최종 수신 위치만 표시하면 되는가?</strong><small>실시간 위치 여부, 갱신 시각, 위치정보 이용 권한을 확인해야 합니다.</small></div>
+          <div class="qno">Q1</div><div><strong>1차 사용자는 딜러 관리자와 딜러 직원만 대상인가?</strong><small>영향: 본사 서비스 담당자·고객사 포함 시 권한과 메뉴 범위 확대</small></div>
+          <div class="qno">Q2</div><div><strong>딜러 직원은 소속 딜러의 전체 차량을 보나, 배정된 차량만 보나?</strong><small>확인 기준: 차량 목록·검색·알림 수신 범위</small></div>
+          <div class="qno">Q3</div><div><strong>홈의 미처리 건수는 어떤 상태를 포함하나?</strong><small>확인 기준: 차량 에러·배터리 에러·소모품별 집계와 중복 차량 처리</small></div>
+          <div class="qno">Q4</div><div><strong>에러 완료는 사용자가 처리 완료를 누를 때인가, 장비에서 오류가 더 이상 수신되지 않을 때인가?</strong><small>확인 기준: 완료 판정 조건·처리 주체·완료일시 생성 방식</small></div>
+          <div class="qno">Q5</div><div><strong>차량 에러와 배터리 에러를 구분하는 기준 데이터가 있는가?</strong><small>확인 기준: 코드·수신 경로·장비 유형별 분류값</small></div>
+          <div class="qno">Q6</div><div><strong>정비이력은 차량 상세에서만 제공해도 되는가?</strong><small>영향: 하단 메뉴 수와 정비이력 접근 경로</small></div>
+          <div class="qno">Q7</div><div><strong>소모품 완료 처리와 수정은 어떤 역할까지 가능한가?</strong><small>확인 기준: 완료 처리·사용량 수정·변경 이력 권한</small></div>
+          <div class="qno">Q8</div><div><strong>위치 정보는 최종 수신 위치만 표시하면 되는가?</strong><small>확인 기준: 실시간 여부·갱신 시각·위치정보 이용 권한</small></div>
         </div>
       </section>
 
       <section class="page" id="qa-2">
-        <p class="kicker">11 · MEETING Q&A 2</p>
-        <h2>알림·운영 기준 질의</h2>
+        <p class="kicker">11 · REVIEW Q&amp;A 2</p>
+        <h2>알림·운영 기준 확인 질의</h2>
         <div class="qa">
-          <div class="qno">Q9</div><div><strong>차량 에러·배터리 에러·소모품 알림을 각각 끌 수 있는가?</strong><small>긴급 에러와 교체 권유 알림의 성격이 달라 분리 설정이 필요합니다.</small></div>
-          <div class="qno">Q10</div><div><strong>동일한 미처리 건을 반복 알림할 것인가?</strong><small>최초 1회, 일정 주기 재알림, 상태 변경 시 알림 중 어떤 방식인지 정합니다.</small></div>
-          <div class="qno">Q11</div><div><strong>처리 완료 항목을 얼마 동안 보관하고 조회할 것인가?</strong><small>이력 화면의 기간과 데이터 보관 기준에 영향을 줍니다.</small></div>
-          <div class="qno">Q12</div><div><strong>에러 매뉴얼 PDF는 국가·언어별로 어떤 파일을 우선 제공하는가?</strong><small>파일 버전, 번역, 미등록 시 안내 기준을 정해야 합니다.</small></div>
-          <div class="qno">Q13</div><div><strong>1차 출시 언어는 한국어만인가?</strong><small>영어를 동시에 제공하면 메뉴·에러 설명·PDF까지 번역 범위를 정해야 합니다.</small></div>
-          <div class="qno">Q14</div><div><strong>모바일웹은 일반 브라우저형인가, 홈 화면 설치형(PWA)인가?</strong><small>푸시 알림, 로그인 유지, 배포·업데이트 방식이 달라집니다.</small></div>
-          <div class="qno">Q15</div><div><strong>통신이 불안정할 때 최근 조회 데이터를 보여줄 것인가?</strong><small>오프라인 사용 여부와 데이터 최신 시각 표시 기준을 정합니다.</small></div>
-          <div class="qno">Q16</div><div><strong>로그인 계정은 기존 웹과 동일하게 사용하는가?</strong><small>계정 발급·승인, 비밀번호 정책, 세션 만료 기준을 확인합니다.</small></div>
+          <div class="qno">Q9</div><div><strong>차량 에러·배터리 에러·소모품 알림을 각각 끌 수 있는가?</strong><small>확인 기준: 필수 알림·선택 알림·유형별 수신 설정</small></div>
+          <div class="qno">Q10</div><div><strong>동일한 미처리 건을 반복 알림할 것인가?</strong><small>선택안: 최초 1회 / 일정 주기 재알림 / 상태 변경 시 알림</small></div>
+          <div class="qno">Q11</div><div><strong>처리 완료 항목을 얼마 동안 보관하고 조회할 것인가?</strong><small>영향: 이력 조회 기간·데이터 보관 기간</small></div>
+          <div class="qno">Q12</div><div><strong>에러 매뉴얼 PDF는 국가·언어별로 어떤 파일을 우선 제공하는가?</strong><small>확인 기준: 국가·언어·버전·미등록 파일 처리</small></div>
+          <div class="qno">Q13</div><div><strong>1차 출시 언어는 한국어만인가?</strong><small>영향: 메뉴·상태·에러 설명·PDF 번역 범위</small></div>
+          <div class="qno">Q14</div><div><strong>모바일웹은 일반 브라우저형인가, 홈 화면 설치형(PWA)인가?</strong><small>영향: 푸시 알림·로그인 유지·배포·업데이트 방식</small></div>
+          <div class="qno">Q15</div><div><strong>통신이 불안정할 때 최근 조회 데이터를 보여줄 것인가?</strong><small>확인 기준: 오프라인 사용·캐시 범위·최신 데이터 시각 표시</small></div>
+          <div class="qno">Q16</div><div><strong>로그인 계정은 기존 웹과 동일하게 사용하는가?</strong><small>확인 기준: 계정 발급·승인·비밀번호 정책·세션 만료</small></div>
         </div>
       </section>
 
@@ -387,12 +387,12 @@
         <p class="kicker">12 · WBS REVIEW</p>
         <h2>기존 WBS에서 지금 진행 가능한 작업</h2>
         <div class="timeline">
-          <article><time>8/31 - 9/4 · T1-1-1</time><h3>요구사항 취합</h3><p>딜러 모바일 메뉴, 사용자 역할, 차량 조회 범위, 알림·처리 기준을 질문 단위로 정리할 수 있습니다.</p></article>
-          <article><time>9/7 - 9/10 · T1-1-2</time><h3>워크숍 준비</h3><p>회의 안건, 선택안, 결정 기록표, 메뉴별 기능 목록, 업무 시나리오를 완성할 수 있습니다.</p></article>
-          <article><time>9/11 · T1-1-3</time><h3>현업 워크숍</h3><p>Q&A를 기준으로 사용자·메뉴·권한·상태·알림 정책을 확정할 수 있습니다.</p></article>
-          <article><time>9/14 - 9/22 · T1-2-1</time><h3>요구사항 분석·시스템 설계</h3><p>확정 결과를 화면 ID, 사용자 흐름, 데이터 항목, API 요청·응답 초안으로 전환할 수 있습니다.</p></article>
-          <article><time>9/23 · T1-2-2</time><h3>개발 범위 확정 워크숍</h3><p>확정 기능과 제외 기능, MVP·후속 범위, 일정과 검증 기준을 합의할 수 있습니다.</p></article>
-          <article><time>10/14 - 11/27 · T2-3</time><h3>모바일 구축</h3><p>가입·승인, 조회 범위, 웹 정보구조 수용, 모바일 신규 화면을 순차 구현하는 일정입니다.</p></article>
+          <article><time>8/31 - 9/4 · T1-1-1</time><h3>요구사항 취합</h3><p>딜러 모바일 메뉴, 사용자 역할, 차량 조회 범위, 알림·처리 기준 질문 정리</p></article>
+          <article><time>9/7 - 9/10 · T1-1-2</time><h3>워크숍 준비</h3><p>안건, 선택안, 결정 기록표, 메뉴별 기능 목록, 업무 시나리오 작성</p></article>
+          <article><time>9/11 · T1-1-3</time><h3>현업 워크숍</h3><p>사용자·메뉴·권한·상태·알림 정책 확정</p></article>
+          <article><time>9/14 - 9/22 · T1-2-1</time><h3>요구사항 분석·시스템 설계</h3><p>확정 결과를 화면 ID, 사용자 흐름, 데이터 항목, API 요청·응답 초안으로 전환</p></article>
+          <article><time>9/23 · T1-2-2</time><h3>개발 범위 확정 워크숍</h3><p>확정·제외 기능, MVP·후속 범위, 일정·검증 기준 확정</p></article>
+          <article><time>10/14 - 11/27 · T2-3</time><h3>모바일 구축</h3><p>가입·승인, 조회 범위, 웹 정보구조 수용, 모바일 신규 화면 순차 구현</p></article>
         </div>
       </section>
 
@@ -404,26 +404,26 @@
             <thead><tr><th>구분</th><th>지금 진행 가능</th><th>선행 결정 필요</th></tr></thead>
             <tbody>
               <tr><td><span class="status now">즉시 가능</span></td><td>메뉴 구조, 기능 목록, 사용자 시나리오, Q&A, 화면 ID 초안</td><td>없음</td></tr>
-              <tr><td><span class="status now">즉시 가능</span></td><td>역할·권한 매트릭스, 알림 유형, 미처리·완료 상태 정의안</td><td>최종 확정은 현업 회의 필요</td></tr>
+              <tr><td><span class="status now">즉시 가능</span></td><td>역할·권한 매트릭스, 알림 유형, 미처리·완료 상태 정의안</td><td>현업 기준 확정 필요</td></tr>
               <tr><td><span class="status now">즉시 가능</span></td><td>화면별 입력·출력 데이터 목록과 API 계약 초안</td><td>백엔드 실제 필드·권한 API 확인</td></tr>
-              <tr><td><span class="status after">회의 후</span></td><td>화면 설계, 프로토타입, 수용 기준, 테스트 시나리오</td><td>메뉴·기능·권한·상태 기준 확정</td></tr>
+              <tr><td><span class="status after">기준 확정 후</span></td><td>화면 설계, 프로토타입, 수용 기준, 테스트 시나리오</td><td>메뉴·기능·권한·상태 기준 확정</td></tr>
               <tr><td><span class="status after">설계 후</span></td><td>개발 일정 상세화, 구현, 통합 테스트, UAT</td><td>API·DB 영향도와 담당 인력 확정</td></tr>
             </tbody>
           </table>
         </div>
         <h3>WBS 보완이 필요한 부분</h3>
         <ul class="plain-list">
-          <li><strong>App과 모바일웹 구분:</strong> 현재 WBS는 App으로 표기되어 있어 모바일웹·PWA·네이티브 중 목표 형태를 확정해야 합니다.</li>
-          <li><strong>알림 구현:</strong> 푸시 지원 범위와 미지원 브라우저 대체 방식이 별도 일정으로 보이지 않습니다.</li>
-          <li><strong>권한·상태 정의:</strong> 개발 전에 사용자 역할, 차량 조회 범위, 미처리·완료 기준을 명시해야 합니다.</li>
-          <li><strong>검증 일정:</strong> 12/21-12/24 UAT 4일은 모바일 기기·브라우저별 검증까지 포함하면 여유가 적습니다.</li>
-          <li><strong>운영 준비:</strong> 로그, 장애 확인, 알림 실패, 고객 문의 대응 기준이 작업 항목으로 추가되어야 합니다.</li>
+          <li><strong>App·모바일웹 구분:</strong> WBS의 App 표기와 실제 모바일웹 범위 불일치. 모바일웹·PWA·네이티브 중 목표 형태 확정 필요.</li>
+          <li><strong>알림 구현:</strong> 푸시 지원 범위와 미지원 브라우저 대체 방식 일정 누락.</li>
+          <li><strong>권한·상태 정의:</strong> 개발 전 사용자 역할, 차량 조회 범위, 미처리·완료 기준 명시 필요.</li>
+          <li><strong>검증 일정:</strong> 12/21-12/24 UAT 4일. 모바일 기기·브라우저별 검증 일정 부족.</li>
+          <li><strong>운영 준비:</strong> 로그, 장애 확인, 알림 실패, 고객 문의 대응 기준 작업 누락.</li>
         </ul>
       </section>
 
       <section class="page" id="decision">
         <p class="kicker">14 · DECISION LOG</p>
-        <h2>회의 결정 기록</h2>
+        <h2>검토 결과 기록</h2>
         <div class="table-wrap">
           <table>
             <thead><tr><th style="width:8%">No.</th><th style="width:27%">결정 항목</th><th>결정 내용</th><th style="width:18%">담당·기한</th></tr></thead>
