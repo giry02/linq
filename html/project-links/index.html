@@ -1,0 +1,429 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="format-detection" content="telephone=no, date=no, address=no, email=no" />
+    <title>MACHINE IQ 산출물 전체 목록</title>
+    <style>
+      :root {
+        color-scheme: light;
+        font-family: "Noto Sans KR", "Pretendard", "Malgun Gothic", sans-serif;
+        --orange: #ff3600;
+        --orange-soft: #fff0eb;
+        --ink: #121212;
+        --muted: #69717d;
+        --line: #dfe3e7;
+        --surface: #ffffff;
+        --canvas: #f4f5f7;
+      }
+
+      * { box-sizing: border-box; }
+
+      html { scroll-behavior: smooth; }
+
+      body {
+        min-width: 320px;
+        min-height: 100vh;
+        margin: 0;
+        color: var(--ink);
+        background: var(--canvas);
+      }
+
+      a { color: inherit; }
+
+      .topbar {
+        height: 88px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 44px;
+        color: #fff;
+        background: var(--orange);
+        box-shadow: 0 6px 24px rgba(22, 24, 29, 0.12);
+      }
+
+      .brand {
+        display: flex;
+        align-items: baseline;
+        gap: 12px;
+        font-weight: 800;
+        letter-spacing: -0.04em;
+      }
+
+      .brand strong { font-size: 30px; }
+      .brand span { font-size: 16px; letter-spacing: 0.08em; }
+
+      .home-link {
+        min-height: 42px;
+        display: inline-flex;
+        align-items: center;
+        padding: 0 16px;
+        color: #fff;
+        border: 1px solid rgba(255, 255, 255, 0.62);
+        border-radius: 9px;
+        font-size: 14px;
+        font-weight: 800;
+        text-decoration: none;
+      }
+
+      main {
+        width: min(1480px, calc(100% - 48px));
+        margin: 0 auto;
+        padding: 56px 0 72px;
+      }
+
+      .hero {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 32px;
+        align-items: end;
+        margin-bottom: 28px;
+      }
+
+      .eyebrow {
+        margin: 0 0 10px;
+        color: var(--orange);
+        font-size: 13px;
+        font-weight: 900;
+        letter-spacing: 0.12em;
+      }
+
+      h1 {
+        margin: 0;
+        font-size: clamp(34px, 4vw, 52px);
+        line-height: 1.16;
+        letter-spacing: -0.055em;
+      }
+
+      .intro {
+        max-width: 780px;
+        margin: 16px 0 0;
+        color: var(--muted);
+        font-size: 16px;
+        line-height: 1.7;
+      }
+
+      .summary {
+        min-width: 150px;
+        padding: 18px 22px;
+        text-align: right;
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: 13px;
+      }
+
+      .summary strong { display: block; font-size: 30px; }
+      .summary span { color: var(--muted); font-size: 13px; }
+
+      .toolbar {
+        position: sticky;
+        top: 12px;
+        z-index: 5;
+        display: grid;
+        grid-template-columns: minmax(240px, 1fr) auto;
+        gap: 14px;
+        padding: 14px;
+        margin-bottom: 22px;
+        background: rgba(255, 255, 255, 0.96);
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        box-shadow: 0 8px 24px rgba(18, 18, 18, 0.07);
+        backdrop-filter: blur(12px);
+      }
+
+      .search {
+        width: 100%;
+        min-height: 48px;
+        padding: 0 16px;
+        color: var(--ink);
+        background: #fff;
+        border: 1px solid #cfd4da;
+        border-radius: 9px;
+        font: inherit;
+        font-size: 15px;
+        outline: none;
+      }
+
+      .search:focus { border-color: var(--orange); box-shadow: 0 0 0 3px rgba(255, 54, 0, 0.12); }
+
+      .filters { display: flex; flex-wrap: wrap; gap: 8px; }
+
+      .filter {
+        min-height: 48px;
+        padding: 0 15px;
+        color: #4f5661;
+        background: #fff;
+        border: 1px solid #cfd4da;
+        border-radius: 9px;
+        font: inherit;
+        font-size: 14px;
+        font-weight: 800;
+        cursor: pointer;
+      }
+
+      .filter[aria-pressed="true"] { color: #fff; background: var(--orange); border-color: var(--orange); }
+
+      .list {
+        overflow: hidden;
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        box-shadow: 0 14px 42px rgba(18, 18, 18, 0.06);
+      }
+
+      .list-head,
+      .item {
+        display: grid;
+        grid-template-columns: 72px 132px minmax(230px, 1.1fr) minmax(320px, 1.6fr) 118px;
+        align-items: center;
+        gap: 0;
+      }
+
+      .list-head {
+        min-height: 52px;
+        color: #4f5661;
+        background: #e7e9ec;
+        border-bottom: 1px solid #cdd2d7;
+        font-size: 13px;
+        font-weight: 900;
+      }
+
+      .list-head > span,
+      .item > div { padding: 0 16px; }
+
+      .item {
+        min-height: 98px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .item:last-child { border-bottom: 0; }
+      .item[hidden] { display: none; }
+
+      .number { color: #9aa1aa; font-size: 13px; font-weight: 900; text-align: center; }
+
+      .category {
+        width: fit-content;
+        padding: 6px 9px;
+        color: var(--orange);
+        background: var(--orange-soft);
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 900;
+      }
+
+      .name strong {
+        display: block;
+        margin-bottom: 7px;
+        font-size: 16px;
+        letter-spacing: -0.025em;
+      }
+
+      .name span,
+      .url small { color: var(--muted); font-size: 13px; line-height: 1.45; }
+
+      .url a {
+        display: block;
+        overflow-wrap: anywhere;
+        color: #1f5a9d;
+        font-size: 14px;
+        line-height: 1.45;
+        text-decoration: none;
+      }
+
+      .url a:hover { color: var(--orange); text-decoration: underline; }
+
+      .actions { display: flex; gap: 7px; justify-content: flex-end; }
+
+      .open,
+      .copy {
+        min-height: 38px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0 11px;
+        border-radius: 8px;
+        font: inherit;
+        font-size: 13px;
+        font-weight: 800;
+        cursor: pointer;
+      }
+
+      .open { color: #fff; background: var(--orange); border: 1px solid var(--orange); text-decoration: none; }
+      .copy { color: var(--ink); background: #fff; border: 1px solid #cfd4da; }
+      .copy.done { color: #087d4f; border-color: #0ea86b; }
+
+      .empty {
+        display: none;
+        padding: 72px 24px;
+        color: var(--muted);
+        text-align: center;
+      }
+
+      .empty.visible { display: block; }
+
+      footer { margin-top: 28px; color: #8a9099; font-size: 13px; }
+
+      @media (max-width: 980px) {
+        .list-head { display: none; }
+        .item { grid-template-columns: 54px 116px minmax(0, 1fr); padding: 18px 0; }
+        .item .url { grid-column: 3; margin-top: 10px; }
+        .item .actions { grid-column: 3; justify-content: flex-start; margin-top: 12px; }
+      }
+
+      @media (max-width: 720px) {
+        .topbar { height: 72px; padding: 0 20px; }
+        .brand strong { font-size: 23px; }
+        .brand span { font-size: 12px; }
+        .home-link { padding: 0 11px; }
+        main { width: min(100% - 28px, 620px); padding-top: 42px; }
+        .hero { grid-template-columns: 1fr; gap: 18px; }
+        .summary { width: fit-content; text-align: left; }
+        .toolbar { position: static; grid-template-columns: 1fr; }
+        .filters { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 2px; }
+        .filter { flex: 0 0 auto; }
+        .item { grid-template-columns: 44px minmax(0, 1fr); row-gap: 7px; }
+        .item > div { padding: 0 12px; }
+        .item .category { grid-column: 2; }
+        .item .name,
+        .item .url,
+        .item .actions { grid-column: 2; }
+        .number { grid-row: 1 / span 4; align-self: start; padding-top: 6px !important; }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="brand"><strong>Bobcat</strong><span>MACHINE IQ</span></div>
+      <a class="home-link" href="../../main.html">메인으로</a>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div>
+          <p class="eyebrow">PROJECT DELIVERABLES</p>
+          <h1>산출물 전체 목록</h1>
+          <p class="intro">작업 화면, 요구사항 검토, 회의 자료, 개발 문서와 Figma·FigJam 경로를 한곳에서 확인합니다. 주소 복사 버튼으로 엑셀이나 메신저에 바로 붙여 넣을 수 있습니다.</p>
+        </div>
+        <div class="summary"><strong id="result-count">28</strong><span>현재 표시 항목</span></div>
+      </section>
+
+      <section class="toolbar" aria-label="산출물 검색 및 분류">
+        <input class="search" id="search" type="search" placeholder="산출물명, 구분, 설명 또는 주소 검색" aria-label="산출물 검색" />
+        <div class="filters" role="group" aria-label="산출물 구분">
+          <button class="filter" type="button" data-filter="all" aria-pressed="true">전체</button>
+          <button class="filter" type="button" data-filter="화면">화면</button>
+          <button class="filter" type="button" data-filter="요구사항">요구사항</button>
+          <button class="filter" type="button" data-filter="회의자료">회의자료</button>
+          <button class="filter" type="button" data-filter="개발문서">개발문서</button>
+          <button class="filter" type="button" data-filter="매뉴얼">매뉴얼</button>
+          <button class="filter" type="button" data-filter="Figma">Figma</button>
+          <button class="filter" type="button" data-filter="다운로드">다운로드</button>
+        </div>
+      </section>
+
+      <section class="list" aria-label="산출물 목록">
+        <div class="list-head"><span>No.</span><span>구분</span><span>산출물</span><span>웹 주소</span><span>기능</span></div>
+        <div id="items"></div>
+        <div class="empty" id="empty">검색 조건에 맞는 산출물이 없습니다.</div>
+      </section>
+
+      <footer>기준일 2026-08-30 · MACHINE IQ 프로젝트 산출물</footer>
+    </main>
+
+    <script>
+      const base = 'https://giry02.github.io/linq/';
+      const github = 'https://github.com/giry02/linq/tree/main/';
+      const deliverables = [
+        ['화면', '프로젝트 메인', '전체 산출물 진입 화면', base + 'main.html', github],
+        ['화면', '플릿 최종 작업본', '요구사항 반영 후 계속 수정하는 플릿 작업본', base + 'html/final-implementation/fleet/', github + 'html/final-implementation/fleet'],
+        ['화면', '딜러 최종 작업본', '요구사항 반영 후 계속 수정하는 딜러 작업본', base + 'html/final-implementation/dealer/', github + 'html/final-implementation/dealer'],
+        ['화면', '요구사항 반영 화면 모음', '플릿·딜러 요구사항 반영 결과를 모은 화면', base + 'html/final-implementation/requirements-mvp/', github + 'html/final-implementation/requirements-mvp'],
+        ['화면', '딜러 모바일 작업본', '딜러용 모바일 웹 작업 화면', base + 'html/dealer/mobile-home/', github + 'html/dealer/mobile-home'],
+        ['화면', '딜러 모바일 메인 시안', '고객 검토용 모바일 메인 레이아웃 모음', base + 'html/dealer/mobile-home/home-types.html', github + 'html/dealer/mobile-home'],
+        ['요구사항', '플릿 요구사항 검토', 'PPT 요구사항별 수정 화면과 설명', base + 'html/requirements-review/fleet/requirements-mvp/', github + 'html/requirements-review/fleet/requirements-mvp'],
+        ['요구사항', '딜러 요구사항 검토', '딜러 요구사항 적용 화면', base + 'html/requirements-review/dealer/requirements-mvp/actual-screen.html', github + 'html/requirements-review/dealer/requirements-mvp'],
+        ['요구사항', '요구사항 회의 질의서 HTML', '메뉴·화면별 요구사항과 확인 질의', base + 'html/workshop/requirements-questions-20260829/', github + 'html/workshop/requirements-questions-20260829'],
+        ['회의자료', '요구사항 수렴 워크숍', '요구사항 이해 내용, 문제와 협의 항목', base + 'html/workshop/requirements-gathering-20260911/', github + 'html/workshop/requirements-gathering-20260911'],
+        ['회의자료', '글로벌 구조 협의자료', '글로벌 확장 시 구조 문제와 해결 방향', base + 'html/workshop/global-structure-discussion-20260830/', github + 'html/workshop/global-structure-discussion-20260830'],
+        ['개발문서', '개발 문서 인덱스', 'API·DB 문서 진입 화면', base + 'html/developer-atlas/', github + 'html/developer-atlas'],
+        ['개발문서', '프론트 화면별 변수·API 계약', '입력·출력 변수, 응답 필드 사용 여부와 향후 API 방식', base + 'html/developer-atlas/frontend-screen-contracts/', github + 'html/developer-atlas/frontend-screen-contracts'],
+        ['개발문서', '플릿·딜러 글로벌 개발 아틀라스', 'DB 관계 구조, 마이그레이션, 페이지별 쿼리', base + 'html/developer-atlas/fleet-dealer-global-decision/', github + 'html/developer-atlas/fleet-dealer-global-decision'],
+        ['매뉴얼', 'MACHINE IQ 매뉴얼 V2', '플릿·딜러 구분, 화면별 기능과 용어 색인', base + 'manual-v2/', github + 'manual-v2'],
+        ['매뉴얼', '기존 사이트 매뉴얼', '기존 버전 매뉴얼 보관본', base + 'manual/', github + 'manual'],
+        ['다운로드', '요구사항 및 회의 질의서', '최종 통합 엑셀', base + 'html/project-links/documents/MACHINE_IQ_요구사항_및_회의질의서_20260827.xlsx', github + 'html/project-links/documents'],
+        ['다운로드', '요구사항 회의 질의서', '회의 질의 전용 엑셀', base + 'html/project-links/documents/MACHINE_IQ_요구사항_회의질의서_20260827.xlsx', github + 'html/project-links/documents'],
+        ['다운로드', '요구사항 정의서 및 문제점 리포트', 'PPT 근거와 문제점 연결 엑셀', base + 'html/project-links/documents/MACHINE_IQ_요구사항정의서_및_문제점리포트_PPT기준_20260826.xlsx', github + 'html/project-links/documents'],
+        ['다운로드', '요구사항 질의서 PPT', '요구사항과 질의를 화면·메뉴별로 정리한 PPT', base + 'html/project-links/documents/MACHINE_IQ_요구사항_회의질의서_PPT_20260829.pptx', github + 'html/project-links/documents'],
+        ['다운로드', 'API 문서 PPT', '프론트 화면별 변수와 API 계약 PPT', base + 'html/project-links/documents/MACHINE_IQ_API_문서_프론트_화면별_변수_API_계약_20260829.pptx', github + 'html/project-links/documents'],
+        ['다운로드', 'DB 문서 PPT', '플릿·딜러 글로벌 개발 아틀라스 PPT', base + 'html/project-links/documents/MACHINE_IQ_DB_문서_플릿_딜러_글로벌_개발_아틀라스_20260829.pptx', github + 'html/project-links/documents'],
+        ['다운로드', '글로벌 구조 협의자료 PPT', '글로벌 구조 문제점·해결방안·질의사항 PPT', base + 'html/project-links/documents/MACHINE_IQ_글로벌_구조_문제점_해결방안_협의자료_20260830.pptx', github + 'html/project-links/documents'],
+        ['Figma', 'LIN-Q 메인화면 기획서', '레이어가 살아 있는 스토리보드 양식', 'https://www.figma.com/design/BhpaQ7cJx6XbGRXMeTlqwl/LIN-Q-%EB%A9%94%EC%9D%B8%ED%99%94%EB%A9%B4-%EA%B8%B0%ED%9A%8D%EC%84%9C?node-id=0-1&p=f', 'https://www.figma.com/design/BhpaQ7cJx6XbGRXMeTlqwl'],
+        ['Figma', 'LIN-Q Page 1 원본', '플릿·딜러 기준 디자인 Page 1', 'https://www.figma.com/design/djG9ZrdP7sNzK78rMAfQ3U/LIN-Q?node-id=1-3&p=f', 'https://www.figma.com/design/djG9ZrdP7sNzK78rMAfQ3U/LIN-Q?node-id=1-3&p=f'],
+        ['Figma', 'LIN-Q Page 1 전체 배치', 'Page 1 내 플릿·딜러 화면 위치', 'https://www.figma.com/design/djG9ZrdP7sNzK78rMAfQ3U/LIN-Q?node-id=1-8&p=f', 'https://www.figma.com/design/djG9ZrdP7sNzK78rMAfQ3U/LIN-Q?node-id=1-8&p=f'],
+        ['Figma', '플릿 FigJam 프로세스', '플릿 화면·기능·프로세스 흐름', 'https://www.figma.com/board/a9gbF4XnrOlIgYrH4UF2Dk', 'https://www.figma.com/board/a9gbF4XnrOlIgYrH4UF2Dk'],
+        ['Figma', '딜러 FigJam 프로세스', '딜러 화면·기능·프로세스 흐름', 'https://www.figma.com/board/RB55xtSx6RlRVSF2QKV69n', 'https://www.figma.com/board/RB55xtSx6RlRVSF2QKV69n']
+      ];
+
+      const items = document.querySelector('#items');
+      const search = document.querySelector('#search');
+      const filters = [...document.querySelectorAll('.filter')];
+      const count = document.querySelector('#result-count');
+      const empty = document.querySelector('#empty');
+      let activeFilter = 'all';
+
+      const escapeHtml = (value) => value.replace(/[&<>'"]/g, (character) => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
+      })[character]);
+
+      items.innerHTML = deliverables.map((item, index) => {
+        const [category, name, description, url, source] = item;
+        const searchable = item.join(' ').toLowerCase();
+        return `<article class="item" data-category="${escapeHtml(category)}" data-search="${escapeHtml(searchable)}">
+          <div class="number">${String(index + 1).padStart(2, '0')}</div>
+          <div><span class="category">${escapeHtml(category)}</span></div>
+          <div class="name"><strong>${escapeHtml(name)}</strong><span>${escapeHtml(description)}</span></div>
+          <div class="url"><a href="${escapeHtml(url)}" target="_blank" rel="noopener">${escapeHtml(url)}</a><small>저장소/원본: <a href="${escapeHtml(source)}" target="_blank" rel="noopener">${escapeHtml(source)}</a></small></div>
+          <div class="actions"><a class="open" href="${escapeHtml(url)}" target="_blank" rel="noopener">열기</a><button class="copy" type="button" data-url="${escapeHtml(url)}">복사</button></div>
+        </article>`;
+      }).join('');
+
+      const applyFilter = () => {
+        const keyword = search.value.trim().toLowerCase();
+        let visible = 0;
+        document.querySelectorAll('.item').forEach((item) => {
+          const categoryMatches = activeFilter === 'all' || item.dataset.category === activeFilter;
+          const keywordMatches = !keyword || item.dataset.search.includes(keyword);
+          const show = categoryMatches && keywordMatches;
+          item.hidden = !show;
+          if (show) visible += 1;
+        });
+        count.textContent = String(visible);
+        empty.classList.toggle('visible', visible === 0);
+      };
+
+      filters.forEach((button) => button.addEventListener('click', () => {
+        activeFilter = button.dataset.filter;
+        filters.forEach((item) => item.setAttribute('aria-pressed', String(item === button)));
+        applyFilter();
+      }));
+
+      search.addEventListener('input', applyFilter);
+
+      document.addEventListener('click', async (event) => {
+        const button = event.target.closest('.copy');
+        if (!button) return;
+        try {
+          await navigator.clipboard.writeText(button.dataset.url);
+          button.textContent = '복사됨';
+          button.classList.add('done');
+          window.setTimeout(() => { button.textContent = '복사'; button.classList.remove('done'); }, 1400);
+        } catch {
+          window.prompt('아래 주소를 복사해 주세요.', button.dataset.url);
+        }
+      });
+
+      count.textContent = String(deliverables.length);
+    </script>
+  </body>
+</html>
