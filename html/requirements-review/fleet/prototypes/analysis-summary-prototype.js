@@ -258,6 +258,26 @@ function render(){
   else { renderSummary(); renderCards(); }
 }
 
+function fitHierarchySelectWidths(){
+  if(!hierarchyEnabled()) return;
+  const canvas=document.createElement('canvas');
+  const context=canvas.getContext('2d');
+  if(!context) return;
+  [
+    ['#quick-company-select',160,290],
+    ['#quick-group-select',130,160],
+    ['#quick-fuel-select',120,140],
+    ['#quick-vehicle-select',160,225]
+  ].forEach(([selector,minWidth,maxWidth])=>{
+    const select=$(selector);
+    if(!select) return;
+    const style=getComputedStyle(select);
+    context.font=`${style.fontStyle} ${style.fontWeight} ${style.fontSize} ${style.fontFamily}`;
+    const widest=[...select.options].reduce((width,option)=>Math.max(width,context.measureText(option.textContent).width),0);
+    select.style.width=`${Math.min(maxWidth,Math.max(minWidth,Math.ceil(widest+54)))}px`;
+  });
+}
+
 function renderSelectors(){
   const allVehicles=availableVehicles();
   const hierarchy=hierarchyEnabled();
@@ -279,7 +299,8 @@ function renderSelectors(){
     $('#quick-fuel-select').innerHTML=`<option value="all" ${state.fuelType==='all'?'selected':''}>전체 분류 · ${groupPool.length}대</option>${hierarchyFuels.map(type=>`<option value="${type}" ${type===state.fuelType?'selected':''}>${type} · ${groupPool.filter(v=>v.fuel===type).length}대</option>`).join('')}`;
     if($('#quick-vehicle-select')) $('#quick-vehicle-select').innerHTML=`<option value="">전체 차량 · ${filtered.length}대</option>${filtered.map(v=>`<option value="${v.id}" ${v.id===state.vehicleId?'selected':''}>${v.id} · ${v.model}</option>`).join('')}`;
   }else if($('#quick-vehicle-select')) $('#quick-vehicle-select').innerHTML=`<option value="">차량을 선택하세요</option>${companyVehicles().map(v=>`<option value="${v.id}" ${v.id===state.vehicleId?'selected':''}>${v.id} · ${v.model}</option>`).join('')}`;
-  if($('#context-pill')) $('#context-pill').textContent=selectedVehicle()?`현재 조회 · 차량 ${selectedVehicle().id}`:hierarchy&&state.fuelType!=='all'?`현재 조회 · 분류 ${state.fuelType}`:hierarchy&&state.groupName!=='all'?`현재 조회 · 그룹 ${state.groupName}`:state.companyId==='all'?'현재 조회 · 전체차량':`현재 조회 · 업체 ${company().name}`;
+  fitHierarchySelectWidths();
+  if($('#context-pill')) $('#context-pill').textContent=hierarchy?(selectedVehicle()?`차량 · ${selectedVehicle().id}`:state.fuelType!=='all'?`분류 · ${state.fuelType}`:state.groupName!=='all'?`그룹 · ${state.groupName}`:state.companyId==='all'?'전체차량':`업체 · ${company().name}`):(selectedVehicle()?`현재 조회 · 차량 ${selectedVehicle().id}`:state.companyId==='all'?'현재 조회 · 전체차량':`현재 조회 · 업체 ${company().name}`);
   if(isTop()) renderGlobalVehicleSearch();
   const input=$('#current-vehicle-search'); const keyword=(input?.value||'').trim().toLowerCase();
   let vehicles=companyVehicles(); vehicles=vehicles.filter(v=>`${v.id} ${v.model}`.toLowerCase().includes(keyword));

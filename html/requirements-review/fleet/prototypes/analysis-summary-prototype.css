@@ -77,14 +77,16 @@ body[data-layout="top"] .top-selection.collapsed .top-selection__detail { max-he
 .detail-result-head span { color:#888; font-size:12px; }
 
 /* 요약정보 3안: 업체 → 그룹 → 분류 → 차량 4단계 조회 대상 */
-body[data-selector="hierarchy"] .top-selection__inner { gap:12px; }
-body[data-selector="hierarchy"] .top-selection label { flex:0 0 auto; gap:6px; }
-body[data-selector="hierarchy"] .top-selection label>span { display:inline-flex; align-items:center; color:#666; font-size:14px; line-height:1; font-weight:700; white-space:nowrap; }
-body[data-selector="hierarchy"] .top-selection label>span em { display:none; }
+body[data-selector="hierarchy"] .top-selection__inner { gap:14px; }
+body[data-selector="hierarchy"] .top-selection label { flex:0 0 auto; gap:5px; }
+body[data-selector="hierarchy"] .top-selection .selector-kind-icon { display:inline-flex; flex:0 0 20px; align-items:center; justify-content:center; width:20px; height:20px; border:1px solid #ddd; border-radius:4px; background:#f7f7f7; color:#555; }
+body[data-selector="hierarchy"] .top-selection .selector-kind-icon svg { width:15px; height:15px; fill:none; stroke:currentColor; stroke-width:1.7; stroke-linecap:round; stroke-linejoin:round; }
+body[data-selector="hierarchy"] .top-selection .selector-kind-icon em { display:none; }
 body[data-selector="hierarchy"] .top-selection select { width:auto; padding-right:26px; padding-left:9px; font-size:12px; field-sizing:content; }
+body[data-selector="hierarchy"] .top-selection select option { padding-right:24px; padding-left:9px; }
 body[data-selector="hierarchy"] #quick-company-select { min-width:160px; max-width:290px; }
-body[data-selector="hierarchy"] #quick-group-select { min-width:140px; max-width:160px; }
-body[data-selector="hierarchy"] #quick-fuel-select { min-width:130px; max-width:140px; }
+body[data-selector="hierarchy"] #quick-group-select { min-width:130px; max-width:160px; }
+body[data-selector="hierarchy"] #quick-fuel-select { min-width:120px; max-width:140px; }
 body[data-selector="hierarchy"] #quick-vehicle-select { min-width:160px; max-width:225px; }
 body[data-selector="hierarchy"] .selection-context { flex:0 0 auto; width:max-content; max-width:none; overflow:visible; font-size:12px; text-overflow:clip; }
 body[data-selector="hierarchy"] .line-button { flex:0 0 136px; width:136px; padding-right:12px; padding-left:12px; white-space:nowrap; }
@@ -92,7 +94,7 @@ body[data-selector="hierarchy"] .line-button { font-size:14px; }
 body[data-selector="hierarchy"] .top-selection:not(.collapsed) .line-button { flex-basis:64px; width:64px; }
 
 @media(max-width:1780px){
-  body[data-selector="hierarchy"] .top-selection__inner { gap:8px; }
+  body[data-selector="hierarchy"] .top-selection__inner { gap:10px; }
   body[data-selector="hierarchy"] .top-selection label { gap:5px; }
   body[data-selector="hierarchy"] .selection-context { padding-right:8px; padding-left:8px; }
   body[data-selector="hierarchy"] .line-button { padding-right:12px; padding-left:12px; }

@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>MACHINE IQ · 운행이력 요약정보 · 3안</title>
   <link rel="stylesheet" href="../assets/local-fonts.css">
-  <link rel="stylesheet" href="./analysis-summary-prototype.css?v=20260902-1">
+  <link rel="stylesheet" href="./analysis-summary-prototype.css?v=20260902-2">
 </head>
 <body data-layout="top" data-view="compact-list" data-selector="hierarchy">
   <div id="wrap">
@@ -29,10 +29,10 @@
 
     <section class="top-selection collapsed" id="selector-dock" aria-label="업체, 그룹, 분류 및 차량 선택">
       <div class="top-selection__inner">
-        <label><span>업체 <em id="quick-company-count"></em></span><select id="quick-company-select" aria-label="업체 선택"></select></label>
-        <label><span>그룹 <em id="quick-group-count"></em></span><select id="quick-group-select" aria-label="그룹 선택"></select></label>
-        <label><span>분류 <em id="quick-fuel-count"></em></span><select id="quick-fuel-select" aria-label="분류 선택"></select></label>
-        <label><span>차량 <em id="quick-vehicle-count"></em></span><select id="quick-vehicle-select" aria-label="차량 선택"></select></label>
+        <label><span class="selector-kind-icon" title="업체" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="1.5"></rect><path d="M8 7h2M14 7h2M8 11h2M14 11h2M9 21v-5h6v5"></path></svg><em id="quick-company-count"></em></span><select id="quick-company-select" aria-label="업체 선택"></select></label>
+        <label><span class="selector-kind-icon" title="그룹" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"></circle><circle cx="17" cy="9" r="2.5"></circle><path d="M3.5 20v-1.5A5.5 5.5 0 0 1 9 13a5.5 5.5 0 0 1 5.5 5.5V20M14 14.5a4.5 4.5 0 0 1 6.5 4V20"></path></svg><em id="quick-group-count"></em></span><select id="quick-group-select" aria-label="그룹 선택"></select></label>
+        <label><span class="selector-kind-icon" title="분류" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 5h7l9 9-7 7-9-9z"></path><circle cx="8.5" cy="9.5" r="1.4"></circle></svg><em id="quick-fuel-count"></em></span><select id="quick-fuel-select" aria-label="분류 선택"></select></label>
+        <label><span class="selector-kind-icon" title="차량" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 6h11v10H3zM14 10h4l3 3v3h-7z"></path><circle cx="7" cy="18" r="2"></circle><circle cx="17" cy="18" r="2"></circle></svg><em id="quick-vehicle-count"></em></span><select id="quick-vehicle-select" aria-label="차량 선택"></select></label>
         <span class="selection-context" id="context-pill"></span>
         <button class="line-button" id="selector-toggle" type="button">차량 상세검색</button>
       </div>
@@ -86,6 +86,6 @@
     <footer class="page-foot"><strong>Bobcat <span>MACHINE IQ</span></strong><p>이용약관　 위치정보 및 위치기반서비스 이용약관　 개인(위치)정보 처리방침　 오픈소스 고지</p><p>©2024 Bobcat Company. ALL RIGHTS RESERVED.</p></footer>
   </div>
   <div class="toast" id="toast" hidden></div>
-  <script src="./analysis-summary-prototype.js?v=20260901-2" defer></script>
+  <script src="./analysis-summary-prototype.js?v=20260902-1" defer></script>
 </body>
 </html>
