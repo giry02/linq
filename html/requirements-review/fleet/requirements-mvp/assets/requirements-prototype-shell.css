@@ -47,24 +47,29 @@ body.requirements-prototype-shell .account-info button { font-size: 13rem !impor
 .requirements-prototype-selector .top-selection__inner {
   display: flex;
   align-items: center;
-  gap: 12rem;
+  gap: 14rem;
   width: calc(100% - 80rem);
   max-width: 1600rem;
   height: 58rem;
   margin: 0 auto;
 }
-.requirements-prototype-selector .top-selection__inner > strong { margin-right: 8rem; font-size: 18rem; }
-.requirements-prototype-selector label { display: flex; align-items: center; gap: 8rem; color: #666; font-size: 14rem; font-weight: 700; }
+.requirements-prototype-selector label { display: flex; flex: 0 0 auto; align-items: center; gap: 5rem; }
+.requirements-prototype-selector .selector-kind-icon { display: inline-flex; flex: 0 0 24rem; align-items: center; justify-content: center; width: 24rem; height: 24rem; border: 1rem solid #ddd; border-radius: 4rem; background: #f7f7f7; color: #555; }
+.requirements-prototype-selector .selector-kind-icon svg { width: 17rem; height: 17rem; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
 .requirements-prototype-selector select,
-.requirements-prototype-selector input { height: 36rem; padding: 0 38rem 0 14rem; color: #222; border: 1rem solid #ddd; border-radius: 4rem; outline: 0; background: #fff; }
+.requirements-prototype-selector input { height: 36rem; color: #222; border: 1rem solid #ddd; border-radius: 4rem; outline: 0; background: #fff; }
 .requirements-prototype-selector select:focus,
 .requirements-prototype-selector input:focus { border-color: #999; }
-.requirements-prototype-selector select { width: 250rem; }
-.requirements-prototype-selector label:nth-of-type(2) select { width: 230rem; }
-.requirements-prototype-selector .selection-context { display: inline-flex; align-items: center; height: 36rem; padding: 0 12rem; color: #b82400; border: 1rem solid #ffc7b8; border-radius: 4rem; background: #fff5f3; font-size: 13rem; line-height: 1; font-weight: 700; white-space: nowrap; }
-.requirements-prototype-selector .line-button { display: inline-flex; align-items: center; justify-content: center; gap: 7rem; margin-left: auto; height: 36rem; padding: 0 20rem; color: #333; border: 1rem solid #aaa; border-radius: 4rem; background: #fff; font-weight: 700; }
-.requirements-prototype-selector .line-button__icon { width: 17rem; height: 17rem; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
-.requirements-prototype-selector .top-selection__detail { display: grid; grid-template-columns: 300rem minmax(0,1fr); gap: 24rem; width: calc(100% - 80rem); max-width: 1600rem; max-height: 154rem; margin: 0 auto; padding: 16rem 0 20rem; overflow: hidden; border-top: 1rem solid #eee; transition: max-height .18s ease,padding .18s ease,opacity .18s ease; }
+.requirements-prototype-selector select { width: auto; height: 36rem; padding: 0 26rem 0 9rem; font-size: 12rem; field-sizing: content; }
+.requirements-prototype-selector select option { padding-right: 24rem; padding-left: 9rem; }
+.requirements-prototype-selector [data-company] { min-width: 160rem; max-width: 290rem; }
+.requirements-prototype-selector [data-group] { min-width: 130rem; max-width: 160rem; }
+.requirements-prototype-selector [data-fuel] { min-width: 120rem; max-width: 140rem; }
+.requirements-prototype-selector [data-vehicle] { min-width: 160rem; max-width: 225rem; }
+.requirements-prototype-selector .selection-context { display: inline-flex; flex: 0 0 auto; align-items: center; width: max-content; max-width: none; height: 36rem; padding: 0 12rem; overflow: visible; color: #b82400; border: 1rem solid #ffc7b8; border-radius: 4rem; background: #fff5f3; font-size: 12rem; line-height: 1; font-weight: 700; white-space: nowrap; text-overflow: clip; }
+.requirements-prototype-selector .line-button { display: inline-flex; flex: 0 0 136rem; align-items: center; justify-content: center; width: 136rem; height: 36rem; margin-left: auto; padding: 0 12rem; color: #333; border: 1rem solid #aaa; border-radius: 4rem; background: #fff; font-size: 14rem; font-weight: 700; white-space: nowrap; }
+.requirements-prototype-selector:not(.collapsed) .line-button { flex-basis: 64rem; width: 64rem; }
+.requirements-prototype-selector .top-selection__detail { display: grid; grid-template-columns: 320rem minmax(0,1fr); gap: 24rem; width: calc(100% - 80rem); max-width: 1600rem; max-height: 230rem; margin: 0 auto; padding: 14rem 0 16rem; overflow: hidden; border-top: 1rem solid #eee; transition: max-height .18s ease,padding .18s ease,opacity .18s ease; }
 .requirements-prototype-selector.collapsed .top-selection__detail { max-height: 0; padding-top: 0; padding-bottom: 0; border-top-color: transparent; opacity: 0; pointer-events: none; }
 .requirements-prototype-selector .detail-search-field { display: block !important; color: #333 !important; font-size: 14rem !important; }
 .requirements-prototype-selector .detail-search-field > span { display: block; margin-bottom: 8rem; font-weight: 700; }
@@ -156,11 +161,20 @@ body.requirements-prototype-shell .local-body { min-width: 0 !important; }
 body.requirements-prototype-shell .display-table { max-width: 100% !important; overflow-x: hidden !important; }
 body.requirements-prototype-shell .display-table > table { width: 100% !important; min-width: 100% !important; table-layout: fixed !important; }
 
+@media (max-width: 1780px) {
+  .requirements-prototype-selector .top-selection__inner { gap: 10rem; }
+  .requirements-prototype-selector .selection-context { padding-right: 8rem; padding-left: 8rem; }
+}
+
+@media (max-width: 1600px) {
+  .requirements-prototype-selector .top-selection__inner { flex-wrap: wrap; height: auto; min-height: 58rem; padding-top: 8rem; padding-bottom: 8rem; row-gap: 8rem; }
+  .requirements-prototype-selector .selection-context { margin-left: auto; }
+  .requirements-prototype-selector .line-button { margin-left: 0; }
+}
+
 @media (max-width: 1320px) {
   .requirements-prototype-selector .top-selection__inner,
   .requirements-prototype-selector .top-selection__detail { width: calc(100% - 40rem); }
-  .requirements-prototype-selector select { width: 180rem; }
-  .requirements-prototype-selector label:nth-of-type(2) select { width: 210rem; }
   .requirements-prototype-selector .vehicle-result { grid-template-columns: repeat(2,minmax(180rem,250rem)); }
 }
 

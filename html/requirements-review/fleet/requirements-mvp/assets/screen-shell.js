@@ -97,16 +97,19 @@
     doc.defaultView.LINQ_REQUIREMENT_REVIEW = window.LINQ_REQUIREMENT_REVIEW;
     doc.defaultView.LINQ_REVIEW_SCREEN = reviewScreen;
     doc.documentElement.dataset.linqReviewScreen = reviewScreen;
-    if (!doc.querySelector('link[data-requirements-prototype-shell]')) {
+    const prototypeShellStyle = doc.querySelector('link[data-requirements-prototype-shell]');
+    if (prototypeShellStyle) {
+      prototypeShellStyle.href = assetUrl('requirements-prototype-shell.css?v=20260902-1');
+    } else {
       const style = doc.createElement('link');
       style.rel = 'stylesheet';
-      style.href = assetUrl('requirements-prototype-shell.css?v=20260829-5');
+      style.href = assetUrl('requirements-prototype-shell.css?v=20260902-1');
       style.dataset.requirementsPrototypeShell = '';
       doc.head.append(style);
     }
     if (!doc.querySelector('script[data-requirements-prototype-shell]')) {
       const script = doc.createElement('script');
-      script.src = assetUrl('requirements-prototype-shell.js?v=20260829-7');
+      script.src = assetUrl('requirements-prototype-shell.js?v=20260902-5');
       script.async = false;
       script.dataset.requirementsPrototypeShell = '';
       doc.head.append(script);
@@ -126,7 +129,7 @@
       existingReviewScript.dataset.requirementsReview = '';
       return;
     }
-    const currentReviewVersion = '20260829-5';
+    const currentReviewVersion = '20260902-1';
     const existingReviewIsCurrent = existingReviewScript?.src.includes(`v=${currentReviewVersion}`);
     if (doc.defaultView.__linqReviewOverlayMounted && existingReviewIsCurrent) {
       if (existingReviewScript) existingReviewScript.dataset.requirementsReview = '';

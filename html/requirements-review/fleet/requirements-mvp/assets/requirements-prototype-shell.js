@@ -2,9 +2,11 @@
   const initialUrl = new URL(location.href);
   const wrappedRoute = initialUrl.searchParams.get('route') || '';
   const wrappedUrl = new URL(wrappedRoute || location.href, location.origin);
+  const staticRequirementPreview = location.pathname.includes('/requirements-mvp/static/');
   if (
     initialUrl.searchParams.get('layout') !== 'prototype3'
     && wrappedUrl.searchParams.get('layout') !== 'prototype3'
+    && !staticRequirementPreview
   ) return;
   const reviewScreen = window.LINQ_REVIEW_SCREEN || '';
 
@@ -32,7 +34,7 @@
     };
   };
   const companyRecords = [
-    {id:'all', name:'전체차량'},
+    {id:'all', name:'전체 업체'},
     {id:'1933', name:'(주)세종물류중부지점'},
     {id:'20119', name:'김현종'},
     {id:'167', name:'두산물류 주식회사'},
@@ -59,6 +61,55 @@
     if (id.startsWith('FDB21')) return 'D70S-9';
     return '';
   };
+  const fallbackVehicles = [
+    ['FBA32_224250271','B30S-7','리튬'],['FBA32_224250383','B30S-7','리튬'],
+    ['FBA32-002038','B30S-7','리튬'],['FBA32-002039','B30S-7','리튬'],
+    ['FBA32-002040','B30S-7','리튬'],['FBA32-002043','B30S-7','리튬'],
+    ['FBA32-002044','B30S-7','리튬'],['FBA32-002045','B30S-7','리튬'],
+    ['FBA32-002065','B30S-7','리튬'],['FBA32-002067','B30S-7','리튬'],
+    ['FBA32-002068','B30S-7','리튬'],['FBA32-002069','B30S-7','리튬'],
+    ['FBA32-002071','B30S-7','리튬'],['FBA32-002073','B30S-7','리튬'],
+    ['FBA32-002074','B30S-7','리튬'],['FBA34_224030249','B35S-7','리튬'],
+    ['FBA34_224250279','B35S-7','리튬'],['FBA34-000509','B35S-7','리튬'],
+    ['FBA34-000518','B35S-7','리튬'],['FBA34-000520','B35S-7','리튬'],
+    ['FBA34-000522','B35S-7','리튬'],['FHA30-000101','B30X-7 H2','수소'],
+  ].map(([id, model, power]) => ({id, model, power, companyId:'1933', company:'(주)세종물류중부지점'}));
+  const hierarchyGroups = ['기본그룹','테스트그룹'];
+  const hierarchyFuels = ['엔진','납축','리튬','수소'];
+
+  function vehicleGroup(item) {
+    if (item.group) return item.group;
+    const hash = [...String(item.id || '')].reduce((sum, char) => sum + char.charCodeAt(0), 0);
+    return hash % 10 < 6 ? '기본그룹' : '테스트그룹';
+  }
+
+  function vehicleFuel(item) {
+    const power = String(item.power || '').replace(/\s/g, '');
+    if (hierarchyFuels.includes(power)) return power;
+    const id = String(item.id || '').toUpperCase();
+    if (id.startsWith('FHA')) return '수소';
+    if (id.startsWith('FDB') || id.startsWith('FRA')) return '엔진';
+    if (id.startsWith('FBA35') || id.startsWith('FBA36')) return '납축';
+    if (id.startsWith('FBA')) return '리튬';
+    return '엔진';
+  }
+
+  function fitHierarchySelectWidths(section) {
+    const canvas = document.createElement('canvas');
+    const context = canvas.getContext('2d');
+    if (!context) return;
+    [
+      ['[data-company]',160,290],['[data-group]',130,160],
+      ['[data-fuel]',120,140],['[data-vehicle]',160,225],
+    ].forEach(([selector,minWidth,maxWidth]) => {
+      const select = section.querySelector(selector);
+      if (!select) return;
+      const style = getComputedStyle(select);
+      context.font = `${style.fontStyle} ${style.fontWeight} ${style.fontSize} ${style.fontFamily}`;
+      const widest = [...select.options].reduce((width, option) => Math.max(width, context.measureText(option.textContent).width), 0);
+      select.style.width = `${Math.min(maxWidth, Math.max(minWidth, Math.ceil(widest + 54)))}px`;
+    });
+  }
 
   const decorateUrl = value => {
     if (!value) return value;
@@ -159,14 +210,15 @@
     const section = document.createElement('section');
     section.className = 'top-selection collapsed requirements-prototype-selector';
     section.id = 'requirements-selector-dock';
-    section.setAttribute('aria-label', '\uc5c5\uccb4 \ubc0f \ucc28\ub7c9 \uc120\ud0dd');
+    section.setAttribute('aria-label', '\uc5c5\uccb4, \uadf8\ub8f9, \ubd84\ub958 \ubc0f \ucc28\ub7c9 \uc120\ud0dd');
     section.innerHTML = `
       <div class="top-selection__inner">
-        <strong>\uc870\ud68c \ub300\uc0c1</strong>
-        <label><span>\uc5c5\uccb4</span><select data-company aria-label="\uc5c5\uccb4 \uc120\ud0dd"></select></label>
-        <label><span>\ucc28\ub7c9</span><select data-vehicle aria-label="\ucc28\ub7c9 \uc120\ud0dd"></select></label>
+        <label><span class="selector-kind-icon" title="\uc5c5\uccb4" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="1.5"></rect><path d="M8 7h2M14 7h2M8 11h2M14 11h2M9 21v-5h6v5"></path></svg></span><select data-company aria-label="\uc5c5\uccb4 \uc120\ud0dd"></select></label>
+        <label><span class="selector-kind-icon" title="\uadf8\ub8f9" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"></circle><circle cx="17" cy="9" r="2.5"></circle><path d="M3.5 20v-1.5A5.5 5.5 0 0 1 9 13a5.5 5.5 0 0 1 5.5 5.5V20M14 14.5a4.5 4.5 0 0 1 6.5 4V20"></path></svg></span><select data-group aria-label="\uadf8\ub8f9 \uc120\ud0dd"></select></label>
+        <label><span class="selector-kind-icon" title="\ubd84\ub958" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 5h7l9 9-7 7-9-9z"></path><circle cx="8.5" cy="9.5" r="1.4"></circle></svg></span><select data-fuel aria-label="\ubd84\ub958 \uc120\ud0dd"></select></label>
+        <label><span class="selector-kind-icon" title="\ucc28\ub7c9" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 6h11v10H3zM14 10h4l3 3v3h-7z"></path><circle cx="7" cy="18" r="2"></circle><circle cx="17" cy="18" r="2"></circle></svg></span><select data-vehicle aria-label="\ucc28\ub7c9 \uc120\ud0dd"></select></label>
         <span class="selection-context" data-context></span>
-        <button class="line-button" data-toggle type="button" aria-expanded="false"><svg class="line-button__icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"></circle><path d="m15.5 15.5 5 5"></path></svg><span>\ucc28\ub7c9 \uc0c1\uc138\uac80\uc0c9</span></button>
+        <button class="line-button" data-toggle type="button" aria-expanded="false">\ucc28\ub7c9 \uc0c1\uc138\uac80\uc0c9</button>
       </div>
       <div class="top-selection__detail">
         <div class="detail-search-field">
@@ -184,7 +236,7 @@
     toggle.addEventListener('click', () => {
       const collapsed = section.classList.toggle('collapsed');
       toggle.setAttribute('aria-expanded', String(!collapsed));
-      toggle.textContent = collapsed ? '\ucc28\ub7c9 \uc0c1\uc138\uac80\uc0c9' : '\uc0c1\uc138\uac80\uc0c9 \ub2eb\uae30';
+      toggle.textContent = collapsed ? '\ucc28\ub7c9 \uc0c1\uc138\uac80\uc0c9' : '\ub2eb\uae30';
       if (!collapsed) section.querySelector('[data-search]')?.focus();
     });
     section.querySelector('[data-submit]').addEventListener('click', () => renderSearch(section));
@@ -212,7 +264,8 @@
     }
     const local = sourceVehicles(sourceSide()).map(item => ({ id: item.id, company: currentCompanyName(sourceSide()) }));
     const remote = await loadEquipment();
-    const merged = [...remote, ...local].filter((item, index, array) => item.id && array.findIndex(other => normalizeVehicleId(other.id) === normalizeVehicleId(item.id)) === index);
+    const merged = [...(section._selectorVehicles || []), ...remote, ...local]
+      .filter((item, index, array) => item.id && array.findIndex(other => normalizeVehicleId(other.id) === normalizeVehicleId(item.id)) === index);
     const matches = merged.filter(item => normalizeVehicleId(item.id).includes(keyword));
     count.textContent = `\uac80\uc0c9 \uacb0\uacfc ${matches.length}\ub300`;
     if (!matches.length) {
@@ -239,81 +292,114 @@
     const companyName = currentCompanyName(side);
     const detailScope = forcedVehicleDetail();
     const company = section.querySelector('[data-company]');
+    const group = section.querySelector('[data-group]');
+    const fuel = section.querySelector('[data-fuel]');
     const vehicle = section.querySelector('[data-vehicle]');
     const context = section.querySelector('[data-context]');
     const remoteVehicles = await loadEquipment();
-    const signature = JSON.stringify([detailScope, companyName, vehicles.map(item => [item.id, item.active]), remoteVehicles.map(item => [item.id, item.model, item.companyId])]);
+    const currentCompany = companyRecords.find(item => item.name === companyName) || companyRecords[1];
+    const localVehicles = vehicles.map(item => ({
+      id:item.id, model:modelForVehicle(item.id), power:vehicleFuel(item),
+      companyId:currentCompany.id, company:companyName,
+    }));
+    let mergedVehicles = [...remoteVehicles, ...localVehicles]
+      .filter((item, index, array) => item.id && array.findIndex(other => normalizeVehicleId(other.id) === normalizeVehicleId(item.id)) === index)
+      .map(item => ({...item, power:vehicleFuel(item), group:vehicleGroup(item)}));
+    if (!mergedVehicles.length) mergedVehicles = fallbackVehicles.map(item => ({...item, group:vehicleGroup(item)}));
+
+    if (detailScope && !mergedVehicles.some(item => normalizeVehicleId(item.id) === normalizeVehicleId(detailScope.vehicleId))) {
+      mergedVehicles.unshift({
+        id:detailScope.vehicleId, model:modelForVehicle(detailScope.vehicleId), power:vehicleFuel({id:detailScope.vehicleId}),
+        group:vehicleGroup({id:detailScope.vehicleId}), companyId:detailScope.companyId, company:companyName,
+      });
+    }
+    section._selectorVehicles = mergedVehicles;
+    const signature = JSON.stringify([detailScope, companyName, vehicles.map(item => [item.id, item.active]), mergedVehicles.map(item => [item.id, item.model, item.companyId])]);
     if (section.dataset.signature === signature) return;
     section.dataset.signature = signature;
-    const currentCompany = companyRecords.find(item => item.name === companyName) || companyRecords[1];
-    const mergedVehicles = [...remoteVehicles, ...vehicles.map(item => ({id:item.id, model:modelForVehicle(item.id), companyId:currentCompany.id, company:companyName}))]
-      .filter((item, index, array) => item.id && array.findIndex(other => normalizeVehicleId(other.id) === normalizeVehicleId(item.id)) === index);
 
+    const active = vehicles.find(item => item.active);
     if (detailScope) {
-      const forcedVehicle = mergedVehicles.find(item => normalizeVehicleId(item.id) === normalizeVehicleId(detailScope.vehicleId));
-      const forcedCompany = companyRecords.find(item => item.id === detailScope.companyId) || {
-        id: detailScope.companyId,
-        name: forcedVehicle?.company || companyName,
-      };
-      const companyVehicles = mergedVehicles.filter(item => String(item.companyId) === String(detailScope.companyId));
-      if (!companyVehicles.some(item => normalizeVehicleId(item.id) === normalizeVehicleId(detailScope.vehicleId))) {
-        companyVehicles.unshift({
-          id: detailScope.vehicleId,
-          model: modelForVehicle(detailScope.vehicleId),
-          companyId: detailScope.companyId,
-          company: forcedCompany.name,
-        });
-      }
-
-      setSelectOptions(company, [{value: forcedCompany.id, label: forcedCompany.name, selected: true}]);
-      company.value = forcedCompany.id;
+      section.dataset.selectedCompany = detailScope.companyId;
+      section.dataset.selectedVehicle = detailScope.vehicleId;
+      const forced = mergedVehicles.find(item => normalizeVehicleId(item.id) === normalizeVehicleId(detailScope.vehicleId));
+      section.dataset.selectedGroup = forced?.group || 'all';
+      section.dataset.selectedFuel = forced?.power || 'all';
       company.disabled = true;
       company.setAttribute('aria-readonly', 'true');
-      setSelectOptions(vehicle, companyVehicles.map(item => ({
-        value: item.id,
-        label: [item.id, item.model].filter(Boolean).join(' \u00b7 '),
-        selected: normalizeVehicleId(item.id) === normalizeVehicleId(detailScope.vehicleId),
-      })));
-      const selectedVehicle = [...vehicle.options].find(option => normalizeVehicleId(option.value) === normalizeVehicleId(detailScope.vehicleId));
-      if (selectedVehicle) vehicle.value = selectedVehicle.value;
-      context.textContent = `\ud604\uc7ac \uc870\ud68c \u00b7 \ucc28\ub7c9 ${detailScope.vehicleId}`;
-      company.onchange = null;
-      vehicle.onchange = () => {
-        if (vehicle.value) chooseVehicle(vehicle.value);
-      };
-      return;
+    } else {
+      company.disabled = false;
+      company.removeAttribute('aria-readonly');
+      if (!section.dataset.selectedCompany) section.dataset.selectedCompany = 'all';
+      if (!section.dataset.selectedGroup) section.dataset.selectedGroup = 'all';
+      if (!section.dataset.selectedFuel) section.dataset.selectedFuel = 'all';
+      if (!section.dataset.selectedVehicle && active) section.dataset.selectedVehicle = active.id;
     }
 
-    company.disabled = false;
-    company.removeAttribute('aria-readonly');
-    const selectedCompanyId = section.dataset.selectedCompany || currentCompany.id;
-    setSelectOptions(company, companyRecords.map(item => ({ value: item.id, label: item.name, selected: item.id === selectedCompanyId })));
-    company.value = selectedCompanyId;
-    const populateVehicles = companyId => {
-      const rows = mergedVehicles.filter(item => companyId === 'all' || item.companyId === companyId);
-      setSelectOptions(vehicle, rows.map(item => ({
-        value: item.id,
-        label: [item.id, item.model].filter(Boolean).join(' \u00b7 '),
-        selected: vehicles.some(source => source.active && normalizeVehicleId(source.id) === normalizeVehicleId(item.id)),
-      })), '\ucc28\ub7c9\uc744 \uc120\ud0dd\ud558\uc138\uc694');
+    const renderHierarchy = () => {
+      let companyId = section.dataset.selectedCompany || 'all';
+      let groupName = section.dataset.selectedGroup || 'all';
+      let fuelType = section.dataset.selectedFuel || 'all';
+      let vehicleId = section.dataset.selectedVehicle || '';
+      if (!companyRecords.some(item => item.id === companyId)) companyId = detailScope?.companyId || 'all';
+
+      setSelectOptions(company, companyRecords.map(item => {
+        const count = item.id === 'all' ? mergedVehicles.length : mergedVehicles.filter(vehicleItem => String(vehicleItem.companyId) === String(item.id)).length;
+        return {value:item.id, label:`${item.name} \u00b7 ${count}\ub300`, selected:item.id === companyId};
+      }));
+      company.value = companyId;
+      const companyPool = mergedVehicles.filter(item => companyId === 'all' || String(item.companyId) === String(companyId));
+      setSelectOptions(group, [
+        {value:'all', label:`\uc804\uccb4 \uadf8\ub8f9 \u00b7 ${companyPool.length}\ub300`, selected:groupName === 'all'},
+        ...hierarchyGroups.map(name => ({value:name, label:`${name} \u00b7 ${companyPool.filter(item => item.group === name).length}\ub300`, selected:name === groupName})),
+      ]);
+      group.value = groupName;
+      const groupPool = companyPool.filter(item => groupName === 'all' || item.group === groupName);
+      setSelectOptions(fuel, [
+        {value:'all', label:`\uc804\uccb4 \ubd84\ub958 \u00b7 ${groupPool.length}\ub300`, selected:fuelType === 'all'},
+        ...hierarchyFuels.map(type => ({value:type, label:`${type} \u00b7 ${groupPool.filter(item => item.power === type).length}\ub300`, selected:type === fuelType})),
+      ]);
+      fuel.value = fuelType;
+      const filtered = groupPool.filter(item => fuelType === 'all' || item.power === fuelType);
+      if (!filtered.some(item => normalizeVehicleId(item.id) === normalizeVehicleId(vehicleId))) {
+        vehicleId = '';
+        section.dataset.selectedVehicle = '';
+      }
+      setSelectOptions(vehicle, [
+        {value:'', label:`\uc804\uccb4 \ucc28\ub7c9 \u00b7 ${filtered.length}\ub300`, selected:!vehicleId},
+        ...filtered.map(item => ({value:item.id, label:[item.id,item.model].filter(Boolean).join(' \u00b7 '), selected:normalizeVehicleId(item.id) === normalizeVehicleId(vehicleId)})),
+      ]);
+      vehicle.value = vehicleId;
+      const selectedCompany = companyRecords.find(item => item.id === companyId)?.name || companyName;
+      context.textContent = vehicleId ? `\ucc28\ub7c9 \u00b7 ${vehicleId}` : fuelType !== 'all' ? `\ubd84\ub958 \u00b7 ${fuelType}` : groupName !== 'all' ? `\uadf8\ub8f9 \u00b7 ${groupName}` : companyId === 'all' ? '\uc804\uccb4\ucc28\ub7c9' : `\uc5c5\uccb4 \u00b7 ${selectedCompany}`;
+      [company,group,fuel,vehicle].forEach(select => { select.title = select.selectedOptions[0]?.textContent || ''; });
+      fitHierarchySelectWidths(section);
     };
-    populateVehicles(selectedCompanyId);
-    const active = vehicles.find(item => item.active);
-    context.textContent = active ? `\ud604\uc7ac \uc870\ud68c \u00b7 \ucc28\ub7c9 ${active.id}` : `\ud604\uc7ac \uc870\ud68c \u00b7 ${companyName}`;
+
+    renderHierarchy();
     company.onchange = () => {
       section.dataset.selectedCompany = company.value;
-      populateVehicles(company.value);
-      const selectedName = company.selectedOptions[0]?.textContent || companyName;
-      context.textContent = company.value === 'all' ? '\ud604\uc7ac \uc870\ud68c \u00b7 \uc804\uccb4\ucc28\ub7c9' : `\ud604\uc7ac \uc870\ud68c \u00b7 \uc5c5\uccb4 ${selectedName}`;
+      section.dataset.selectedGroup = 'all';
+      section.dataset.selectedFuel = 'all';
+      section.dataset.selectedVehicle = '';
+      renderHierarchy();
       if (company.value === currentCompany.id) chooseCompanyScope();
     };
+    group.onchange = () => {
+      section.dataset.selectedGroup = group.value;
+      section.dataset.selectedFuel = 'all';
+      section.dataset.selectedVehicle = '';
+      renderHierarchy();
+    };
+    fuel.onchange = () => {
+      section.dataset.selectedFuel = fuel.value;
+      section.dataset.selectedVehicle = '';
+      renderHierarchy();
+    };
     vehicle.onchange = () => {
-      if (!vehicle.value) {
-        const selectedName = company.selectedOptions[0]?.textContent || companyName;
-        context.textContent = company.value === 'all' ? '\ud604\uc7ac \uc870\ud68c \u00b7 \uc804\uccb4\ucc28\ub7c9' : `\ud604\uc7ac \uc870\ud68c \u00b7 \uc5c5\uccb4 ${selectedName}`;
-        return;
-      }
-      chooseVehicle(vehicle.value);
+      section.dataset.selectedVehicle = vehicle.value;
+      renderHierarchy();
+      if (vehicle.value) chooseVehicle(vehicle.value);
     };
   }
 
@@ -485,11 +571,20 @@
     compactServiceSummary();
 
     let selector = page.querySelector('.requirements-prototype-selector');
+    if (selector && (!selector.querySelector('[data-group]') || !selector.querySelector('[data-fuel]'))) {
+      const upgradedSelector = createSelector();
+      selector.replaceWith(upgradedSelector);
+      selector = upgradedSelector;
+    }
     if (reviewScreen === 'dashboard') {
       document.body.classList.add('requirements-prototype-dashboard-topnav');
-      selector?.remove();
+      if (!selector) {
+        selector = createSelector();
+        head.insertAdjacentElement('afterend', selector);
+      }
+      refreshSelector(selector);
       page.querySelectorAll('.requirements-prototype-side').forEach(side => side.remove());
-      ensureDashboardTabs(page, head);
+      ensureDashboardTabs(page, selector);
       const originalSide = sourceSide();
       if (originalSide) originalSide.classList.add('requirements-prototype-source-side');
       if (management) {
@@ -536,7 +631,11 @@
     const own = mutations.every(mutation => mutation.target instanceof Element && mutation.target.closest('.requirements-prototype-selector, .requirements-prototype-side'));
     if (!own) queueRefresh();
   });
-  observer.observe(document.documentElement, { childList: true, subtree: true });
+  try {
+    if (document.documentElement) observer.observe(document.documentElement, { childList: true, subtree: true });
+  } catch (_error) {
+    // Static review snapshots can briefly expose a non-observable root while the iframe is attaching.
+  }
   addEventListener('popstate', queueRefresh);
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', queueRefresh, { once: true });
   else queueRefresh();

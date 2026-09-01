@@ -950,14 +950,17 @@
     window.__linqBatteryFunctionVersion = 'restore-original-v3';
     window.__linqBatteryCompareValue = compare;
     if (!compare) {
+      const requestedRoute = new URLSearchParams(location.search).get('route') || location.pathname;
+      const routeVehicleMatch = requestedRoute.match(/\/detail\/equip\/[^/]+\/[^/]+\/([^/?#]+)/i);
+      const routeVehicleId = routeVehicleMatch ? decodeURIComponent(routeVehicleMatch[1]) : 'FBA32_224250383';
       const detailVehicleSelector = [...document.querySelectorAll('.content-head__suffix')]
         .find(node => node.textContent.replace(/\s+/g, ' ').includes('차량별'));
       detailVehicleSelector?.remove();
 
       const globalVehicleSelect = [...document.querySelectorAll('select[data-vehicle], select[aria-label="차량 선택"]')]
-        .find(select => !content.contains(select) && [...select.options].some(option => option.textContent.includes('FBA32_224250383')));
+        .find(select => !content.contains(select) && [...select.options].some(option => option.textContent.includes(routeVehicleId)));
       const globalVehicleOption = globalVehicleSelect
-        ? [...globalVehicleSelect.options].find(option => option.textContent.includes('FBA32_224250383'))
+        ? [...globalVehicleSelect.options].find(option => option.textContent.includes(routeVehicleId))
         : null;
       if (globalVehicleSelect && globalVehicleOption) {
         globalVehicleSelect.value = globalVehicleOption.value;
@@ -965,7 +968,7 @@
       }
       const currentSelection = [...document.querySelectorAll('body *')]
         .find(node => !content.contains(node) && node.children.length === 0 && node.textContent.trim().startsWith('현재 조회'));
-      if (currentSelection) currentSelection.textContent = '현재 조회 · 차량 FBA32_224250383';
+      if (currentSelection) currentSelection.textContent = `현재 조회 · 차량 ${routeVehicleId}`;
 
       content.querySelectorAll('.linq-review-battery-compare').forEach(node => node.remove());
       content.querySelectorAll('.linq-review-battery-production-chart').forEach(node => node.remove());
