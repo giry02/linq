@@ -79,8 +79,8 @@ body[data-layout="top"] .top-selection.collapsed .top-selection__detail { max-he
 /* 요약정보 3안: 업체 → 그룹 → 분류 → 차량 4단계 조회 대상 */
 body[data-selector="hierarchy"] .top-selection__inner { gap:14px; }
 body[data-selector="hierarchy"] .top-selection label { flex:0 0 auto; gap:5px; }
-body[data-selector="hierarchy"] .top-selection .selector-kind-icon { display:inline-flex; flex:0 0 20px; align-items:center; justify-content:center; width:20px; height:20px; border:1px solid #ddd; border-radius:4px; background:#f7f7f7; color:#555; }
-body[data-selector="hierarchy"] .top-selection .selector-kind-icon svg { width:15px; height:15px; fill:none; stroke:currentColor; stroke-width:1.7; stroke-linecap:round; stroke-linejoin:round; }
+body[data-selector="hierarchy"] .top-selection .selector-kind-icon { display:inline-flex; flex:0 0 24px; align-items:center; justify-content:center; width:24px; height:24px; border:1px solid #ddd; border-radius:4px; background:#f7f7f7; color:#555; }
+body[data-selector="hierarchy"] .top-selection .selector-kind-icon svg { width:17px; height:17px; fill:none; stroke:currentColor; stroke-width:1.7; stroke-linecap:round; stroke-linejoin:round; }
 body[data-selector="hierarchy"] .top-selection .selector-kind-icon em { display:none; }
 body[data-selector="hierarchy"] .top-selection select { width:auto; padding-right:26px; padding-left:9px; font-size:12px; field-sizing:content; }
 body[data-selector="hierarchy"] .top-selection select option { padding-right:24px; padding-left:9px; }
