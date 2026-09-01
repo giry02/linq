@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>MACHINE IQ · 운행이력 요약정보 · 3안</title>
   <link rel="stylesheet" href="../assets/local-fonts.css">
-  <link rel="stylesheet" href="./analysis-summary-prototype.css?v=20260901-1">
+  <link rel="stylesheet" href="./analysis-summary-prototype.css?v=20260901-2">
 </head>
 <body data-layout="top" data-view="compact-list" data-selector="hierarchy">
   <div id="wrap">
@@ -29,7 +29,10 @@
 
     <section class="top-selection collapsed" id="selector-dock" aria-label="업체, 그룹, 분류 및 차량 선택">
       <div class="top-selection__inner">
-        <strong>조회 대상</strong>
+        <strong class="selection-title" aria-label="조회 대상" title="조회 대상">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="6.5"></circle><circle cx="12" cy="12" r="2"></circle><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3"></path></svg>
+          <span>조회 대상</span>
+        </strong>
         <label><span>업체 <em id="quick-company-count"></em></span><select id="quick-company-select" aria-label="업체 선택"></select></label>
         <label><span>그룹 <em id="quick-group-count"></em></span><select id="quick-group-select" aria-label="그룹 선택"></select></label>
         <label><span>분류 <em id="quick-fuel-count"></em></span><select id="quick-fuel-select" aria-label="분류 선택"></select></label>
