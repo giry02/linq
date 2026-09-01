@@ -213,7 +213,7 @@ function bind(){
   $$('[data-global]').forEach(b=>b.addEventListener('click',()=>goGlobal(b.dataset.global)));
   $$('[data-section]').forEach(b=>b.addEventListener('click',()=>goSection(b.dataset.section)));
   $$('.period-tabs button').forEach(b=>b.addEventListener('click',()=>setPeriod(b)));
-  $('#selector-toggle')?.addEventListener('click',()=>{$('#selector-dock').classList.toggle('collapsed');$('#selector-toggle').textContent=$('#selector-dock').classList.contains('collapsed')?'차량 상세검색':'차량 상세검색 닫기';});
+  $('#selector-toggle')?.addEventListener('click',()=>{$('#selector-dock').classList.toggle('collapsed');$('#selector-toggle').textContent=$('#selector-dock').classList.contains('collapsed')?'차량 상세검색':'닫기';});
   $('#quick-company-select')?.addEventListener('change',e=>setCompany(e.target.value));
   $('#quick-group-select')?.addEventListener('change',e=>setGroup(e.target.value));
   $('#quick-fuel-select')?.addEventListener('change',e=>setFuelType(e.target.value));
