@@ -75,6 +75,36 @@ body[data-layout="top"] .top-selection.collapsed .top-selection__detail { max-he
 .detail-result-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; }
 .detail-result-head strong { font-size:14px; }
 .detail-result-head span { color:#888; font-size:12px; }
+
+/* 요약정보 3안: 업체 → 그룹 → 분류 → 차량 4단계 조회 대상 */
+body[data-selector="hierarchy"] .top-selection__inner { gap:8px; }
+body[data-selector="hierarchy"] .top-selection__inner>strong { flex:0 0 auto; margin-right:4px; white-space:nowrap; }
+body[data-selector="hierarchy"] .top-selection label { flex:0 0 auto; gap:5px; }
+body[data-selector="hierarchy"] .top-selection label>span { display:inline-flex; align-items:center; gap:4px; white-space:nowrap; }
+body[data-selector="hierarchy"] .top-selection label>span em { color:#aaa; font-size:11px; font-style:normal; font-weight:500; }
+body[data-selector="hierarchy"] #quick-company-select { width:215px; }
+body[data-selector="hierarchy"] #quick-group-select { width:158px; }
+body[data-selector="hierarchy"] #quick-fuel-select { width:148px; }
+body[data-selector="hierarchy"] #quick-vehicle-select { width:195px; }
+body[data-selector="hierarchy"] .selection-context { max-width:245px; overflow:hidden; text-overflow:ellipsis; }
+body[data-selector="hierarchy"] .line-button { flex:0 0 auto; padding-right:16px; padding-left:16px; }
+
+@media(max-width:1780px){
+  body[data-selector="hierarchy"] .top-selection__inner { gap:6px; }
+  body[data-selector="hierarchy"] .top-selection label { gap:4px; }
+  body[data-selector="hierarchy"] .selection-context { padding-right:8px; padding-left:8px; }
+  body[data-selector="hierarchy"] .line-button { padding-right:12px; padding-left:12px; }
+}
+
+@media(max-width:1600px){
+  body[data-selector="hierarchy"] .top-selection__inner { flex-wrap:wrap; height:auto; min-height:58px; padding-top:8px; padding-bottom:8px; row-gap:8px; }
+  body[data-selector="hierarchy"] .selection-context { margin-left:auto; }
+  body[data-selector="hierarchy"] .line-button { margin-left:0; }
+}
+@media(max-width:1350px){
+  body[data-layout="top"][data-selector="hierarchy"] .top-selection__inner,
+  body[data-layout="top"][data-selector="hierarchy"] .top-selection__detail { margin-right:40px; margin-left:40px; }
+}
 body[data-layout="top"] .vehicle-result { grid-template-columns:repeat(4,minmax(0,1fr)); max-height:152px; padding-right:4px; overflow-y:auto; }
 body[data-layout="top"] .vehicle-result button { display:flex; flex-direction:column; justify-content:center; height:52px; padding:6px 12px; }
 body[data-layout="top"] .vehicle-result button strong { display:block; margin:0 0 2px; overflow:hidden; text-overflow:ellipsis; }

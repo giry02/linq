@@ -5,9 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>MACHINE IQ · 운행이력 요약정보 · 3안</title>
   <link rel="stylesheet" href="../assets/local-fonts.css">
-  <link rel="stylesheet" href="./analysis-summary-prototype.css?v=20260828-3">
+  <link rel="stylesheet" href="./analysis-summary-prototype.css?v=20260901-1">
 </head>
-<body data-layout="top" data-view="compact-list">
+<body data-layout="top" data-view="compact-list" data-selector="hierarchy">
   <div id="wrap">
     <header class="page-head">
       <div class="page-head__inner">
@@ -27,11 +27,13 @@
       </div>
     </header>
 
-    <section class="top-selection collapsed" id="selector-dock" aria-label="업체 및 차량 선택">
+    <section class="top-selection collapsed" id="selector-dock" aria-label="업체, 그룹, 분류 및 차량 선택">
       <div class="top-selection__inner">
         <strong>조회 대상</strong>
-        <label><span>업체</span><select id="quick-company-select"></select></label>
-        <label><span>차량</span><select id="quick-vehicle-select"></select></label>
+        <label><span>업체 <em id="quick-company-count"></em></span><select id="quick-company-select" aria-label="업체 선택"></select></label>
+        <label><span>그룹 <em id="quick-group-count"></em></span><select id="quick-group-select" aria-label="그룹 선택"></select></label>
+        <label><span>분류 <em id="quick-fuel-count"></em></span><select id="quick-fuel-select" aria-label="분류 선택"></select></label>
+        <label><span>차량 <em id="quick-vehicle-count"></em></span><select id="quick-vehicle-select" aria-label="차량 선택"></select></label>
         <span class="selection-context" id="context-pill"></span>
         <button class="line-button" id="selector-toggle" type="button">차량 상세검색</button>
       </div>
@@ -85,6 +87,6 @@
     <footer class="page-foot"><strong>Bobcat <span>MACHINE IQ</span></strong><p>이용약관　 위치정보 및 위치기반서비스 이용약관　 개인(위치)정보 처리방침　 오픈소스 고지</p><p>©2024 Bobcat Company. ALL RIGHTS RESERVED.</p></footer>
   </div>
   <div class="toast" id="toast" hidden></div>
-  <script src="./analysis-summary-prototype.js?v=20260828-3" defer></script>
+  <script src="./analysis-summary-prototype.js?v=20260901-1" defer></script>
 </body>
 </html>

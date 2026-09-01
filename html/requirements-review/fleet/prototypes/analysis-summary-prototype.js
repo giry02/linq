@@ -151,6 +151,8 @@ const SECTIONS = {
 const state = {
   service: SERVICES[params.get("service")] ? params.get("service") : "fleet",
   companyId: params.get("companyId") || null,
+  groupName: params.get("groupName") || "all",
+  fuelType: params.get("fuelType") || "all",
   vehicleId: params.get("equipmentId") || null,
   section: SECTIONS[params.get("section")] ? params.get("section") : "summary",
   period: "월",
@@ -168,9 +170,25 @@ const availableVehicles = () => {
   const hydrogenPrototype=SERVICES.fleet.vehicles.find(v=>v.id==='FHA30-000101');
   return hydrogenPrototype?[...OPTION3_ACTUAL_VEHICLES,hydrogenPrototype]:[...OPTION3_ACTUAL_VEHICLES];
 };
+const hierarchyEnabled = () => Boolean($('#quick-group-select') && $('#quick-fuel-select'));
+const hierarchyGroups = ['기본그룹','테스트그룹'];
+const hierarchyFuels = ['엔진','납축','리튬','수소'];
+function vehicleGroup(vehicleItem){
+  if(vehicleItem.groupName) return vehicleItem.groupName;
+  const hash=[...vehicleItem.id].reduce((sum,char)=>sum+char.charCodeAt(0),0);
+  return hash%10<6?'기본그룹':'테스트그룹';
+}
 const company = () => data().companies.find(c=>c.id===state.companyId) || {id:data().companyId,name:data().companyName};
 const selectedVehicle = () => availableVehicles().find(v=>v.id===state.vehicleId) || null;
-const companyVehicles = () => state.companyId==="all"?availableVehicles():availableVehicles().filter(v=>v.companyId===state.companyId);
+const companyVehiclePool = () => state.companyId==="all"?availableVehicles():availableVehicles().filter(v=>v.companyId===state.companyId);
+const groupVehiclePool = () => {
+  const list=companyVehiclePool();
+  return hierarchyEnabled()&&state.groupName!=="all"?list.filter(v=>vehicleGroup(v)===state.groupName):list;
+};
+const companyVehicles = () => {
+  const list=groupVehiclePool();
+  return hierarchyEnabled()&&state.fuelType!=="all"?list.filter(v=>v.fuel===state.fuelType):list;
+};
 let globalVehicleSearchSubmitted = false;
 
 function init(){
@@ -197,6 +215,8 @@ function bind(){
   $$('.period-tabs button').forEach(b=>b.addEventListener('click',()=>setPeriod(b)));
   $('#selector-toggle')?.addEventListener('click',()=>{$('#selector-dock').classList.toggle('collapsed');$('#selector-toggle').textContent=$('#selector-dock').classList.contains('collapsed')?'차량 상세검색':'차량 상세검색 닫기';});
   $('#quick-company-select')?.addEventListener('change',e=>setCompany(e.target.value));
+  $('#quick-group-select')?.addEventListener('change',e=>setGroup(e.target.value));
+  $('#quick-fuel-select')?.addEventListener('change',e=>setFuelType(e.target.value));
   $('#quick-vehicle-select')?.addEventListener('change',e=>e.target.value?chooseVehicle(e.target.value):clearVehicle());
   $('#vehicle-search')?.addEventListener('input',resetGlobalVehicleSearch);
   $('#vehicle-search')?.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();submitGlobalVehicleSearch();}});
@@ -216,19 +236,22 @@ function setPeriod(button){
   }
 }
 
-function setCompany(id){state.companyId=id;state.vehicleId=null;state.source=null;updateUrl();render();}
+function setCompany(id){state.companyId=id;if(hierarchyEnabled()){state.groupName='all';state.fuelType='all';}state.vehicleId=null;state.source=null;updateUrl();render();}
+function setGroup(name){state.groupName=name;state.fuelType='all';state.vehicleId=null;state.source=null;updateUrl();render();}
+function setFuelType(type){state.fuelType=type;state.vehicleId=null;state.source=null;updateUrl();render();}
 function clearVehicle(){state.vehicleId=null;state.source=null;updateUrl();render();}
-function chooseVehicle(id){ if(isTop()){const target=data().vehicles.find(v=>v.id===id);if(target)state.companyId=target.companyId;state.vehicleId=id;state.source='top-selector';updateUrl();render();}else openModal(id); }
+function chooseVehicle(id){ if(isTop()){const target=availableVehicles().find(v=>v.id===id);if(target){state.companyId=target.companyId;if(hierarchyEnabled()){state.groupName=vehicleGroup(target);state.fuelType=target.fuel;}}state.vehicleId=id;state.source='top-selector';updateUrl();render();}else openModal(id); }
 function goSection(section){state.section=section;updateUrl();render();}
 function goGlobal(name){if(!isTop()){state.vehicleId=null;state.source=null;}updateUrl({global:name});render();toast(isTop()&&state.vehicleId?`${state.vehicleId} 차량 기준으로 ${name} 메뉴에 연결합니다.`:`${company().name} 업체 기준으로 ${name} 메뉴에 연결합니다.`);}
-function updateUrl(extra={}){const q=new URLSearchParams({service:state.service,companyId:state.companyId,section:state.section});if(state.vehicleId){q.set('equipmentId',state.vehicleId);q.set('source',state.source||'vehicle-modal');}if(extra.global)q.set('global',extra.global);history.replaceState({},'',`${location.pathname}?${q}`);}
+function updateUrl(extra={}){const q=new URLSearchParams({service:state.service,companyId:state.companyId,section:state.section});if(hierarchyEnabled()&&state.groupName!=='all')q.set('groupName',state.groupName);if(hierarchyEnabled()&&state.fuelType!=='all')q.set('fuelType',state.fuelType);if(state.vehicleId){q.set('equipmentId',state.vehicleId);q.set('source',state.source||'vehicle-modal');}if(extra.global)q.set('global',extra.global);history.replaceState({},'',`${location.pathname}?${q}`);}
 
 function render(){
   $('#account').textContent=data().account;
   $('#selected-company') && ($('#selected-company').textContent=company().name);
   $('#page-title').textContent=SECTIONS[state.section];
   $('#breadcrumb-current').textContent=SECTIONS[state.section];
-  $('#dataset-name').textContent=selectedVehicle()?selectedVehicle().id:data().groupName;
+  const hierarchyDataset=hierarchyEnabled()?[state.groupName!=='all'?state.groupName:'',state.fuelType!=='all'?state.fuelType:''].filter(Boolean).join(' · '):'';
+  $('#dataset-name').textContent=selectedVehicle()?selectedVehicle().id:hierarchyDataset||data().groupName;
   $$('[data-section]').forEach(b=>b.classList.toggle('active',b.dataset.section===state.section));
   renderSelectors();
   if(isCompactList() && state.section==='battery') renderBatteryLists();
@@ -236,10 +259,27 @@ function render(){
 }
 
 function renderSelectors(){
-  if($('#quick-company-select')) $('#quick-company-select').innerHTML=data().companies.map(c=>`<option value="${c.id}" ${c.id===state.companyId?'selected':''}>${c.name}</option>`).join('');
+  const allVehicles=availableVehicles();
+  const hierarchy=hierarchyEnabled();
+  if($('#quick-company-select')) $('#quick-company-select').innerHTML=data().companies.map(c=>{
+    const count=c.id==='all'?allVehicles.length:allVehicles.filter(v=>v.companyId===c.id).length;
+    const name=hierarchy&&c.id==='all'?'전체 업체':c.name;
+    return `<option value="${c.id}" ${c.id===state.companyId?'selected':''}>${hierarchy?`${name} · ${count}대`:name}</option>`;
+  }).join('');
   if($('#quick-company-select')) $('#quick-company-select').title=company().name;
-  if($('#quick-vehicle-select')) $('#quick-vehicle-select').innerHTML=`<option value="">차량을 선택하세요</option>${companyVehicles().map(v=>`<option value="${v.id}" ${v.id===state.vehicleId?'selected':''}>${v.id} · ${v.model}</option>`).join('')}`;
-  if($('#context-pill')) $('#context-pill').textContent=selectedVehicle()?`현재 조회 · 차량 ${selectedVehicle().id}`:state.companyId==='all'?'현재 조회 · 전체차량':`현재 조회 · 업체 ${company().name}`;
+  if(hierarchy){
+    const companyPool=companyVehiclePool();
+    const groupPool=groupVehiclePool();
+    const filtered=companyVehicles();
+    $('#quick-company-count').textContent=`${data().companies.length-1}개`;
+    $('#quick-group-count').textContent=`${hierarchyGroups.length}개`;
+    $('#quick-fuel-count').textContent=`${hierarchyFuels.length}개`;
+    $('#quick-vehicle-count').textContent=`${filtered.length}대`;
+    $('#quick-group-select').innerHTML=`<option value="all" ${state.groupName==='all'?'selected':''}>전체 그룹 · ${companyPool.length}대</option>${hierarchyGroups.map(name=>`<option value="${name}" ${name===state.groupName?'selected':''}>${name} · ${companyPool.filter(v=>vehicleGroup(v)===name).length}대</option>`).join('')}`;
+    $('#quick-fuel-select').innerHTML=`<option value="all" ${state.fuelType==='all'?'selected':''}>전체 분류 · ${groupPool.length}대</option>${hierarchyFuels.map(type=>`<option value="${type}" ${type===state.fuelType?'selected':''}>${type} · ${groupPool.filter(v=>v.fuel===type).length}대</option>`).join('')}`;
+    if($('#quick-vehicle-select')) $('#quick-vehicle-select').innerHTML=`<option value="">전체 차량 · ${filtered.length}대</option>${filtered.map(v=>`<option value="${v.id}" ${v.id===state.vehicleId?'selected':''}>${v.id} · ${v.model}</option>`).join('')}`;
+  }else if($('#quick-vehicle-select')) $('#quick-vehicle-select').innerHTML=`<option value="">차량을 선택하세요</option>${companyVehicles().map(v=>`<option value="${v.id}" ${v.id===state.vehicleId?'selected':''}>${v.id} · ${v.model}</option>`).join('')}`;
+  if($('#context-pill')) $('#context-pill').textContent=selectedVehicle()?`현재 조회 · 차량 ${selectedVehicle().id}`:hierarchy&&state.fuelType!=='all'?`현재 조회 · 분류 ${state.fuelType}`:hierarchy&&state.groupName!=='all'?`현재 조회 · 그룹 ${state.groupName}`:state.companyId==='all'?'현재 조회 · 전체차량':`현재 조회 · 업체 ${company().name}`;
   if(isTop()) renderGlobalVehicleSearch();
   const input=$('#current-vehicle-search'); const keyword=(input?.value||'').trim().toLowerCase();
   let vehicles=companyVehicles(); vehicles=vehicles.filter(v=>`${v.id} ${v.model}`.toLowerCase().includes(keyword));
@@ -270,12 +310,13 @@ function renderGlobalVehicleSearch(){
       : '<p class="vehicle-result-empty">입력한 차량번호와 일치하는 차량이 없습니다.</p>';
 }
 
-function aggregate(sourceList){const list=sourceList?.length?sourceList:(companyVehicles().length?companyVehicles():availableVehicles());const avg=k=>list.reduce((a,v)=>a+(Number(v[k])||0),0)/list.length;return{operatingRate:avg('operatingRate'),efficiencyRate:avg('efficiencyRate'),shockCnt:list.reduce((a,v)=>a+v.shockCnt,0),distance:list.reduce((a,v)=>a+v.distance,0),operatingTime:`${Math.round(list.reduce((a,v)=>a+parseFloat(v.operatingTime),0))}H`,batteryRate:avg('batteryRate')};}
+function aggregate(sourceList){const list=hierarchyEnabled()&&Array.isArray(sourceList)?sourceList:(sourceList?.length?sourceList:(companyVehicles().length?companyVehicles():availableVehicles()));if(!list.length)return{operatingRate:0,efficiencyRate:0,shockCnt:0,distance:0,operatingTime:'0H',batteryRate:0};const avg=k=>list.reduce((a,v)=>a+(Number(v[k])||0),0)/list.length;return{operatingRate:avg('operatingRate'),efficiencyRate:avg('efficiencyRate'),shockCnt:list.reduce((a,v)=>a+v.shockCnt,0),distance:list.reduce((a,v)=>a+v.distance,0),operatingTime:`${Math.round(list.reduce((a,v)=>a+parseFloat(v.operatingTime),0))}H`,batteryRate:avg('batteryRate')};}
 function renderSummary(){
   const compact=isCompactList();
   const batteryMode=state.section==='battery';
   const count=sectionVehicles(companyVehicles());
-  const useActualOverall=compact&&state.companyId==='all'&&!selectedVehicle()&&!batteryMode;
+  const hierarchyOverall=!hierarchyEnabled()||(state.groupName==='all'&&state.fuelType==='all');
+  const useActualOverall=compact&&state.companyId==='all'&&hierarchyOverall&&!selectedVehicle()&&!batteryMode;
   const s=useActualOverall?OPTION3_ACTUAL_TOTALS:selectedVehicle()||aggregate(count);
   const counts=useActualOverall
     ? {엔진:OPTION3_ACTUAL_TOTALS.engine,납축:OPTION3_ACTUAL_TOTALS.lead,리튬:OPTION3_ACTUAL_TOTALS.lithium,수소:OPTION3_ACTUAL_TOTALS.hydrogen+1}
@@ -324,7 +365,7 @@ function renderCompactCards(list){
   const ordered=[...representatives,...remaining];
   const listLabel=state.section==='battery'
     ? `배터리 차량 ${ordered.length}대 <small>리튬·수소 통합 목록</small>`
-    : state.companyId==='all'&&!selectedVehicle()
+    : state.companyId==='all'&&(!hierarchyEnabled()||(state.groupName==='all'&&state.fuelType==='all'))&&!selectedVehicle()
     ? `차량 상세 ${ordered.length}대 <small>운영 전체 ${OPTION3_ACTUAL_TOTALS.operatingTotal}대</small>`
     : `${selectedVehicle()?'선택 차량':'차량'} ${ordered.length}대`;
   const legendTypes=state.section==='battery'?['리튬','수소']:['엔진','리튬','납축','수소'];
@@ -366,7 +407,7 @@ function compactCard(v,index){
       </div>
       <div class="compact-card__info">
         <div><span>소속 업체</span><strong title="${v.companyName}">${v.companyName}</strong></div>
-        <div><span>소속 그룹</span><strong>${data().groupName}</strong></div>
+        <div><span>소속 그룹</span><strong>${hierarchyEnabled()?vehicleGroup(v):data().groupName}</strong></div>
         <div><span>동력 유형</span><strong>${v.fuel}</strong></div>
         <div><span>누적 이동거리</span><strong>${v.distance.toLocaleString()}km</strong></div>
         <div><span>누적 가동시간</span><strong>${v.operatingTime}</strong></div>
