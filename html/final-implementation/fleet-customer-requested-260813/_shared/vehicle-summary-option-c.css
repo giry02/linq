@@ -1,0 +1,117 @@
+:root{--c-primary:#ff3600;--c-navy:#003263;--c-text:#273247;--c-sub:#666;--c-muted:#767676;--c-line:#dfdfdf;--c-soft:#f1f8fe;--c-neutral:#f3f4f5;--c-engine:#315bd5;--c-lithium:#00a875;--c-lead:#ed6400;--c-hydrogen:#0089a8;--c-success:#00ad83;--c-warning:#ff9d3b;--c-danger:#ec2d2d}
+.miq-summary-option-c .summary-content{padding-bottom:42px}
+.miq-summary-option-c .concept-badge{display:inline-flex;align-items:center;height:25px;padding:0 9px;color:var(--c-navy);font-size:12px;font-weight:700;white-space:nowrap;border:1px solid #bfd7ea;border-radius:12px;background:var(--c-soft)}
+.miq-summary-option-c .summary-heading{display:flex;align-items:center;gap:8px;min-width:0}
+
+.c-summary-table{width:100%;margin-top:14px;overflow:hidden;border:1px solid var(--c-line);border-radius:8px;background:#fff}
+.c-summary-table table{width:100%;table-layout:fixed;border-collapse:collapse}
+.c-summary-table col:first-child{width:16%}
+.c-summary-table col:nth-child(2),.c-summary-table col:nth-child(3),.c-summary-table col:nth-child(4),.c-summary-table col:nth-child(5),.c-summary-table col:nth-child(6){width:11%}
+.c-summary-table col:nth-child(7),.c-summary-table col:nth-child(8){width:14.5%}
+.c-summary-table th,.c-summary-table td{overflow:hidden;padding:0 6px;text-align:left;text-overflow:ellipsis;white-space:nowrap;border-right:1px solid #eaeaea}
+.c-summary-table th:last-child,.c-summary-table td:last-child{border-right:0}
+.c-summary-table th{height:31px;color:#333;font-size:12px;line-height:18px;font-weight:700;letter-spacing:-.2px;background:var(--c-neutral)}
+.c-summary-table td{height:42px;color:var(--c-text);font-size:17px;line-height:22px;font-weight:700;border-top:1px solid var(--c-line)}
+.c-summary-table td:first-child{font-size:13px;letter-spacing:-.2px}
+.c-summary-table td.is-alert{color:var(--c-danger)}
+.c-summary-table .na{color:#8a909c;font-size:13px;font-weight:500}
+.c-summary-table.is-updating tbody{animation:c-value-in .22s ease both}
+
+.c-reference-list{margin-top:14px}
+.c-list-head{display:flex;align-items:center;gap:14px;min-height:44px;margin-bottom:8px}
+.c-list-head__count{flex:0 0 auto;color:var(--c-text);font-size:14px;font-weight:700;white-space:nowrap}
+.c-list-head__count b{color:var(--c-navy);font-size:17px}
+.c-fuel-legend{display:flex;align-items:center;gap:9px;color:var(--c-sub);font-size:12px}
+.c-fuel-legend::before{content:"동력 유형";color:var(--c-text);font-weight:700}
+.c-fuel-legend>span{display:inline-flex;align-items:center;gap:4px;white-space:nowrap}
+.c-sort-current{margin-left:auto;color:var(--c-muted);font-size:12px;white-space:nowrap}
+.c-sort-tools{display:flex;align-items:center;gap:6px;flex:0 0 auto}
+.c-sort-control{display:flex;align-items:center;gap:6px;color:var(--c-sub);font-size:12px;font-weight:600;white-space:nowrap}
+.c-sort-select{width:158px;height:36px;padding:0 30px 0 10px;color:var(--c-text);font-size:13px;font-weight:500;border:1px solid #cfcfcf;border-radius:4px;background:#fff}
+.c-sort-select:focus,.c-direction-button:focus-visible,.c-reset-button:focus-visible{outline:2px solid var(--c-primary);outline-offset:2px}
+.c-direction-button,.c-reset-button{height:36px;color:var(--c-text);font-size:13px;font-weight:700;border:1px solid #cfcfcf;border-radius:4px;background:#fff}
+.c-direction-button{min-width:111px;padding:0 10px;color:var(--c-navy)}
+.c-direction-button:hover,.c-direction-button.is-desc{border-color:#9ebbd1;background:var(--c-soft)}
+.c-reset-button{padding:0 11px}
+.c-reset-button:hover{border-color:#aaa;background:#f9f9f9}
+
+.c-card-list{display:grid;gap:10px}
+.c-vehicle-card{display:grid;grid-template-columns:60px minmax(0,1fr);min-height:158px;padding:13px 16px 13px 0;border:1px solid var(--c-line);border-left:4px solid #aeb5bd;border-radius:7px;background:#fff;transition:border-color .16s ease,box-shadow .16s ease,transform .16s ease}
+.c-vehicle-card:hover{border-color:#9ebbd1;box-shadow:0 4px 12px rgba(0,50,99,.08);transform:translateY(-1px)}
+.c-vehicle-card[aria-selected="true"]{border-color:var(--c-primary);box-shadow:0 0 0 1px var(--c-primary)}
+.c-card__icon{display:flex;align-items:flex-start;justify-content:center;padding-top:42px}
+.c-fuel-icon{display:inline-grid;width:38px;height:38px;place-items:center;font-style:normal;border-radius:9px}
+.c-fuel-icon svg{display:block;width:21px;height:21px}
+.c-fuel-legend .c-fuel-icon{width:22px;height:22px;border-radius:5px}
+.c-fuel-legend .c-fuel-icon svg{width:14px;height:14px}
+.c-fuel-icon.engine{color:var(--c-engine);background:#edf1ff}
+.c-fuel-icon.lithium{color:var(--c-lithium);background:#e7fbf4}
+.c-fuel-icon.lead{color:var(--c-lead);background:#fff2e7}
+.c-fuel-icon.hydrogen{color:var(--c-hydrogen);background:#e6f8fc}
+.c-card__icon .c-fuel-icon{color:#fff;box-shadow:0 3px 9px rgba(0,0,0,.12)}
+.c-card__icon .c-fuel-icon.engine{background:var(--c-engine)}
+.c-card__icon .c-fuel-icon.lithium{background:var(--c-lithium)}
+.c-card__icon .c-fuel-icon.lead{background:var(--c-lead)}
+.c-card__icon .c-fuel-icon.hydrogen{background:var(--c-hydrogen)}
+.c-card__body{min-width:0}
+.c-card__head{display:flex;align-items:center;justify-content:space-between;gap:14px;min-height:35px;padding-bottom:8px;border-bottom:1px solid #eaeaea}
+.c-card__identity{display:flex;align-items:center;min-width:0}
+.c-card__identity>a{flex:0 0 auto;color:var(--c-navy);font-size:16px;line-height:22px;font-weight:700;text-decoration:none}
+.c-card__identity>a:hover{text-decoration:underline}
+.c-card__model{margin-left:10px;overflow:hidden;color:#737b88;font-size:13px;text-overflow:ellipsis;white-space:nowrap}
+.c-type-badge{display:inline-flex;align-items:center;gap:4px;flex:0 0 auto;margin-left:9px;padding:3px 8px;font-size:12px;line-height:16px;font-weight:700;border-radius:10px}
+.c-type-badge svg{width:13px;height:13px}
+.c-type-badge.engine{color:var(--c-engine);background:#edf1ff}
+.c-type-badge.lithium{color:#00875e;background:#e7fbf4}
+.c-type-badge.lead{color:#c84f00;background:#fff2e7}
+.c-type-badge.hydrogen{color:#00728c;background:#e6f8fc}
+.c-card__status{display:flex;align-items:center;justify-content:flex-end;gap:7px;min-width:0;font-size:12px;white-space:nowrap}
+.c-health,.c-connection{display:inline-flex;align-items:center;height:24px;padding:0 8px;font-size:12px;font-weight:700;border-radius:12px}
+.c-health.normal,.c-connection.connected{color:#08785c;background:#e5f7f1}
+.c-health.warning{color:#a85d00;background:#fff4e6}
+.c-health.danger{color:#bd2020;background:#fff0f0}
+.c-connection.disconnected{color:#687383;background:#eef1f4}
+.c-energy-label{margin-left:2px;color:#737b88}
+.c-energy-gauge{position:relative;display:inline-block;width:42px;height:19px;padding:3px;border:2px solid #444;border-radius:2px}
+.c-energy-gauge::after{content:"";position:absolute;top:4px;right:-6px;width:4px;height:8px;background:#444;border-radius:0 2px 2px 0}
+.c-energy-gauge b{display:block;height:100%;background:var(--energy-color,var(--c-navy))}
+.c-energy-value{min-width:31px;color:var(--c-text);font-size:13px;font-weight:700}
+.c-energy-value.unavailable{min-width:auto;color:#888;font-weight:500}
+
+.c-card__info,.c-card__metrics{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));align-items:start;column-gap:14px;min-width:0}
+.c-card__info{padding-top:9px}
+.c-card__metrics{padding-top:8px}
+.c-card__info>div,.c-card__metrics>div{min-width:0}
+.c-card__info span,.c-card__metrics span{display:block;min-height:18px;margin-bottom:2px;overflow:hidden;color:#737b88;font-size:12px;line-height:18px;text-overflow:ellipsis;white-space:nowrap}
+.c-card__info strong,.c-card__metrics strong{display:block;max-width:100%;overflow:hidden;color:#222;font-size:14px;line-height:20px;font-weight:600;text-overflow:ellipsis;white-space:nowrap}
+.c-card__metrics .c-period-basis{display:inline;margin-left:3px;padding:1px 4px;color:#6f7680;font-size:12px;font-weight:500;line-height:16px;border:1px solid #d9dce1;border-radius:3px;background:#f9f9f9}
+.c-card__metrics .is-active,.c-card__info .is-active{margin:-4px;padding:4px;border-left:2px solid var(--c-navy);border-radius:4px;background:var(--c-soft)}
+.c-card__metrics .is-alert strong{color:var(--c-danger)}
+.c-card__info .na,.c-card__metrics .na{color:#8a909c;font-weight:500}
+.c-data-note{margin:10px 0 0;padding-left:9px;color:#767676;font-size:12px;line-height:18px;border-left:3px solid #c8d9e6}
+.c-live{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.c-empty{padding:48px 20px;color:#777;font-size:14px;text-align:center;border:1px solid var(--c-line);border-radius:7px;background:#fff}
+
+@keyframes c-value-in{from{opacity:.25;transform:translateY(3px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:1500px){
+  .c-list-head{gap:9px}
+  .c-fuel-legend{gap:6px}
+  .c-sort-current{display:none}
+  .c-sort-select{width:145px}
+  .c-card__info,.c-card__metrics{column-gap:10px}
+}
+@media(max-width:1320px){
+  .c-list-head{flex-wrap:wrap;padding:4px 0}
+  .c-sort-tools{margin-left:auto}
+  .c-vehicle-card{grid-template-columns:54px minmax(0,1fr);padding-right:12px}
+  .c-card__status{gap:5px}
+  .c-health,.c-connection{padding-right:7px;padding-left:7px}
+  .c-card__info,.c-card__metrics{column-gap:8px}
+  .c-card__info span,.c-card__metrics span{letter-spacing:-.2px}
+}
+@media(max-width:1050px){
+  .c-card__head{align-items:flex-start;flex-direction:column;gap:7px}
+  .c-card__status{justify-content:flex-start;flex-wrap:wrap}
+  .c-card__info,.c-card__metrics{grid-template-columns:repeat(3,minmax(0,1fr));row-gap:8px}
+}
+@media(prefers-reduced-motion:reduce){.c-summary-table.is-updating tbody,.c-vehicle-card{animation:none;transition:none}.c-vehicle-card:hover{transform:none}}
